@@ -36,15 +36,12 @@ Then include the library in your code based on your needs.
 The library is divided into modular headers to keep the codebase organized and
 provide flexibility to users. Here's an overview of the primary files:
 
-- `fsmlib/base.hpp`
+- `fsmlib/fsmlib.hpp`
   - Contains base utilities and foundational types used throughout the library,
     such as common traits and helper functions.
 - `fsmlib/control.hpp`
   - Provides utility functions for managing and controlling matrix/vector data,
     likely including error handling or bounds checking.
-- `fsmlib/fsmlib.hpp`
-  - The main header file that includes all other headers. Users can include this
-    file to access the entire library without worrying about individual headers.
 - `fsmlib/io.hpp`
   - Implements input/output functionality for matrices and vectors, such as
     streaming operations and formatting.
@@ -66,8 +63,8 @@ provide flexibility to users. Here's an overview of the primary files:
 #include <iostream>
 
 int main() {
-    mx::Vector<int, 3> vec1 = {1, 2, 3};
-    mx::Vector<int, 3> vec2 = {4, 5, 6};
+    fsmlib::Vector<int, 3> vec1 = {1, 2, 3};
+    fsmlib::Vector<int, 3> vec2 = {4, 5, 6};
     
     auto result = vec1 + vec2;
 
@@ -93,8 +90,8 @@ Output:
 #include <iostream>
 
 int main() {
-    mx::Matrix<int, 2, 2> mat1 = {{{1, 2}, {3, 4}}};
-    mx::Matrix<int, 2, 2> mat2 = {{{5, 6}, {7, 8}}};
+    fsmlib::Matrix<int, 2, 2> mat1 = {{{1, 2}, {3, 4}}};
+    fsmlib::Matrix<int, 2, 2> mat2 = {{{5, 6}, {7, 8}}};
     
     auto result = mat1 + mat2;
 

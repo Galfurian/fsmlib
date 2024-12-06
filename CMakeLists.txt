@@ -7,7 +7,7 @@
 cmake_minimum_required(VERSION 3.1...3.18)
 
 # Set the project name.
-project(mx CXX)
+project(fsmlib CXX)
 
 # Set the default build type to Debug.
 if(NOT CMAKE_BUILD_TYPE)
@@ -33,20 +33,28 @@ mark_as_advanced(FORCE
 # OPTIONS
 # -----------------------------------------------------------------------------
 
+option(BUILD_TESTS "Build tests" OFF)
+option(BUILD_EXAMPLES "Build examples" ON)
 option(STRICT_WARNINGS "Enable strict compiler warnings" ON)
 option(WARNINGS_AS_ERRORS "Treat all warnings as errors" OFF)
+
+# -----------------------------------------------------------------------------
+# DEPENDENCY (SYSTEM LIBRARIES)
+# -----------------------------------------------------------------------------
+
+find_package(Doxygen)
 
 # -----------------------------------------------------------------------------
 # LIBRARY
 # -----------------------------------------------------------------------------
 
 # Add the C++ Library.
-add_library(mx INTERFACE)
-add_library(mx::mx ALIAS mx)
+add_library(fsmlib INTERFACE)
+add_library(fsmlib::fsmlib ALIAS fsmlib)
 # Inlcude header directories.
-target_include_directories(mx INTERFACE ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(fsmlib INTERFACE ${PROJECT_SOURCE_DIR}/include)
 # Set the library to use c++-20
-target_compile_features(mx INTERFACE cxx_std_20)
+target_compile_features(fsmlib INTERFACE cxx_std_20)
 
 # -----------------------------------------------------------------------------
 # COMPILATION FLAGS
@@ -54,13 +62,13 @@ target_compile_features(mx INTERFACE cxx_std_20)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     # Disable warnings that suggest using MSVC-specific safe functions
-    target_compile_definitions(mx INTERFACE _CRT_SECURE_NO_WARNINGS)
+    target_compile_definitions(fsmlib INTERFACE _CRT_SECURE_NO_WARNINGS)
     if(WARNINGS_AS_ERRORS)
-        target_compile_options(mx INTERFACE /WX)
+        target_compile_options(fsmlib INTERFACE /WX)
     endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     if(WARNINGS_AS_ERRORS)
-        target_compile_options(mx INTERFACE -Werror)
+        target_compile_options(fsmlib INTERFACE -Werror)
     endif()
 endif()
 
@@ -68,18 +76,109 @@ if(STRICT_WARNINGS)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         # Mark system headers as external for MSVC explicitly
         # https://devblogs.microsoft.com/cppblog/broken-warnings-theory
-        target_compile_options(mx INTERFACE /experimental:external)
-        target_compile_options(mx INTERFACE /external:I ${CMAKE_BINARY_DIR})
-        target_compile_options(mx INTERFACE /external:anglebrackets)
-        target_compile_options(mx INTERFACE /external:W0)
+        target_compile_options(fsmlib INTERFACE /experimental:external)
+        target_compile_options(fsmlib INTERFACE /external:I ${CMAKE_BINARY_DIR})
+        target_compile_options(fsmlib INTERFACE /external:anglebrackets)
+        target_compile_options(fsmlib INTERFACE /external:W0)
 
-        target_compile_options(mx INTERFACE /W4)
+        target_compile_options(fsmlib INTERFACE /W4)
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-        target_compile_options(mx INTERFACE -Wall -Wextra -Wconversion -pedantic)
+        target_compile_options(fsmlib INTERFACE -Wall -Wextra -Wconversion -pedantic)
     endif()
 endif()
 
-# Add the example.
-add_executable(mx_usage examples/usage/main.cpp)
-target_include_directories(mx_usage PUBLIC ${PROJECT_SOURCE_DIR}/examples)
-target_link_libraries(mx_usage PUBLIC mx)
+# -----------------------------------------------------------------------------
+# EXAMPLES
+# -----------------------------------------------------------------------------
+
+if(BUILD_EXAMPLES)
+    # Add the example.
+    add_executable(fsmlib_usage examples/usage/main.cpp)
+    target_include_directories(fsmlib_usage PUBLIC ${PROJECT_SOURCE_DIR}/examples)
+    target_link_libraries(fsmlib_usage PUBLIC fsmlib)
+endif()
+
+# -----------------------------------------------------------------------------
+# TESTS
+# -----------------------------------------------------------------------------
+
+if(BUILD_TESTS)
+
+    # CMake has support for adding tests to a project.
+    enable_testing()
+
+    # Add the test.
+    add_executable(fsmlib_test_fsmlib ${PROJECT_SOURCE_DIR}/tests/test_fsmlib.cpp)
+    target_include_directories(fsmlib_test_fsmlib PUBLIC ${PROJECT_SOURCE_DIR}/include)
+    target_link_libraries(fsmlib_test_fsmlib fsmlib)
+    add_test(fsmlib_test_fsmlib_run fsmlib_test_fsmlib)
+    
+    # Add the test.
+    add_executable(fsmlib_test_math ${PROJECT_SOURCE_DIR}/tests/test_math.cpp)
+    target_include_directories(fsmlib_test_math PUBLIC ${PROJECT_SOURCE_DIR}/include)
+    target_link_libraries(fsmlib_test_math fsmlib)
+    add_test(fsmlib_test_math_run fsmlib_test_math)
+
+    # Add the test.
+    add_executable(fsmlib_test_linalg ${PROJECT_SOURCE_DIR}/tests/test_linalg.cpp)
+    target_include_directories(fsmlib_test_linalg PUBLIC ${PROJECT_SOURCE_DIR}/include)
+    target_link_libraries(fsmlib_test_linalg fsmlib)
+    add_test(fsmlib_test_linalg_run fsmlib_test_linalg)
+
+    # Add the test.
+    add_executable(fsmlib_test_control ${PROJECT_SOURCE_DIR}/tests/test_control.cpp)
+    target_include_directories(fsmlib_test_control PUBLIC ${PROJECT_SOURCE_DIR}/include)
+    target_link_libraries(fsmlib_test_control fsmlib)
+    add_test(fsmlib_test_control_run fsmlib_test_control)
+
+endif()
+
+# -----------------------------------------------------------------------------
+# DOCUMENTATION
+# -----------------------------------------------------------------------------
+
+if(DOXYGEN_FOUND)
+    
+    # Record the options that describe how to populate the specified content.
+    FetchContent_Declare(
+        doxygenawesome
+        GIT_REPOSITORY https://github.com/jothepro/doxygen-awesome-css
+        GIT_TAG main
+    )
+    # Retrieve the properties related to the content.
+    FetchContent_GetProperties(doxygenawesome)
+    # If not populated, make the content available.
+    if(NOT doxygenawesome_POPULATED)
+        message(STATUS "Retrieving `doxygen-awesome-css`...")
+        # Ensures the named dependencies have been populated.
+        FetchContent_MakeAvailable(doxygenawesome)
+        # Hide fetchcontent variables, otherwise with ccmake it's a mess.
+        mark_as_advanced(FORCE
+            FETCHCONTENT_UPDATES_DISCONNECTED_DOXYGENAWESOME
+            FETCHCONTENT_SOURCE_DIR_DOXYGENAWESOME
+        )
+    endif()
+
+    # = CUSTOMIZATION =========================================================
+    set(DOXYGEN_WARN_FORMAT "$file:$line: $text")
+    set(DOXYGEN_PROJECT_NAME fsmlib)
+    set(DOXYGEN_USE_MDFILE_AS_MAINPAGE ${PROJECT_SOURCE_DIR}/README.md)
+    set(DOXYGEN_SHOW_INCLUDE_FILES NO)
+    set(DOXYGEN_GENERATE_TREEVIEW YES)
+    set(DOXYGEN_HTML_HEADER ${doxygenawesome_SOURCE_DIR}/doxygen-custom/header.html)
+    set(DOXYGEN_HTML_EXTRA_STYLESHEET ${doxygenawesome_SOURCE_DIR}/doxygen-awesome.css)
+    set(DOXYGEN_HTML_EXTRA_FILES
+        ${doxygenawesome_SOURCE_DIR}/doxygen-awesome-fragment-copy-button.js
+        ${doxygenawesome_SOURCE_DIR}/doxygen-awesome-paragraph-link.js
+        ${doxygenawesome_SOURCE_DIR}/doxygen-awesome-darkmode-toggle.js
+    )
+    doxygen_add_docs(
+        fsmlib_documentation
+        ${PROJECT_SOURCE_DIR}/README.md
+        ${PROJECT_SOURCE_DIR}/include/fsmlib/fsmlib.hpp
+        ${PROJECT_SOURCE_DIR}/include/fsmlib/control.hpp
+        ${PROJECT_SOURCE_DIR}/include/fsmlib/io.hpp
+        ${PROJECT_SOURCE_DIR}/include/fsmlib/linalg.hpp
+        ${PROJECT_SOURCE_DIR}/include/fsmlib/math.hpp
+    )
+endif()
