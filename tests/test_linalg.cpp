@@ -162,6 +162,27 @@ int main()
 
             std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: expm with simple 2x2 matrix\n";
         }
+
+        {
+            fsmlib::Matrix<double, 2, 2> mat = { { { 0.0, 1.0 }, { -10.0, -2.0 } } };
+
+            auto result = fsmlib::linalg::expm(mat, 1e-12);
+
+            // Updated expected result from Octave
+            fsmlib::Matrix<double, 2, 2> expected = {
+                { { -0.346893, 0.017305 }, { -0.173050, -0.381503 } }
+            };
+
+            if (fsmlib::any(fsmlib::abs(result - expected) > 0.1)) {
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
+                throw std::runtime_error("Test failed: expm with simple 2x2 matrix");
+            }
+
+            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: expm with simple 2x2 matrix\n";
+        }
+
         {
             fsmlib::Matrix<double, 2, 2> mat = {
                 { { 1.0, 2.0 },

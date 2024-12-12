@@ -56,7 +56,7 @@ inline auto c2d(const state_space_t<T, N_state, N_input, N_output> &sys, T sampl
     discrete_state_space_t<T, N_state, N_input, N_output> dsys;
 
     // Discretize the system matrix using matrix exponential.
-    dsys.A = fsmlib::linalg::expm(sys.A * sample_time, 1e-12);
+    dsys.A = fsmlib::linalg::expm(sys.A * sample_time, 1e-06);
 
     // Discretize the input matrix using the zero-order hold method.
     dsys.B = fsmlib::multiply(

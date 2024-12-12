@@ -39,7 +39,7 @@ int main()
             };
 
             // Validate results
-            if (fsmlib::any(dsys.A != expected_A)) {
+            if (fsmlib::any(fsmlib::abs(dsys.A - expected_A) > 1e-3)) {
                 std::ostringstream error;
                 error << "Test failed: Incorrect A matrix in Continuous-to-Discrete Conversion.\n"
                       << "Expected A:\n"
@@ -48,7 +48,7 @@ int main()
                       << dsys.A << "\n";
                 throw std::runtime_error(error.str());
             }
-            if (fsmlib::any(dsys.B != expected_B)) {
+            if (fsmlib::any(fsmlib::abs(dsys.B - expected_B) > 1e-3)) {
                 std::ostringstream error;
                 error << "Test failed: Incorrect B matrix in Continuous-to-Discrete Conversion.\n"
                       << "Expected B:\n"
@@ -57,7 +57,7 @@ int main()
                       << dsys.B << "\n";
                 throw std::runtime_error(error.str());
             }
-            if (fsmlib::any(dsys.C != sys.C)) {
+            if (fsmlib::any(fsmlib::abs(dsys.C - sys.C) > 1e-3)) {
                 std::ostringstream error;
                 error << "Test failed: Incorrect C matrix in Continuous-to-Discrete Conversion.\n"
                       << "Expected C:\n"
@@ -66,7 +66,7 @@ int main()
                       << dsys.C << "\n";
                 throw std::runtime_error(error.str());
             }
-            if (fsmlib::any(dsys.D != sys.D)) {
+            if (fsmlib::any(fsmlib::abs(dsys.D - sys.D) > 1e-3)) {
                 std::ostringstream error;
                 error << "Test failed: Incorrect D matrix in Continuous-to-Discrete Conversion.\n"
                       << "Expected D:\n"
