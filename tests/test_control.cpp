@@ -10,6 +10,8 @@
 int main()
 {
     try {
+        int test_count = 1; // Test counter variable
+
         // Test 1: Continuous-to-Discrete Conversion
         {
             // Define a continuous-time state-space model
@@ -39,7 +41,7 @@ int main()
             // Validate results
             if (fsmlib::any(dsys.A != expected_A)) {
                 std::ostringstream error;
-                error << "Test 1 failed: Incorrect A matrix in Continuous-to-Discrete Conversion.\n"
+                error << "Test failed: Incorrect A matrix in Continuous-to-Discrete Conversion.\n"
                       << "Expected A:\n"
                       << expected_A << "\n"
                       << "Got A:\n"
@@ -48,7 +50,7 @@ int main()
             }
             if (fsmlib::any(dsys.B != expected_B)) {
                 std::ostringstream error;
-                error << "Test 1 failed: Incorrect B matrix in Continuous-to-Discrete Conversion.\n"
+                error << "Test failed: Incorrect B matrix in Continuous-to-Discrete Conversion.\n"
                       << "Expected B:\n"
                       << expected_B << "\n"
                       << "Got B:\n"
@@ -57,7 +59,7 @@ int main()
             }
             if (fsmlib::any(dsys.C != sys.C)) {
                 std::ostringstream error;
-                error << "Test 1 failed: Incorrect C matrix in Continuous-to-Discrete Conversion.\n"
+                error << "Test failed: Incorrect C matrix in Continuous-to-Discrete Conversion.\n"
                       << "Expected C:\n"
                       << sys.C << "\n"
                       << "Got C:\n"
@@ -66,7 +68,7 @@ int main()
             }
             if (fsmlib::any(dsys.D != sys.D)) {
                 std::ostringstream error;
-                error << "Test 1 failed: Incorrect D matrix in Continuous-to-Discrete Conversion.\n"
+                error << "Test failed: Incorrect D matrix in Continuous-to-Discrete Conversion.\n"
                       << "Expected D:\n"
                       << sys.D << "\n"
                       << "Got D:\n"
@@ -74,7 +76,7 @@ int main()
                 throw std::runtime_error(error.str());
             }
 
-            std::cout << "Test 1 passed: Continuous-to-Discrete Conversion\n";
+            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: Continuous-to-Discrete Conversion\n";
         }
 
         // Test 2: Simulate one step of a discrete-time model
@@ -103,13 +105,13 @@ int main()
 
             // Validate results
             if (fsmlib::any(x_next != expected_x_next)) {
-                throw std::runtime_error("Test 2 failed: Incorrect next state in Simulation step");
+                throw std::runtime_error("Test failed: Incorrect next state in Simulation step");
             }
             if (fsmlib::any(y != expected_y)) {
-                throw std::runtime_error("Test 2 failed: Incorrect output in Simulation step");
+                throw std::runtime_error("Test failed: Incorrect output in Simulation step");
             }
 
-            std::cout << "Test 2 passed: Simulate one step of a discrete-time model\n";
+            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: Simulate one step of a discrete-time model\n";
         }
 
         std::cout << "All control tests passed!\n";
