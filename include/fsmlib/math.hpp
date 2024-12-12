@@ -10,212 +10,6 @@
 
 #include <cmath>
 
-/// @brief Vector addition.
-/// @param l The left-hand side vector.
-/// @param r The right-hand side vector.
-/// @return The result of element-wise addition.
-template <class T, class U, std::size_t N>
-constexpr auto operator+(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r);
-
-/// @brief Scalar addition with a vector.
-/// @param l The scalar value.
-/// @param r The vector.
-/// @return The result of adding the scalar to each element of the vector.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator+(const U &l, const fsmlib::Vector<T, N> &r);
-
-/// @brief Vector addition with a scalar.
-/// @param l The vector.
-/// @param r The scalar value.
-/// @return The result of adding the scalar to each element of the vector.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator+(const fsmlib::Vector<T, N> &l, const U &r);
-
-/// @brief Vector subtraction.
-/// @param l The left-hand side vector.
-/// @param r The right-hand side vector.
-/// @return The result of element-wise subtraction.
-template <class T, class U, std::size_t N>
-constexpr auto operator-(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r);
-
-/// @brief Scalar subtraction with a vector.
-/// @param l The scalar value.
-/// @param r The vector.
-/// @return The result of subtracting each element of the vector from the scalar.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator-(const U &l, const fsmlib::Vector<T, N> &r);
-
-/// @brief Vector subtraction with a scalar.
-/// @param l The vector.
-/// @param r The scalar value.
-/// @return The result of subtracting the scalar from each element of the vector.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator-(const fsmlib::Vector<T, N> &l, const U &r);
-
-/// @brief Vector multiplication.
-/// @param l The left-hand side vector.
-/// @param r The right-hand side vector.
-/// @return The result of element-wise multiplication.
-template <class T, class U, std::size_t N>
-constexpr auto operator*(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r);
-
-/// @brief Scalar multiplication with a vector.
-/// @param l The scalar value.
-/// @param r The vector.
-/// @return The result of multiplying the scalar with each element of the vector.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator*(const U &l, const fsmlib::Vector<T, N> &r);
-
-/// @brief Vector multiplication with a scalar.
-/// @param l The vector.
-/// @param r The scalar value.
-/// @return The result of multiplying the scalar with each element of the vector.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator*(const fsmlib::Vector<T, N> &l, const U &r);
-
-/// @brief Vector division.
-/// @param l The left-hand side vector.
-/// @param r The right-hand side vector.
-/// @return The result of element-wise division.
-template <class T, class U, std::size_t N>
-constexpr auto operator/(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r);
-
-/// @brief Scalar division with a vector.
-/// @param l The scalar value.
-/// @param r The vector.
-/// @return The result of dividing the scalar by each element of the vector.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator/(const U &l, const fsmlib::Vector<T, N> &r);
-
-/// @brief Vector division with a scalar.
-/// @param l The vector.
-/// @param r The scalar value.
-/// @return The result of dividing each element of the vector by the scalar.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator/(const fsmlib::Vector<T, N> &l, const U &r);
-
-/// @brief Equality comparison for vectors.
-/// @param l The left-hand side vector.
-/// @param r The right-hand side vector.
-/// @return True if all elements of the vectors are equal, false otherwise.
-template <class T, class U, std::size_t N>
-constexpr auto operator==(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r);
-
-/// @brief Scalar equality comparison with a vector.
-/// @param l The scalar value.
-/// @param r The vector.
-/// @return True if the scalar equals all elements of the vector, false otherwise.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator==(const U &l, const fsmlib::Vector<T, N> &r);
-
-/// @brief Vector equality comparison with a scalar.
-/// @param l The vector.
-/// @param r The scalar value.
-/// @return True if the scalar equals all elements of the vector, false otherwise.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator==(const fsmlib::Vector<T, N> &l, const U &r);
-
-/// @brief Inequality comparison for vectors.
-/// @param l The left-hand side vector.
-/// @param r The right-hand side vector.
-/// @return True if at least an element is different, false otherwise.
-template <class T, class U, std::size_t N>
-constexpr auto operator!=(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r);
-
-/// @brief Scalar inequality comparison with a vector.
-/// @param l The scalar value.
-/// @param r The vector.
-/// @return True if the scalar is al least different from one element of the vector, false otherwise.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator!=(const U &l, const fsmlib::Vector<T, N> &r);
-
-/// @brief Vector inequality comparison with a scalar.
-/// @param l The vector.
-/// @param r The scalar value.
-/// @return True if the scalar is al least different from one element of the vector, false otherwise.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator!=(const fsmlib::Vector<T, N> &l, const U &r);
-
-/// @brief Element-wise addition assignment (Vector += Vector).
-/// @tparam T The type of elements in the left-hand vector.
-/// @tparam U The type of elements in the right-hand vector.
-/// @tparam N The size of the vectors.
-/// @param l The left-hand vector (modified in-place).
-/// @param r The right-hand vector.
-/// @return The modified left-hand vector.
-template <class T, class U, std::size_t N>
-constexpr auto operator+=(fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r);
-
-/// @brief Element-wise subtraction assignment (Vector -= Vector).
-/// @tparam T The type of elements in the left-hand vector.
-/// @tparam U The type of elements in the right-hand vector.
-/// @tparam N The size of the vectors.
-/// @param l The left-hand vector (modified in-place).
-/// @param r The right-hand vector.
-/// @return The modified left-hand vector.
-template <class T, class U, std::size_t N>
-constexpr auto operator-=(fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r);
-
-/// @brief Element-wise multiplication assignment (Vector *= Vector).
-/// @tparam T The type of elements in the left-hand vector.
-/// @tparam U The type of elements in the right-hand vector.
-/// @tparam N The size of the vectors.
-/// @param l The left-hand vector (modified in-place).
-/// @param r The right-hand vector.
-/// @return The modified left-hand vector.
-template <class T, class U, std::size_t N>
-constexpr auto operator*=(fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r);
-
-/// @brief Element-wise division assignment (Vector /= Vector).
-/// @tparam T The type of elements in the left-hand vector.
-/// @tparam U The type of elements in the right-hand vector.
-/// @tparam N The size of the vectors.
-/// @param l The left-hand vector (modified in-place).
-/// @param r The right-hand vector.
-/// @return The modified left-hand vector.
-template <class T, class U, std::size_t N>
-constexpr auto operator/=(fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r);
-
-/// @brief Scalar addition assignment (Vector += Scalar).
-/// @tparam T The type of elements in the vector.
-/// @tparam U The type of the scalar.
-/// @tparam N The size of the vector.
-/// @param l The vector (modified in-place).
-/// @param r The scalar value.
-/// @return The modified vector.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator+=(fsmlib::Vector<T, N> &l, const U &r);
-
-/// @brief Scalar subtraction assignment (Vector -= Scalar).
-/// @tparam T The type of elements in the vector.
-/// @tparam U The type of the scalar.
-/// @tparam N The size of the vector.
-/// @param l The vector (modified in-place).
-/// @param r The scalar value.
-/// @return The modified vector.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator-=(fsmlib::Vector<T, N> &l, const U &r);
-
-/// @brief Scalar multiplication assignment (Vector *= Scalar).
-/// @tparam T The type of elements in the vector.
-/// @tparam U The type of the scalar.
-/// @tparam N The size of the vector.
-/// @param l The vector (modified in-place).
-/// @param r The scalar value.
-/// @return The modified vector.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator*=(fsmlib::Vector<T, N> &l, const U &r);
-
-/// @brief Scalar division assignment (Vector /= Scalar).
-/// @tparam T The type of elements in the vector.
-/// @tparam U The type of the scalar.
-/// @tparam N The size of the vector.
-/// @param l The vector (modified in-place).
-/// @param r The scalar value.
-/// @return The modified vector.
-template <class T, class U, std::size_t N, typename = typename std::enable_if_t<std::is_arithmetic_v<U>, U>>
-constexpr auto operator/=(fsmlib::Vector<T, N> &l, const U &r);
-
 namespace fsmlib
 {
 
@@ -320,6 +114,40 @@ constexpr inline auto apply_binary_helper(
     return return_type_t{ func(l, r[N])... };
 }
 
+/// @brief Applies a unary operation element-wise to a vector.
+/// @tparam T The type of the vector elements.
+/// @tparam F The unary operation.
+/// @tparam N The indices of the elements to operate on.
+/// @param v The input vector.
+/// @param func The unary operation to apply.
+/// @param s The sequence of indices.
+/// @return The resulting vector after applying the operation.
+template <class T, class F, std::size_t... N>
+constexpr inline auto apply_unary_helper(
+    const fsmlib::Vector<T, sizeof...(N)> &v,
+    F func,
+    std::integer_sequence<std::size_t, N...> s)
+{
+    using return_type_t = fsmlib::Vector<decltype(func(v[0])), s.size()>;
+    return return_type_t{ func(v[N])... };
+}
+
+/// @brief Applies a unary operation element-wise to a vector (in-place).
+/// @tparam T The type of the vector elements.
+/// @tparam F The unary operation.
+/// @tparam N The indices of the elements to operate on.
+/// @param v The input vector (modified in-place).
+/// @param func The unary operation to apply.
+/// @param s The sequence of indices.
+template <class T, class F, std::size_t... N>
+constexpr inline void apply_unary_helper(
+    fsmlib::Vector<T, sizeof...(N)> &v,
+    F func,
+    std::integer_sequence<std::size_t, N...>)
+{
+    ((v[N] = func(v[N])), ...);
+}
+
 /// @brief Applies a unary operation to all elements of a container.
 /// @tparam N The number of elements.
 /// @tparam F The unary operation.
@@ -328,9 +156,21 @@ constexpr inline auto apply_binary_helper(
 /// @param arg The container to operate on.
 /// @return The resulting container after applying the operation.
 template <std::size_t N, class F, class T>
-constexpr auto apply_unary(F func, T &&arg)
+constexpr auto apply_unary(F func, const T &arg)
 {
     return apply_unary_helper(arg, func, std::make_integer_sequence<std::size_t, N>{});
+}
+
+/// @brief Applies a unary operation to all elements of a container (in-place).
+/// @tparam N The number of elements.
+/// @tparam F The unary operation.
+/// @tparam T The container type (modified in-place).
+/// @param func The unary operation to apply.
+/// @param arg The container to operate on (modified in-place).
+template <std::size_t N, class F, class T>
+constexpr void apply_unary(F func, T &arg)
+{
+    apply_unary_helper(arg, func, std::make_integer_sequence<std::size_t, N>{});
 }
 
 /// @brief Applies a binary operation to all elements of two containers.
@@ -361,109 +201,6 @@ constexpr void apply_binary(F func, T1 &arg1, const T2 &arg2)
 {
     apply_binary_helper(arg1, arg2, func, std::make_integer_sequence<std::size_t, N>{});
 }
-
-/// @brief Functor to compute the negation of a value.
-struct negate {
-    /// @brief Negates the given value.
-    /// @tparam T The type of the value.
-    /// @param l The value to negate.
-    /// @returns The negated value.
-    template <class T>
-    constexpr auto operator()(const T &l) const noexcept
-    {
-        return -l;
-    }
-};
-
-/// @brief Functor to compute the addition of two values.
-struct plus {
-    /// @brief Adds two values.
-    /// @tparam T The type of the first value.
-    /// @tparam U The type of the second value.
-    /// @param l The first value.
-    /// @param r The second value.
-    /// @returns The sum of the two values.
-    template <class T, class U>
-    constexpr auto operator()(const T &l, const U &r) const noexcept
-    {
-        return l + r;
-    }
-};
-
-/// @brief Functor to compute the subtraction of two values.
-struct minus {
-    /// @brief Subtracts the second value from the first value.
-    /// @tparam T The type of the first value.
-    /// @tparam U The type of the second value.
-    /// @param l The first value.
-    /// @param r The second value.
-    /// @returns The result of the subtraction.
-    template <class T, class U>
-    constexpr auto operator()(const T &l, const U &r) const noexcept
-    {
-        return l - r;
-    }
-};
-
-/// @brief Functor to compute the multiplication of two values.
-struct multiplies {
-    /// @brief Multiplies two values.
-    /// @tparam T The type of the first value.
-    /// @tparam U The type of the second value.
-    /// @param l The first value.
-    /// @param r The second value.
-    /// @returns The product of the two values.
-    template <class T, class U>
-    constexpr auto operator()(const T &l, const U &r) const noexcept
-    {
-        return l * r;
-    }
-};
-
-/// @brief Functor to compute the division of two values.
-struct divides {
-    /// @brief Divides the first value by the second value.
-    /// @tparam T The type of the first value.
-    /// @tparam U The type of the second value.
-    /// @param l The first value (numerator).
-    /// @param r The second value (denominator).
-    /// @returns The result of the division.
-    template <class T, class U>
-    constexpr auto operator()(const T &l, const U &r) const noexcept
-    {
-        return l / r;
-    }
-};
-
-/// @brief Functor to check equality between two values.
-struct equal {
-    /// @brief Checks if two values are equal.
-    /// @tparam T The type of the first value.
-    /// @tparam U The type of the second value.
-    /// @param l The first value.
-    /// @param r The second value.
-    /// @returns True if the two values are equal, false otherwise.
-    template <class T, class U>
-    constexpr auto operator()(const T &l, const U &r) const noexcept
-    {
-        return l == r;
-    }
-};
-
-/// @brief Functor to check inequality between two values.
-struct not_equal {
-    /// @brief Checks if two values are not equal.
-    /// @tparam T The type of the first value.
-    /// @tparam U The type of the second value.
-    /// @param l The first value.
-    /// @param r The second value.
-    /// @returns True if the two values are not equal, false otherwise.
-    template <class T, class U>
-    constexpr auto operator()(const T &l, const U &r) const noexcept
-    {
-        return l != r;
-    }
-};
 
 /// @brief Checks if two floating-point values are approximately equal.
 /// @tparam T1 The type of the first value.
@@ -720,152 +457,327 @@ inline void swap_rows(fsmlib::Matrix<T, N> &matrix, std::size_t i, std::size_t j
     }
 }
 
+/// @brief Computes the absolute value of each element in a vector.
+/// @tparam T The type of the elements in the vector.
+/// @tparam N The size of the vector.
+/// @param v The input vector.
+/// @returns A vector with the absolute value of each element.
+template <class T, std::size_t N>
+constexpr auto abs(const fsmlib::Vector<T, N> &v)
+{
+    if constexpr (std::is_arithmetic_v<T>) {
+        return fsmlib::details::apply_unary<N>([](const T &value) { return std::abs(value); }, v);
+    } else {
+        return fsmlib::details::apply_unary<N>([](const T &value) { return fsmlib::abs(value); }, v);
+    }
+}
+
+/// @brief Computes the square root of each element in a vector.
+/// @tparam T The type of the elements in the vector.
+/// @tparam N The size of the vector.
+/// @param v The input vector.
+/// @returns A vector with the square root of each element.
+template <class T, std::size_t N>
+constexpr auto sqrt(const fsmlib::Vector<T, N> &v)
+{
+    if constexpr (std::is_arithmetic_v<T>) {
+        return fsmlib::details::apply_unary<N>([](const T &value) { return std::sqrt(value); }, v);
+    } else {
+        return fsmlib::details::apply_unary<N>([](const T &value) { return fsmlib::sqrt(value); }, v);
+    }
+}
+
+/// @brief Computes the log of each element in a vector.
+/// @tparam T The type of the elements in the vector.
+/// @tparam N The size of the vector.
+/// @param v The input vector.
+/// @returns A vector with the log of each element.
+template <class T, std::size_t N>
+constexpr auto log(const fsmlib::Vector<T, N> &v)
+{
+    if constexpr (std::is_arithmetic_v<T>) {
+        return fsmlib::details::apply_unary<N>([](const T &value) { return std::log(value); }, v);
+    } else {
+        return fsmlib::details::apply_unary<N>([](const T &value) { return fsmlib::log(value); }, v);
+    }
+}
+
+template <typename E1,
+          typename E2,
+          typename Operation,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+constexpr auto apply_elementwise(const E1 &lhs, const E2 &rhs, Operation op)
+{
+    if constexpr (fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) {
+        // Both are containers with fixed sizes.
+        static_assert(fsmlib::fixed_size_v<E1> == fsmlib::fixed_size_v<E2>,
+                      "Sizes of the containers must match for element-wise operation");
+        using ResultType = decltype(op(lhs[0], rhs[0]));
+        fsmlib::Vector<ResultType, fsmlib::fixed_size_v<E1>> result;
+
+        for (std::size_t i = 0; i < lhs.size(); ++i) {
+            result[i] = op(lhs[i], rhs[i]);
+        }
+
+        return result;
+    } else if constexpr (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) {
+        // Left-hand side is a container, and right-hand side is a scalar.
+        using ResultType = decltype(op(lhs[0], rhs));
+        fsmlib::Vector<ResultType, fsmlib::fixed_size_v<E1>> result;
+
+        for (std::size_t i = 0; i < lhs.size(); ++i) {
+            result[i] = op(lhs[i], rhs);
+        }
+
+        return result;
+    } else if constexpr (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>) {
+        // Left-hand side is a scalar, and right-hand side is a container.
+        using ResultType = decltype(op(lhs, rhs[0]));
+        fsmlib::Vector<ResultType, fsmlib::fixed_size_v<E2>> result;
+
+        for (std::size_t i = 0; i < rhs.size(); ++i) {
+            result[i] = op(lhs, rhs[i]);
+        }
+
+        return result;
+    } else {
+        static_assert(fsmlib::always_false<E1, E2>::value, "Invalid types for element-wise operation");
+    }
+}
+
+template <typename E1,
+          typename E2,
+          typename Operation,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>)>>
+constexpr auto apply_elementwise(E1 &lhs, const E2 &rhs, Operation op)
+{
+    if constexpr (fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) {
+        // Both are containers with fixed sizes.
+        static_assert(fsmlib::fixed_size_v<E1> == fsmlib::fixed_size_v<E2>,
+                      "Sizes of the containers must match for element-wise operation");
+        for (std::size_t i = 0; i < lhs.size(); ++i) {
+            lhs[i] = op(lhs[i], rhs[i]); // Assign the result of the operation back to lhs
+        }
+        return lhs;
+    } else if constexpr (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) {
+        // lhs is a container, and rhs is a scalar.
+        for (std::size_t i = 0; i < lhs.size(); ++i) {
+            lhs[i] = op(lhs[i], rhs); // Assign the result of the operation back to lhs
+        }
+        return lhs;
+    } else {
+        static_assert(fsmlib::always_false<E1, E2>::value, "Invalid types for element-wise operation");
+    }
+}
+
 } // namespace fsmlib
 
-template <class T, class U, std::size_t N>
-constexpr auto operator+(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r)
+/// @brief Performs element-wise addition between two operands.
+///
+/// @tparam E1 The type of the left-hand side operand.
+/// @tparam E2 The type of the right-hand side operand.
+/// @param lhs The left-hand side operand (container or scalar).
+/// @param rhs The right-hand side operand (container or scalar).
+/// @return A new fsmlib::Vector containing the result of the element-wise addition.
+template <typename E1,
+          typename E2,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+constexpr auto operator+(const E1 &lhs, const E2 &rhs)
 {
-    return fsmlib::details::apply_binary<N>(fsmlib::details::plus{}, l, r);
+    return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a + b; });
 }
 
-template <class T, class U, std::size_t N, typename>
-constexpr auto operator+(const U &l, const fsmlib::Vector<T, N> &r)
+/// @brief Performs element-wise subtraction between two operands.
+///
+/// @tparam E1 The type of the left-hand side operand.
+/// @tparam E2 The type of the right-hand side operand.
+/// @param lhs The left-hand side operand (container or scalar).
+/// @param rhs The right-hand side operand (container or scalar).
+/// @return A new fsmlib::Vector containing the result of the element-wise subtraction.
+template <typename E1,
+          typename E2,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+constexpr auto operator-(const E1 &lhs, const E2 &rhs)
 {
-    return fsmlib::details::apply_binary<N>(fsmlib::details::plus{}, l, r);
+    return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a - b; });
 }
 
-template <class T, class U, std::size_t N, typename>
-constexpr auto operator+(const fsmlib::Vector<T, N> &l, const U &r)
+/// @brief Performs element-wise multiplication between two operands.
+///
+/// @tparam E1 The type of the left-hand side operand.
+/// @tparam E2 The type of the right-hand side operand.
+/// @param lhs The left-hand side operand (container or scalar).
+/// @param rhs The right-hand side operand (container or scalar).
+/// @return A new fsmlib::Vector containing the result of the element-wise multiplication.
+template <typename E1,
+          typename E2,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+constexpr auto operator*(const E1 &lhs, const E2 &rhs)
 {
-    return fsmlib::details::apply_binary<N>(fsmlib::details::plus{}, l, r);
+    return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a * b; });
 }
 
-template <class T, class U, std::size_t N>
-constexpr auto operator-(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r)
+/// @brief Performs element-wise division between two operands.
+///
+/// @tparam E1 The type of the left-hand side operand.
+/// @tparam E2 The type of the right-hand side operand.
+/// @param lhs The left-hand side operand (container or scalar).
+/// @param rhs The right-hand side operand (container or scalar).
+/// @return A new fsmlib::Vector containing the result of the element-wise division.
+template <typename E1,
+          typename E2,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+constexpr auto operator/(const E1 &lhs, const E2 &rhs)
 {
-    return fsmlib::details::apply_binary<N>(fsmlib::details::minus{}, l, r);
+    return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a / b; });
 }
 
-template <class T, class U, std::size_t N, typename>
-constexpr auto operator-(const U &l, const fsmlib::Vector<T, N> &r)
+/// @brief Performs element-wise equality comparison between two operands.
+///
+/// @tparam E1 The type of the left-hand side operand.
+/// @tparam E2 The type of the right-hand side operand.
+/// @param lhs The left-hand side operand (container or scalar).
+/// @param rhs The right-hand side operand (container or scalar).
+/// @return A new fsmlib::Vector containing the result of element-wise equality comparison.
+template <typename E1,
+          typename E2,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+constexpr auto operator==(const E1 &lhs, const E2 &rhs)
 {
-    return fsmlib::details::apply_binary<N>(fsmlib::details::minus{}, l, r);
+    return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a == b; });
 }
 
-template <class T, class U, std::size_t N, typename>
-constexpr auto operator-(const fsmlib::Vector<T, N> &l, const U &r)
+/// @brief Performs element-wise inequality comparison between two operands.
+///
+/// @tparam E1 The type of the left-hand side operand.
+/// @tparam E2 The type of the right-hand side operand.
+/// @param lhs The left-hand side operand (container or scalar).
+/// @param rhs The right-hand side operand (container or scalar).
+/// @return A new fsmlib::Vector containing the result of element-wise inequality comparison.
+template <typename E1,
+          typename E2,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+constexpr auto operator!=(const E1 &lhs, const E2 &rhs)
 {
-    return fsmlib::details::apply_binary<N>(fsmlib::details::minus{}, l, r);
+    return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a != b; });
 }
 
-template <class T, class U, std::size_t N>
-constexpr auto operator*(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r)
+/// @brief Performs element-wise less-than comparison between two operands.
+///
+/// @tparam E1 The type of the left-hand side operand.
+/// @tparam E2 The type of the right-hand side operand.
+/// @param lhs The left-hand side operand (container or scalar).
+/// @param rhs The right-hand side operand (container or scalar).
+/// @return A new fsmlib::Vector containing the result of element-wise less-than comparison.
+template <typename E1,
+          typename E2,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+constexpr auto operator<(const E1 &lhs, const E2 &rhs)
 {
-    return fsmlib::details::apply_binary<N>(fsmlib::details::multiplies{}, l, r);
+    return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a < b; });
 }
 
-template <class T, class U, std::size_t N, typename>
-constexpr auto operator*(const U &l, const fsmlib::Vector<T, N> &r)
+/// @brief Performs element-wise greater-than comparison between two operands.
+///
+/// @tparam E1 The type of the left-hand side operand.
+/// @tparam E2 The type of the right-hand side operand.
+/// @param lhs The left-hand side operand (container or scalar).
+/// @param rhs The right-hand side operand (container or scalar).
+/// @return A new fsmlib::Vector containing the result of element-wise greater-than comparison.
+template <typename E1,
+          typename E2,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+constexpr auto operator>(const E1 &lhs, const E2 &rhs)
 {
-    return fsmlib::details::apply_binary<N>(fsmlib::details::multiplies{}, l, r);
+    return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a > b; });
 }
 
-template <class T, class U, std::size_t N, typename>
-constexpr auto operator*(const fsmlib::Vector<T, N> &l, const U &r)
+/// @brief Performs element-wise less-than-or-equal comparison between two operands.
+///
+/// @tparam E1 The type of the left-hand side operand.
+/// @tparam E2 The type of the right-hand side operand.
+/// @param lhs The left-hand side operand (container or scalar).
+/// @param rhs The right-hand side operand (container or scalar).
+/// @return A new fsmlib::Vector containing the result of element-wise less-than-or-equal comparison.
+template <typename E1,
+          typename E2,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+constexpr auto operator<=(const E1 &lhs, const E2 &rhs)
 {
-    return fsmlib::details::apply_binary<N>(fsmlib::details::multiplies{}, l, r);
+    return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a <= b; });
 }
 
-template <class T, class U, std::size_t N>
-constexpr auto operator/(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r)
+/// @brief Performs element-wise greater-than-or-equal comparison between two operands.
+///
+/// @tparam E1 The type of the left-hand side operand.
+/// @tparam E2 The type of the right-hand side operand.
+/// @param lhs The left-hand side operand (container or scalar).
+/// @param rhs The right-hand side operand (container or scalar).
+/// @return A new fsmlib::Vector containing the result of element-wise greater-than-or-equal comparison.
+template <typename E1,
+          typename E2,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+constexpr auto operator>=(const E1 &lhs, const E2 &rhs)
 {
-    return fsmlib::details::apply_binary<N>(fsmlib::details::divides{}, l, r);
+    return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a >= b; });
 }
 
-template <class T, class U, std::size_t N, typename>
-constexpr auto operator/(const U &l, const fsmlib::Vector<T, N> &r)
+/// @brief Performs element-wise addition and assignment between two operands.
+///
+/// @tparam E1 The type of the left-hand side operand (container).
+/// @tparam E2 The type of the right-hand side operand (container or scalar).
+/// @param lhs The left-hand side operand, modified in place.
+/// @param rhs The right-hand side operand (container or scalar).
+/// @return The modified left-hand side operand after the addition.
+template <typename E1,
+          typename E2,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>)>>
+constexpr auto operator+=(E1 &lhs, const E2 &rhs)
 {
-    return fsmlib::details::apply_binary<N>(fsmlib::details::divides{}, l, r);
+    return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a + b; });
 }
 
-template <class T, class U, std::size_t N, typename>
-constexpr auto operator/(const fsmlib::Vector<T, N> &l, const U &r)
+/// @brief Performs element-wise subtraction and assignment between two operands.
+///
+/// @tparam E1 The type of the left-hand side operand (container).
+/// @tparam E2 The type of the right-hand side operand (container or scalar).
+/// @param lhs The left-hand side operand, modified in place.
+/// @param rhs The right-hand side operand (container or scalar).
+/// @return The modified left-hand side operand after the subtraction.
+template <typename E1,
+          typename E2,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>)>>
+constexpr auto operator-=(E1 &lhs, const E2 &rhs)
 {
-    return fsmlib::details::apply_binary<N>(fsmlib::details::divides{}, l, r);
+    return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a - b; });
 }
 
-template <class T, class U, std::size_t N>
-constexpr auto operator==(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r)
+/// @brief Performs element-wise multiplication and assignment between two operands.
+///
+/// @tparam E1 The type of the left-hand side operand (container).
+/// @tparam E2 The type of the right-hand side operand (container or scalar).
+/// @param lhs The left-hand side operand, modified in place.
+/// @param rhs The right-hand side operand (container or scalar).
+/// @return The modified left-hand side operand after the multiplication.
+template <typename E1,
+          typename E2,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>)>>
+constexpr auto operator*=(E1 &lhs, const E2 &rhs)
 {
-    return fsmlib::details::apply_binary<N>(fsmlib::details::equal{}, l, r);
+    return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a * b; });
 }
 
-template <class T, class U, std::size_t N>
-constexpr auto operator!=(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r)
+/// @brief Performs element-wise division and assignment between two operands.
+///
+/// @tparam E1 The type of the left-hand side operand (container).
+/// @tparam E2 The type of the right-hand side operand (container or scalar).
+/// @param lhs The left-hand side operand, modified in place.
+/// @param rhs The right-hand side operand (container or scalar).
+/// @return The modified left-hand side operand after the division.
+template <typename E1,
+          typename E2,
+          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>)>>
+constexpr auto operator/=(E1 &lhs, const E2 &rhs)
 {
-    return fsmlib::details::apply_binary<N>(fsmlib::details::not_equal{}, l, r);
-}
-
-// Element-wise addition (Vector += Vector)
-template <class T, class U, std::size_t N>
-constexpr auto operator+=(fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r)
-{
-    fsmlib::details::apply_binary<N>(fsmlib::details::plus{}, l, r);
-    return l;
-}
-
-// Element-wise subtraction (Vector -= Vector)
-template <class T, class U, std::size_t N>
-constexpr auto operator-=(fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r)
-{
-    fsmlib::details::apply_binary<N>(fsmlib::details::minus{}, l, r);
-    return l;
-}
-
-// Element-wise multiplication (Vector *= Vector)
-template <class T, class U, std::size_t N>
-constexpr auto operator*=(fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r)
-{
-    fsmlib::details::apply_binary<N>(fsmlib::details::multiplies{}, l, r);
-    return l;
-}
-
-// Element-wise division (Vector /= Vector)
-template <class T, class U, std::size_t N>
-constexpr auto operator/=(fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r)
-{
-    fsmlib::details::apply_binary<N>(fsmlib::details::divides{}, l, r);
-    return l;
-}
-
-// Scalar addition (Vector += Scalar)
-template <class T, class U, std::size_t N, typename>
-constexpr auto operator+=(fsmlib::Vector<T, N> &l, const U &r)
-{
-    fsmlib::details::apply_binary<N>(fsmlib::details::plus{}, l, r);
-    return l;
-}
-
-// Scalar subtraction (Vector -= Scalar)
-template <class T, class U, std::size_t N, typename>
-constexpr auto operator-=(fsmlib::Vector<T, N> &l, const U &r)
-{
-    fsmlib::details::apply_binary<N>(fsmlib::details::minus{}, l, r);
-    return l;
-}
-
-// Scalar multiplication (Vector *= Scalar)
-template <class T, class U, std::size_t N, typename>
-constexpr auto operator*=(fsmlib::Vector<T, N> &l, const U &r)
-{
-    fsmlib::details::apply_binary<N>(fsmlib::details::multiplies{}, l, r);
-    return l;
-}
-
-// Scalar division (Vector /= Scalar)
-template <class T, class U, std::size_t N, typename>
-constexpr auto operator/=(fsmlib::Vector<T, N> &l, const U &r)
-{
-    fsmlib::details::apply_binary<N>(fsmlib::details::divides{}, l, r);
-    return l;
+    return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a / b; });
 }

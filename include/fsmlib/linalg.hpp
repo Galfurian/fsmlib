@@ -36,7 +36,7 @@ constexpr inline auto infinity_norm(const fsmlib::Matrix<T, N1, N2> &A)
 /// @param A The input matrix.
 /// @returns A pair containing the number of scaling iterations and the scaling factor.
 template <typename T, std::size_t N1, std::size_t N2 = N1>
-constexpr inline auto log2_ceil(const fsmlib::Matrix<T, N1, N2> &A)
+constexpr inline auto scale_to_unit_norm(const fsmlib::Matrix<T, N1, N2> &A)
 {
     std::size_t iterations       = 0;
     std::remove_const_t<T> scale = 1.0;
@@ -273,6 +273,137 @@ template <typename T1, typename T2, std::size_t N>
     return fsmlib::multiply(A, linalg::inverse(B));
 }
 
+/// @brief Performs the QR decomposition of a fixed-size matrix.
+/// @tparam T The type of the matrix elements.
+/// @tparam Rows The number of rows in the matrix.
+/// @tparam Cols The number of columns in the matrix.
+/// @param A The input matrix to decompose.
+/// @return A pair of matrices (Q, R) representing the QR decomposition.
+template <typename T, std::size_t Rows, std::size_t Cols>
+constexpr auto qr_decomposition(const Matrix<T, Rows, Cols> &A)
+{
+    static_assert(Rows >= Cols, "The input matrix must have at least as many rows as columns.");
+    using DataType = std::remove_const_t<T>;
+    // Initialize R as a copy of A and Q as the identity matrix.
+    Matrix<DataType, Rows, Cols> R;
+    Matrix<DataType, Rows, Rows> Q;
+    for (std::size_t k = 0; k < Cols; ++k) {
+        // Compute the k-th column of Q.
+        for (std::size_t i = 0; i < Rows; ++i) {
+            Q[i][k] = A[i][k];
+        }
+        for (std::size_t j = 0; j < k; ++j) {
+            T dot_product = 0;
+            for (std::size_t i = 0; i < Rows; ++i) {
+                dot_product += Q[i][j] * A[i][k];
+            }
+            R[j][k] = dot_product;
+
+            for (std::size_t i = 0; i < Rows; ++i) {
+                Q[i][k] -= R[j][k] * Q[i][j];
+            }
+        }
+        // Normalize the k-th column of Q.
+        T norm = 0;
+        for (std::size_t i = 0; i < Rows; ++i) {
+            norm += Q[i][k] * Q[i][k];
+        }
+        R[k][k] = std::sqrt(norm);
+        for (std::size_t i = 0; i < Rows; ++i) {
+            Q[i][k] /= R[k][k];
+        }
+        if (R[k][k] > 0) {
+            R[k][k] = -R[k][k];
+            for (std::size_t i = 0; i < Rows; ++i) {
+                Q[i][k] = -Q[i][k];
+            }
+        }
+    }
+    return std::make_pair(Q, R);
+}
+
+/// @brief Performs the LU decomposition of a fixed-size matrix.
+/// @tparam T The type of the matrix elements.
+/// @tparam Rows The number of rows in the matrix.
+/// @tparam Cols The number of columns in the matrix (must equal Rows for LU decomposition).
+/// @param A The input square matrix to decompose.
+/// @return A pair of matrices (L, U) representing the LU decomposition, where L is lower triangular and U is upper triangular.
+template <typename T, std::size_t Rows, std::size_t Cols>
+constexpr auto lu_decomposition(const Matrix<T, Rows, Cols> &A)
+{
+    static_assert(Rows == Cols, "LU decomposition requires a square matrix.");
+    using DataType = std::remove_const_t<T>;
+
+    // Initialize L and U as zero matrices.
+    Matrix<DataType, Rows, Cols> L = {};
+    Matrix<DataType, Rows, Cols> U = {};
+
+    for (std::size_t i = 0; i < Rows; ++i) {
+        // Compute the upper triangular matrix U.
+        for (std::size_t k = i; k < Cols; ++k) {
+            T sum = 0;
+            for (std::size_t j = 0; j < i; ++j) {
+                sum += L[i][j] * U[j][k];
+            }
+            U[i][k] = A[i][k] - sum;
+        }
+
+        // Compute the lower triangular matrix L.
+        for (std::size_t k = i; k < Rows; ++k) {
+            if (i == k) {
+                // Diagonal elements of L are set to 1.
+                L[i][i] = 1;
+            } else {
+                T sum = 0;
+                for (std::size_t j = 0; j < i; ++j) {
+                    sum += L[k][j] * U[j][i];
+                }
+                L[k][i] = (A[k][i] - sum) / U[i][i];
+            }
+        }
+    }
+
+    return std::make_pair(L, U);
+}
+
+/// @brief Solves a linear system Ax = b using LU decomposition.
+/// @tparam T The type of the matrix and vector elements.
+/// @tparam Rows The number of rows in the matrix A.
+/// @tparam Cols The number of columns in the matrix A (must equal Rows for LU decomposition).
+/// @param A The square coefficient matrix.
+/// @param b The right-hand side vector.
+/// @return The solution vector x such that Ax = b.
+template <typename T, std::size_t Rows, std::size_t Cols>
+constexpr auto solve(const Matrix<T, Rows, Cols> &A, const Vector<T, Rows> &b)
+{
+    static_assert(Rows == Cols, "solve requires a square matrix for LU decomposition.");
+
+    // Perform LU decomposition
+    auto [L, U] = lu_decomposition(A);
+
+    // Forward substitution to solve Ly = b
+    Vector<T, Rows> y;
+    for (std::size_t i = 0; i < Rows; ++i) {
+        T sum = 0;
+        for (std::size_t j = 0; j < i; ++j) {
+            sum += L[i][j] * y[j];
+        }
+        y[i] = b[i] - sum;
+    }
+
+    // Back substitution to solve Ux = y
+    Vector<T, Rows> x;
+    for (std::size_t i = Rows; i-- > 0;) {
+        T sum = 0;
+        for (std::size_t j = i + 1; j < Rows; ++j) {
+            sum += U[i][j] * x[j];
+        }
+        x[i] = (y[i] - sum) / U[i][i];
+    }
+
+    return x;
+}
+
 /// @brief Computes the matrix exponential using a scaling and squaring method.
 /// @param A The input matrix.
 /// @param accuracy The desired accuracy (e.g., 1e-05).
@@ -280,29 +411,28 @@ template <typename T1, typename T2, std::size_t N>
 template <typename T, std::size_t N>
 inline auto expm(const fsmlib::Matrix<T, N, N> &A, double accuracy)
 {
-    const auto [iterations, scale] = fsmlib::linalg::log2_ceil(A);
+    const auto [iterations, scale] = fsmlib::linalg::scale_to_unit_norm(A);
     const auto scaled_a            = A * scale;
 
-    // Initialize
+    // Initialize.
     fsmlib::Matrix<T, N, N> term = fsmlib::eye<T, N, N>();
     fsmlib::Matrix<T, N, N> ret  = fsmlib::eye<T, N, N>();
     T fac_inv                    = 1.0;
 
-    for (std::size_t k = 1; k <= 50; ++k) { // Max iterations for safety
+    // Max iterations for safety.
+    for (std::size_t k = 1; k <= 1000; ++k) {
         fac_inv /= static_cast<double>(k);
         term = fsmlib::multiply(term, scaled_a) * fac_inv;
         ret  = ret + term;
-
-        if (fsmlib::linalg::square_norm(term) < accuracy) {
+        if (fsmlib::linalg::square_norm(term) < (accuracy * scale)) {
             break;
         }
     }
 
-    // Raise to power 2^iterations
+    // Raise to power 2^iterations.
     for (std::size_t k = 0; k < iterations; ++k) {
         ret = fsmlib::multiply(ret, ret);
     }
-
     return ret;
 }
 

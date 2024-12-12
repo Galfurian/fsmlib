@@ -19,24 +19,54 @@
 /// @tparam N The number of elements in the vector.
 /// @param os The output stream.
 /// @param vec The vector to print.
-/// @returns The output stream with the vector contents.
+/// @return The output stream with the vector contents.
 template <typename T, std::size_t N>
 std::ostream &operator<<(std::ostream &os, const fsmlib::Vector<T, N> &vec)
 {
-    // Determine the maximum width of the elements for alignment
+    // Determine the maximum width of the elements for alignment.
     std::size_t max_width = 0;
-    for (std::size_t i = 0; i < N; ++i) {
+    for (std::size_t i = 0; i < vec.size(); ++i) {
         std::ostringstream ss;
         ss << std::setprecision(6) << std::fixed << vec[i];
         max_width = std::max(max_width, ss.str().length());
     }
-    for (std::size_t i = 0; i < N; ++i) {
+
+    // Print the vector elements with consistent alignment.
+    for (std::size_t i = 0; i < vec.size(); ++i) {
         os << std::setw(static_cast<int>(max_width)) << std::setprecision(6) << std::fixed << vec[i];
-        // Space between elements.
-        if (i < N - 1) {
+        if (i < vec.size() - 1) {
             os << " ";
         }
     }
+
+    return os;
+}
+
+/// @brief Overload the << operator for View.
+/// @tparam T The type of the view elements.
+/// @tparam N The number of elements in the view.
+/// @param os The output stream.
+/// @param vec The view to print.
+/// @return The output stream with the view contents.
+template <typename T, std::size_t N>
+std::ostream &operator<<(std::ostream &os, const fsmlib::View<T, N> &vec)
+{
+    // Determine the maximum width of the elements for alignment.
+    std::size_t max_width = 0;
+    for (std::size_t i = 0; i < vec.size(); ++i) {
+        std::ostringstream ss;
+        ss << std::setprecision(6) << std::fixed << vec[i];
+        max_width = std::max(max_width, ss.str().length());
+    }
+
+    // Print the view elements with consistent alignment.
+    for (std::size_t i = 0; i < vec.size(); ++i) {
+        os << std::setw(static_cast<int>(max_width)) << std::setprecision(6) << std::fixed << vec[i];
+        if (i < vec.size() - 1) {
+            os << " ";
+        }
+    }
+
     return os;
 }
 
@@ -46,11 +76,11 @@ std::ostream &operator<<(std::ostream &os, const fsmlib::Vector<T, N> &vec)
 /// @tparam N2 The number of columns in the matrix.
 /// @param os The output stream.
 /// @param mat The matrix to print.
-/// @returns The output stream with the matrix contents.
+/// @return The output stream with the matrix contents.
 template <typename T, std::size_t N1, std::size_t N2>
 std::ostream &operator<<(std::ostream &os, const fsmlib::Matrix<T, N1, N2> &mat)
 {
-    // Determine the maximum width of the elements for alignment
+    // Determine the maximum width of the elements for alignment.
     std::size_t max_width = 0;
     for (std::size_t r = 0; r < N1; ++r) {
         for (std::size_t c = 0; c < N2; ++c) {
@@ -59,17 +89,52 @@ std::ostream &operator<<(std::ostream &os, const fsmlib::Matrix<T, N1, N2> &mat)
             max_width = std::max(max_width, ss.str().length());
         }
     }
-    // Format and print the matrix.
+
+    // Print the matrix rows.
     for (std::size_t r = 0; r < N1; ++r) {
         for (std::size_t c = 0; c < N2; ++c) {
             os << std::setw(static_cast<int>(max_width)) << std::setprecision(6) << std::fixed << mat[r][c];
-            // Space between columns.
             if (c < N2 - 1) {
                 os << " ";
             }
         }
         os << "\n";
     }
+
+    return os;
+}
+
+/// @brief Overload the << operator for MatrixView.
+/// @tparam T The type of the matrix view elements.
+/// @tparam N1 The number of rows in the view.
+/// @tparam N2 The number of columns in the view.
+/// @param os The output stream.
+/// @param mat The matrix view to print.
+/// @return The output stream with the matrix view contents.
+template <typename T, std::size_t N1, std::size_t N2>
+std::ostream &operator<<(std::ostream &os, const fsmlib::MatrixView<T, N1, N2> &mat)
+{
+    // Determine the maximum width of the elements for alignment.
+    std::size_t max_width = 0;
+    for (std::size_t r = 0; r < N1; ++r) {
+        for (std::size_t c = 0; c < N2; ++c) {
+            std::ostringstream ss;
+            ss << std::setprecision(6) << std::fixed << mat[r][c];
+            max_width = std::max(max_width, ss.str().length());
+        }
+    }
+
+    // Print the matrix view rows.
+    for (std::size_t r = 0; r < N1; ++r) {
+        for (std::size_t c = 0; c < N2; ++c) {
+            os << std::setw(static_cast<int>(max_width)) << std::setprecision(6) << std::fixed << mat[r][c];
+            if (c < N2 - 1) {
+                os << " ";
+            }
+        }
+        os << "\n";
+    }
+
     return os;
 }
 
