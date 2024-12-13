@@ -114,6 +114,136 @@ int main()
             std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: Simulate one step of a discrete-time model\n";
         }
 
+        {
+            fsmlib::Matrix<double, 3, 3> A = {
+                { 8., 1., 6. },
+                { 3., 5., 7. },
+                { 4., 9., 2. },
+            };
+            fsmlib::Matrix<double, 3, 1> B = {
+                { 1.0 },
+                { 0.0 },
+                { 0.0 }
+            };
+            auto result                           = fsmlib::control::ctrb(A, B);
+            fsmlib::Matrix<double, 3, 3> expected = {
+                { 1., 8., 91. },
+                { 0., 3., 67. },
+                { 0., 4., 67. },
+            };
+            if (fsmlib::any(result != expected)) {
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
+                throw std::runtime_error("Test failed: ctrb with 3x3 system");
+            }
+
+            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: ctrb with 3x3 system\n";
+        }
+        {
+            // Define a state matrix A and output matrix C
+            fsmlib::Matrix<double, 3, 3> A = {
+                { 1.0, 2.0, 0.0 },
+                { 0.0, 1.0, 3.0 },
+                { 0.0, 0.0, 1.0 },
+            };
+
+            fsmlib::Matrix<double, 2, 3> C = {
+                { 1.0, 0.0, 0.0 },
+                { 0.0, 1.0, 0.0 },
+            };
+            // Compute the observability matrix
+            auto result = fsmlib::control::obsv(A, C);
+            // Expected result (manually calculated or verified with Octave)
+            fsmlib::Matrix<double, 6, 3> expected = {
+                { 1., 0., 0. },
+                { 0., 1., 0. },
+                { 1., 2., 0. },
+                { 0., 1., 3. },
+                { 1., 4., 6. },
+                { 0., 1., 6. },
+            };
+            // Verify the result
+            if (fsmlib::any(result != expected)) {
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
+                throw std::runtime_error("Test failed: obsv with 3x3 state matrix and 2x3 output matrix");
+            }
+            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: obsv with 3x3 state matrix and 2x3 output matrix\n";
+        }
+
+        {
+            // Define the roots of the polynomial
+            fsmlib::Vector<double, 3> roots = { 2.0, -3.0, 1.5 };
+            // Compute the polynomial coefficients
+            auto result = fsmlib::control::poly(roots);
+            // Expected coefficients for polynomial.
+            fsmlib::Vector<double, 4> expected = { 1.0, -0.5, -7.5, 9.0 };
+            // Verify the result
+            if (fsmlib::any(result != expected)) {
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
+                throw std::runtime_error("Test failed: poly function with 3 roots");
+            }
+            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: poly function with 3 roots\n";
+        }
+
+        {
+            fsmlib::Vector<double, 6> coefficients = { 0, 0, 0, 1.0, -0.5, 9.0 };
+            // Reduce the polynomial coefficients
+            auto result = fsmlib::control::polyreduce(coefficients);
+            // Expected result
+            fsmlib::Vector<double, 6> expected = { 1.0, -0.5, 9.0, 0., 0., 0. };
+            if (fsmlib::any(result != expected)) {
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
+                throw std::runtime_error("Test failed: polyreduce");
+            }
+
+            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: polyreduce\n";
+        }
+
+        {
+            // Define the state matrix A and input matrix B
+            fsmlib::Matrix<double, 2, 2> A = { { 1.0, 2.0 }, { 3.0, 4.0 } };
+            fsmlib::Matrix<double, 2, 1> B = { { 0.0 }, { 1.0 } };
+            // Define the desired poles.
+            fsmlib::Vector<double, 2> poles = { -3.0, -2.0 };
+            // Compute the gain matrix using the acker function
+            auto result = fsmlib::control::acker(A, B, poles);
+            // Expected gain matrix
+            fsmlib::Matrix<double, 1, 2> expected = { { 9.0, 10.0 } };
+            if (fsmlib::any(result != expected)) {
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
+                throw std::runtime_error("Test failed: acker with 2x2 system and 2 poles");
+            }
+            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: acker with 2x2 system and 2 poles\n";
+        }
+        {
+            // Define the state matrix A and input matrix B.
+            fsmlib::Matrix<double, 3, 3> A = { { 1.5, -2.3, 0.7 }, { 3.1, 0.4, -1.2 }, { 0.0, 4.0, -0.5 } };
+            fsmlib::Matrix<double, 3, 1> B = { { 0.0 }, { 1.0 }, { 0.5 } };
+            // Define the desired poles.
+            fsmlib::Vector<double, 3> poles = { -4.0, -3.0, -2.0 };
+            // Compute the gain matrix using the acker function.
+            auto result = fsmlib::control::acker(A, B, poles);
+            // Expected gain matrix (precomputed for the given input).
+            fsmlib::Matrix<double, 1, 3> expected = { { 30.3346, -1.3159, 23.4318 } };
+            // Validate the result.
+            if (fsmlib::any(fsmlib::abs(result - expected) > 1e-03)) {
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
+                throw std::runtime_error("Test failed: acker with 3x3 system and 3 poles");
+            }
+            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: acker with 3x3 system and 3 poles\n";
+        }
+
         std::cout << "All control tests passed!\n";
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;

@@ -152,6 +152,60 @@ int main()
             std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: MatrixView creation and access\n";
         }
 
+        {
+            fsmlib::Matrix<int, 2, 2> A = {
+                { { 1, 2 },
+                  { 3, 4 } }
+            };
+            fsmlib::Matrix<int, 2, 3> B = {
+                { { 5, 6, 7 },
+                  { 8, 9, 10 } }
+            };
+
+            auto result = fsmlib::hstack(A, B);
+
+            fsmlib::Matrix<int, 2, 5> expected = {
+                { { 1, 2, 5, 6, 7 },
+                  { 3, 4, 8, 9, 10 } }
+            };
+
+            if (fsmlib::any(result != expected)) {
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
+                throw std::runtime_error("Test failed: hstack");
+            }
+
+            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: hstack\n";
+        }
+
+        {
+            fsmlib::Matrix<int, 2, 3> A = {
+                { { 1, 2, 3 },
+                  { 4, 5, 6 } }
+            };
+            fsmlib::Matrix<int, 1, 3> B = {
+                { { 7, 8, 9 } }
+            };
+
+            auto result = fsmlib::vstack(A, B);
+
+            fsmlib::Matrix<int, 3, 3> expected = {
+                { { 1, 2, 3 },
+                  { 4, 5, 6 },
+                  { 7, 8, 9 } }
+            };
+
+            if (fsmlib::any(result != expected)) {
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
+                throw std::runtime_error("Test failed: vstack");
+            }
+
+            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: vstack\n";
+        }
+
         // Additional tests for access...
         std::cout << "All access tests passed!\n";
     } catch (const std::exception &e) {

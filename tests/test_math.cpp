@@ -449,6 +449,28 @@ int main()
             std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: Vector / View division with offset\n";
         }
 
+        {
+            fsmlib::Matrix<double, 2, 2> A = { { 1.0, 2.0 }, { 3.0, 4.0 } };
+            double tr                      = trace(A);
+            double expected                = 1.0 + 4.0;
+            if (std::abs(tr - expected) > 1e-6) {
+                std::cerr << "Expected trace: " << expected << "\nGot trace: " << tr << "\n";
+                throw std::runtime_error("Test failed: trace of a 2x2 matrix");
+            }
+            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: trace of a 2x2 matrix\n";
+        }
+
+        {
+            fsmlib::Matrix<double, 3, 3> B = { { 5.0, 2.0, 3.0 }, { 1.0, 6.0, 4.0 }, { 7.0, 8.0, 9.0 } };
+            double tr                      = trace(B);
+            double expected                = 5.0 + 6.0 + 9.0;
+            if (std::abs(tr - expected) > 1e-6) {
+                std::cerr << "Expected trace: " << expected << "\nGot trace: " << tr << "\n";
+                throw std::runtime_error("Test failed: trace of a 3x3 matrix");
+            }
+            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: trace of a 3x3 matrix\n";
+        }
+
         std::cout << "All math tests passed!\n";
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;

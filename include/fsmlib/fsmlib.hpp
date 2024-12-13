@@ -401,4 +401,98 @@ constexpr auto to_vector(const fsmlib::Matrix<T, 1, Cols> &mat)
     return vec;
 }
 
+/// @brief Horizontally stacks two matrices.
+/// @tparam T The type of the matrix elements.
+/// @tparam Rows The number of rows in both matrices.
+/// @tparam Cols1 The number of columns in the first matrix.
+/// @tparam Cols2 The number of columns in the second matrix.
+/// @param A The first matrix (Rows x Cols1).
+/// @param B The second matrix (Rows x Cols2).
+/// @return A matrix of size Rows x (Cols1 + Cols2) containing A and B stacked horizontally.
+template <typename T, std::size_t Rows, std::size_t Cols1, std::size_t Cols2>
+constexpr Matrix<T, Rows, Cols1 + Cols2> hstack(const Matrix<T, Rows, Cols1> &A, const Matrix<T, Rows, Cols2> &B)
+{
+    Matrix<T, Rows, Cols1 + Cols2> result = {};
+
+    // Copy the elements of A
+    for (std::size_t i = 0; i < Rows; ++i) {
+        for (std::size_t j = 0; j < Cols1; ++j) {
+            result[i][j] = A[i][j];
+        }
+    }
+
+    // Copy the elements of B
+    for (std::size_t i = 0; i < Rows; ++i) {
+        for (std::size_t j = 0; j < Cols2; ++j) {
+            result[i][Cols1 + j] = B[i][j];
+        }
+    }
+
+    return result;
+}
+
+/// @brief Vertically stacks two matrices.
+/// @tparam T The type of the matrix elements.
+/// @tparam Cols The number of columns in both matrices.
+/// @tparam Rows1 The number of rows in the first matrix.
+/// @tparam Rows2 The number of rows in the second matrix.
+/// @param A The first matrix (Rows1 x Cols).
+/// @param B The second matrix (Rows2 x Cols).
+/// @return A matrix of size (Rows1 + Rows2) x Cols containing A and B stacked vertically.
+template <typename T, std::size_t Rows1, std::size_t Rows2, std::size_t Cols>
+constexpr Matrix<T, Rows1 + Rows2, Cols> vstack(const Matrix<T, Rows1, Cols> &A, const Matrix<T, Rows2, Cols> &B)
+{
+    Matrix<T, Rows1 + Rows2, Cols> result = {};
+
+    // Copy the elements of A
+    for (std::size_t i = 0; i < Rows1; ++i) {
+        for (std::size_t j = 0; j < Cols; ++j) {
+            result[i][j] = A[i][j];
+        }
+    }
+
+    // Copy the elements of B
+    for (std::size_t i = 0; i < Rows2; ++i) {
+        for (std::size_t j = 0; j < Cols; ++j) {
+            result[Rows1 + i][j] = B[i][j];
+        }
+    }
+
+    return result;
+}
+
+/// @brief Creates a matrix filled with zeros.
+/// @tparam T The type of the elements in the matrix.
+/// @tparam Rows The number of rows in the matrix.
+/// @tparam Cols The number of columns in the matrix.
+/// @return A matrix of size Rows x Cols filled with zeros.
+template <typename T, std::size_t Rows, std::size_t Cols>
+constexpr fsmlib::Matrix<T, Rows, Cols> zeros()
+{
+    fsmlib::Matrix<T, Rows, Cols> result = {};
+    for (std::size_t i = 0; i < Rows; ++i) {
+        for (std::size_t j = 0; j < Cols; ++j) {
+            result[i][j] = static_cast<T>(0);
+        }
+    }
+    return result;
+}
+
+/// @brief Creates a matrix filled with ones.
+/// @tparam T The type of the elements in the matrix.
+/// @tparam Rows The number of rows in the matrix.
+/// @tparam Cols The number of columns in the matrix.
+/// @return A matrix of size Rows x Cols filled with ones.
+template <typename T, std::size_t Rows, std::size_t Cols>
+constexpr fsmlib::Matrix<T, Rows, Cols> ones()
+{
+    fsmlib::Matrix<T, Rows, Cols> result = {};
+    for (std::size_t i = 0; i < Rows; ++i) {
+        for (std::size_t j = 0; j < Cols; ++j) {
+            result[i][j] = static_cast<T>(1);
+        }
+    }
+    return result;
+}
+
 } // namespace fsmlib

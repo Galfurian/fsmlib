@@ -502,6 +502,22 @@ constexpr auto log(const fsmlib::Vector<T, N> &v)
     }
 }
 
+/// @brief Computes the trace of a square matrix, i.e., the sum of the elements along the main diagonal.
+/// @tparam T The type of the matrix elements.
+/// @tparam Size The size of the square matrix (Size x Size).
+/// @param A The input square matrix.
+/// @return The sum of the diagonal elements.
+template <typename T, std::size_t Size>
+constexpr T trace(const fsmlib::Matrix<T, Size, Size> &A)
+{
+    T result = 0;
+    // Sum the diagonal elements.
+    for (std::size_t i = 0; i < Size; ++i) {
+        result += A[i][i];
+    }
+    return result;
+}
+
 template <typename E1,
           typename E2,
           typename Operation,

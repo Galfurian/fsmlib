@@ -436,5 +436,60 @@ inline auto expm(const fsmlib::Matrix<T, N, N> &A, double accuracy)
     return ret;
 }
 
+/// @brief Computes the matrix power A^p for a square matrix A.
+/// @tparam T The type of the matrix elements.
+/// @tparam Size The size of the square matrix A (Size x Size).
+/// @param A The input square matrix.
+/// @param p The non-negative integer power to raise the matrix to.
+/// @return The resulting matrix A^p.
+template <typename T, std::size_t Size>
+constexpr Matrix<T, Size, Size> powm(const Matrix<T, Size, Size> &A, std::size_t p)
+{
+    // Initialize the result as the identity matrix
+    Matrix<T, Size, Size> result = {};
+    for (std::size_t i = 0; i < Size; ++i) {
+        result[i][i] = 1;
+    }
+
+    // Temporary variable to store intermediate results
+    Matrix<T, Size, Size> base = A;
+
+    // Perform exponentiation by squaring
+    while (p > 0) {
+        if (p % 2 == 1) {
+            // Multiply result by the current base matrix
+            Matrix<T, Size, Size> temp = {};
+            for (std::size_t i = 0; i < Size; ++i) {
+                for (std::size_t j = 0; j < Size; ++j) {
+                    T sum = 0;
+                    for (std::size_t k = 0; k < Size; ++k) {
+                        sum += result[i][k] * base[k][j];
+                    }
+                    temp[i][j] = sum;
+                }
+            }
+            result = temp;
+        }
+
+        // Square the base matrix
+        Matrix<T, Size, Size> temp = {};
+        for (std::size_t i = 0; i < Size; ++i) {
+            for (std::size_t j = 0; j < Size; ++j) {
+                T sum = 0;
+                for (std::size_t k = 0; k < Size; ++k) {
+                    sum += base[i][k] * base[k][j];
+                }
+                temp[i][j] = sum;
+            }
+        }
+        base = temp;
+
+        // Divide the power by 2
+        p /= 2;
+    }
+
+    return result;
+}
+
 } // namespace linalg
 } // namespace fsmlib
