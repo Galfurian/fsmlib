@@ -352,7 +352,7 @@ constexpr auto view(const Matrix<T, MatrixRows, MatrixCols> &matrix, std::size_t
 /// @param vec The input vector.
 /// @return A Matrix with one column (if IsColumn is true) or one row (if IsColumn is false).
 template <bool IsColumn, typename T, std::size_t N>
-constexpr auto to_matrix(const fsmlib::Vector<T, N> &vec)
+[[nodiscard]] constexpr auto to_matrix(const fsmlib::Vector<T, N> &vec)
 {
     if constexpr (IsColumn) {
         // Create a column matrix

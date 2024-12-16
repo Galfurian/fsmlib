@@ -79,17 +79,22 @@ inline auto square_norm(const fsmlib::Matrix<T, N1, N2> &A)
     return std::sqrt(accum);
 }
 
-/// @brief Converts a vector to a column matrix.
-/// @param v The input vector.
-/// @returns The column matrix representation of the vector.
-template <class T, std::size_t Cols>
-[[nodiscard]] constexpr fsmlib::Matrix<T, Cols, 1> to_matrix(const fsmlib::Vector<T, Cols> &v) noexcept
+/// @brief Computes the Frobenius norm of a matrix.
+/// @tparam T The type of the matrix elements.
+/// @tparam Rows The number of rows in the matrix.
+/// @tparam Cols The number of columns in the matrix.
+/// @param mat The input matrix.
+/// @return The Frobenius norm of the matrix.
+template <typename T, std::size_t Rows, std::size_t Cols>
+constexpr T frobenius_norm(const fsmlib::Matrix<T, Rows, Cols> &mat)
 {
-    fsmlib::Matrix<T, Cols, 1> ret;
-    for (std::size_t i = 0; i < Cols; ++i) {
-        ret[i][0] = v[i];
+    T sum = 0;
+    for (std::size_t i = 0; i < Rows; ++i) {
+        for (std::size_t j = 0; j < Cols; ++j) {
+            sum += mat[i][j] * mat[i][j];
+        }
     }
-    return ret;
+    return std::sqrt(sum);
 }
 
 /// @brief Computes the transpose of a matrix.
@@ -630,6 +635,8 @@ constexpr Matrix<T, Size, Size> powm(const Matrix<T, Size, Size> &A, std::size_t
 /// @tparam T The type of the matrix elements.
 /// @tparam N The size of the square matrix (N x N).
 /// @param mat The input symmetric matrix.
+/// @param max_iterations The maximum number of iterations.
+/// @param tol The convergence tolerance.
 /// @return A pair consisting of:
 ///         - A vector of eigenvalues.
 ///         - A matrix whose columns are the corresponding eigenvectors.
@@ -666,15 +673,12 @@ constexpr Matrix<T, Size, Size> powm(const Matrix<T, Size, Size> &A, std::size_t
 /// @note This implementation is optimized for fixed-size matrices and may not
 /// handle large, ill-conditioned matrices efficiently.
 template <typename T, std::size_t N>
-constexpr std::pair<fsmlib::Vector<T, N>, fsmlib::Matrix<T, N, N>> eigen(const fsmlib::Matrix<T, N, N> &mat)
+constexpr std::pair<fsmlib::Vector<T, N>, fsmlib::Matrix<T, N, N>> eigen(const fsmlib::Matrix<T, N, N> &mat, std::size_t max_iterations = 1000, T tolerance = 1e-9)
 {
-    constexpr T epsilon                  = 1e-9; // Tolerance for convergence
-    constexpr std::size_t max_iterations = 1000;
-
     // Ensure the input matrix is symmetric.
     for (std::size_t i = 0; i < N; ++i) {
         for (std::size_t j = 0; j < i; ++j) {
-            if (std::abs(mat[i][j] - mat[j][i]) > epsilon) {
+            if (std::abs(mat[i][j] - mat[j][i]) > tolerance) {
                 throw std::runtime_error("Eigen decomposition: Matrix is not symmetric.");
             }
         }
@@ -713,7 +717,7 @@ constexpr std::pair<fsmlib::Vector<T, N>, fsmlib::Matrix<T, N, N>> eigen(const f
             }
 
             // Check for convergence
-            if (std::abs(new_lambda - lambda) < epsilon) {
+            if (std::abs(new_lambda - lambda) < tolerance) {
                 break;
             }
 
@@ -753,6 +757,38 @@ constexpr std::pair<fsmlib::Vector<T, N>, fsmlib::Matrix<T, N, N>> eigen(const f
     }
 
     return { eigenvalues, eigenvectors };
+}
+
+/// @brief Computes the dominant eigenvalue and eigenvector of a matrix using power iteration.
+/// @tparam T The type of the matrix elements.
+/// @tparam N The size of the square matrix.
+/// @param mat The input matrix.
+/// @param max_iterations The maximum number of iterations.
+/// @param tolerance The convergence tolerance.
+/// @return A pair containing:
+///         - The dominant eigenvalue.
+///         - The corresponding eigenvector.
+template <typename T, std::size_t N>
+constexpr std::pair<T, fsmlib::Vector<T, N>> power_iteration(const fsmlib::Matrix<T, N, N> &mat, std::size_t max_iterations = 1000, T tolerance = 1e-6)
+{
+    fsmlib::Vector<T, N> eigenvector = fsmlib::ones<T, N>();                      // Initial guess
+    eigenvector                      = eigenvector / frobenius_norm(eigenvector); // Normalize
+
+    T eigenvalue = 0;
+    for (std::size_t iter = 0; iter < max_iterations; ++iter) {
+        auto next_vector = mat * eigenvector; // Matrix-vector multiplication
+        T next_norm      = fsmlib::linalg::frobenius_norm(next_vector);
+        next_vector      = next_vector / next_norm; // Normalize
+
+        if (std::abs(next_norm - eigenvalue) < tolerance) {
+            break;
+        }
+
+        eigenvalue  = next_norm;
+        eigenvector = next_vector;
+    }
+
+    return { eigenvalue, eigenvector };
 }
 
 } // namespace linalg
