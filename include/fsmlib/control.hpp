@@ -21,7 +21,7 @@ namespace control
 /// @tparam N_input The number of inputs.
 /// @tparam N_output The number of outputs.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-struct state_space_t {
+struct StateSpace {
     fsmlib::Matrix<T, N_state, N_state> A;  ///< System matrix.
     fsmlib::Matrix<T, N_state, N_input> B;  ///< Input matrix.
     fsmlib::Matrix<T, N_output, N_state> C; ///< Output matrix.
@@ -34,7 +34,7 @@ struct state_space_t {
 /// @tparam N_input The number of inputs.
 /// @tparam N_output The number of outputs.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-struct discrete_state_space_t {
+struct DiscreteStateSpace {
     fsmlib::Matrix<T, N_state, N_state> A;  ///< System matrix.
     fsmlib::Matrix<T, N_state, N_input> B;  ///< Input matrix.
     fsmlib::Matrix<T, N_output, N_state> C; ///< Output matrix.
@@ -51,9 +51,9 @@ struct discrete_state_space_t {
 /// @param sample_time The sample time for discretization.
 /// @returns The discretized state-space model.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-inline auto c2d(const state_space_t<T, N_state, N_input, N_output> &sys, T sample_time)
+inline auto c2d(const StateSpace<T, N_state, N_input, N_output> &sys, T sample_time)
 {
-    discrete_state_space_t<T, N_state, N_input, N_output> dsys;
+    DiscreteStateSpace<T, N_state, N_input, N_output> dsys;
 
     // Discretize the system matrix using matrix exponential.
     dsys.A = fsmlib::linalg::expm(sys.A * sample_time, 1e-06);
@@ -89,7 +89,7 @@ inline auto c2d(const state_space_t<T, N_state, N_input, N_output> &sys, T sampl
 /// \f$ y = C \cdot x + D \cdot u \f$.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
 inline void step(
-    const discrete_state_space_t<T, N_state, N_input, N_output> &dsys,
+    const DiscreteStateSpace<T, N_state, N_input, N_output> &dsys,
     const Vector<T, N_state> &x,
     const Vector<T, N_input> &u,
     Vector<T, N_state> &state,

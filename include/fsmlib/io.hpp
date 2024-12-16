@@ -147,7 +147,7 @@ std::ostream &operator<<(std::ostream &os, const fsmlib::MatrixView<T, N1, N2> &
 /// @param ss The continuous-time state-space model.
 /// @returns The output stream with the state-space model contents.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-inline std::ostream &operator<<(std::ostream &os, const fsmlib::control::state_space_t<T, N_state, N_input, N_output> &ss)
+inline std::ostream &operator<<(std::ostream &os, const fsmlib::control::StateSpace<T, N_state, N_input, N_output> &ss)
 {
     os << "A =\n"
        << ss.A << "\n"
@@ -170,7 +170,7 @@ inline std::ostream &operator<<(std::ostream &os, const fsmlib::control::state_s
 /// @param ss The discrete-time state-space model.
 /// @returns The output stream with the state-space model contents.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-inline std::ostream &operator<<(std::ostream &os, const fsmlib::control::discrete_state_space_t<T, N_state, N_input, N_output> &ss)
+inline std::ostream &operator<<(std::ostream &os, const fsmlib::control::DiscreteStateSpace<T, N_state, N_input, N_output> &ss)
 {
     os << "A =\n"
        << ss.A << "\n"

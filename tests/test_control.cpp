@@ -15,7 +15,7 @@ int main()
         // Test 1: Continuous-to-Discrete Conversion
         {
             // Define a continuous-time state-space model
-            fsmlib::control::state_space_t<double, 2, 1, 1> sys = {
+            fsmlib::control::StateSpace<double, 2, 1, 1> sys = {
                 { { 0.0, 1.0 }, { -10.0, -2.0 } }, // A matrix
                 { { 0.0 }, { 1.0 } },              // B matrix
                 { { 1.0, 0.0 } },                  // C matrix
@@ -82,7 +82,7 @@ int main()
         // Test 2: Simulate one step of a discrete-time model
         {
             // Define a discrete-time state-space model
-            fsmlib::control::discrete_state_space_t<double, 2, 1, 1> dsys = {
+            fsmlib::control::DiscreteStateSpace<double, 2, 1, 1> dsys = {
                 { { 0.904837, 0.0951626 }, { -0.951626, 0.809685 } },
                 { { 0.00483742 }, { 0.0951626 } },
                 { { 1.0, 0.0 } },
