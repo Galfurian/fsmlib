@@ -8,6 +8,7 @@
 #pragma once
 
 #include "fsmlib/math.hpp"
+#include <array>
 
 namespace fsmlib
 {
@@ -273,6 +274,78 @@ template <typename T1, typename T2, std::size_t N>
     return fsmlib::multiply(A, linalg::inverse(B));
 }
 
+/// @brief Computes the rank of a matrix using Gaussian elimination.
+/// @tparam T The type of the matrix elements.
+/// @tparam Rows The number of rows in the matrix.
+/// @tparam Cols The number of columns in the matrix.
+/// @param mat The input matrix.
+/// @return The rank of the matrix.
+/// @details
+/// This function calculates the rank of the input matrix by performing Gaussian elimination.
+/// The rank is defined as the number of linearly independent rows or columns in the matrix.
+/// A small tolerance (\( \epsilon = 1e-9 \)) is used to handle floating-point precision issues.
+///
+/// The rank is determined as the number of non-zero rows in the row-echelon form of the matrix.
+///
+/// Example usage:
+/// @code
+/// fsmlib::Matrix<double, 4, 4> mat = {
+///     { {1.0, 2.0, 3.0, 4.0},
+///       {5.0, 6.0, 7.0, 8.0},
+///       {9.0, 10.0, 11.0, 12.0},
+///       {13.0, 14.0, 15.0, 16.0} }
+/// };
+/// auto r = fsmlib::linalg::rank(mat);
+/// @endcode
+/// @note The matrix is modified in-place during the Gaussian elimination process.
+template <typename T, std::size_t Rows, std::size_t Cols>
+[[nodiscard]] constexpr std::size_t rank(fsmlib::Matrix<T, Rows, Cols> mat)
+{
+    constexpr T epsilon = 1e-9; // Small value to handle floating-point precision issues
+    std::size_t rank    = 0;
+
+    // Perform Gaussian elimination
+    for (std::size_t col = 0, row = 0; col < Cols && row < Rows; ++col) {
+        // Find the pivot
+        std::size_t pivot = row;
+        for (std::size_t i = row + 1; i < Rows; ++i) {
+            if (std::abs(mat[i][col]) > std::abs(mat[pivot][col])) {
+                pivot = i;
+            }
+        }
+
+        // If the pivot is effectively zero, skip this column
+        if (std::abs(mat[pivot][col]) < epsilon) {
+            continue;
+        }
+
+        // Swap the current row with the pivot row
+        for (std::size_t j = 0; j < Cols; ++j) {
+            std::swap(mat[row][j], mat[pivot][j]);
+        }
+
+        // Normalize the pivot row
+        T pivot_value = mat[row][col];
+        for (std::size_t j = 0; j < Cols; ++j) {
+            mat[row][j] /= pivot_value;
+        }
+
+        // Eliminate the column below the pivot
+        for (std::size_t i = row + 1; i < Rows; ++i) {
+            T factor = mat[i][col];
+            for (std::size_t j = 0; j < Cols; ++j) {
+                mat[i][j] -= factor * mat[row][j];
+            }
+        }
+
+        // Increment the rank and move to the next row
+        ++rank;
+        ++row;
+    }
+
+    return rank;
+}
+
 /// @brief Performs the QR decomposition of a fixed-size matrix.
 /// @tparam T The type of the matrix elements.
 /// @tparam Rows The number of rows in the matrix.
@@ -364,6 +437,68 @@ constexpr auto lu_decomposition(const Matrix<T, Rows, Cols> &A)
     }
 
     return std::make_pair(L, U);
+}
+
+/// @brief Computes the Cholesky decomposition of a symmetric positive-definite matrix.
+/// @tparam T The type of the matrix elements.
+/// @tparam N The size of the square matrix (N x N).
+/// @param mat The input symmetric positive-definite matrix.
+/// @return A lower triangular matrix \( L \) such that \( A = L \cdot L^T \).
+/// @throws std::runtime_error If the input matrix is not symmetric or not positive definite.
+/// @details
+/// This function computes the Cholesky decomposition, which decomposes a symmetric positive-definite
+/// matrix \( A \) into the product of a lower triangular matrix \( L \) and its transpose \( L^T \),
+/// i.e., \( A = L \cdot L^T \). The input matrix must satisfy the following conditions:
+/// - Symmetry: \( A_{ij} = A_{ji} \).
+/// - Positive definiteness: All eigenvalues of \( A \) must be positive.
+///
+/// Example usage:
+/// @code
+/// fsmlib::Matrix<double, 3, 3> A = {
+///     { { 4.0, 12.0, -16.0 },
+///       { 12.0, 37.0, -43.0 },
+///       { -16.0, -43.0, 98.0 } }
+/// };
+/// auto L = fsmlib::linalg::cholesky_decomposition(A);
+/// @endcode
+template <typename T, std::size_t N>
+[[nodiscard]] constexpr fsmlib::Matrix<T, N, N> cholesky_decomposition(const fsmlib::Matrix<T, N, N> &mat)
+{
+    // Ensure the input matrix is symmetric
+    for (std::size_t i = 0; i < N; ++i) {
+        for (std::size_t j = 0; j < i; ++j) {
+            if (mat[i][j] != mat[j][i]) {
+                throw std::runtime_error("Cholesky decomposition: Matrix is not symmetric.");
+            }
+        }
+    }
+
+    fsmlib::Matrix<T, N, N> lower = {}; // Lower triangular matrix
+
+    for (std::size_t i = 0; i < N; ++i) {
+        for (std::size_t j = 0; j <= i; ++j) {
+            T sum = 0;
+
+            // Summation for diagonal and non-diagonal elements
+            for (std::size_t k = 0; k < j; ++k) {
+                sum += lower[i][k] * lower[j][k];
+            }
+
+            if (i == j) {
+                // Diagonal elements
+                T diag = mat[i][i] - sum;
+                if (diag <= 0) {
+                    throw std::runtime_error("Cholesky decomposition: Matrix is not positive definite.");
+                }
+                lower[i][j] = std::sqrt(diag);
+            } else {
+                // Non-diagonal elements
+                lower[i][j] = (mat[i][j] - sum) / lower[j][j];
+            }
+        }
+    }
+
+    return lower;
 }
 
 /// @brief Solves a linear system Ax = b using LU decomposition.
@@ -489,6 +624,135 @@ constexpr Matrix<T, Size, Size> powm(const Matrix<T, Size, Size> &A, std::size_t
     }
 
     return result;
+}
+
+/// @brief Computes the eigenvalues and eigenvectors of a symmetric matrix.
+/// @tparam T The type of the matrix elements.
+/// @tparam N The size of the square matrix (N x N).
+/// @param mat The input symmetric matrix.
+/// @return A pair consisting of:
+///         - A vector of eigenvalues.
+///         - A matrix whose columns are the corresponding eigenvectors.
+/// @throws std::runtime_error If the input matrix is not symmetric.
+/// @details
+/// This function calculates the eigenvalues and eigenvectors of a symmetric
+/// matrix using a combination of power iteration and Rayleigh quotient
+/// iteration for dominant eigenpair extraction, followed by deflation to
+/// compute the remaining eigenpairs.
+///
+/// The input matrix must be symmetric (\( A_{ij} = A_{ji} \)), which guarantees
+/// real eigenvalues and orthogonal eigenvectors. The output is as follows:
+/// - The eigenvalues are returned in a vector, sorted in descending order of magnitude.
+/// - The eigenvectors are returned as columns of the resulting matrix.
+///
+/// The decomposition satisfies the equation:
+/// \f[
+/// A \cdot v = \lambda \cdot v
+/// \f]
+/// where \f$ \lambda \f$ is an eigenvalue, and \f$ v \f$ is the corresponding eigenvector.
+///
+/// Example usage:
+/// @code
+/// fsmlib::Matrix<double, 3, 3> A = {
+///     { { 6.0, 2.0, 1.0 },
+///       { 2.0, 3.0, 1.0 },
+///       { 1.0, 1.0, 1.0 } }
+/// };
+/// auto [eigenvalues, eigenvectors] = fsmlib::linalg::eigen(A);
+/// std::cout << "Eigenvalues:\n" << eigenvalues << "\n";
+/// std::cout << "Eigenvectors:\n" << eigenvectors << "\n";
+/// @endcode
+/// @note The matrix must be symmetric for this function to work correctly.
+/// @note This implementation is optimized for fixed-size matrices and may not
+/// handle large, ill-conditioned matrices efficiently.
+template <typename T, std::size_t N>
+constexpr std::pair<fsmlib::Vector<T, N>, fsmlib::Matrix<T, N, N>> eigen(const fsmlib::Matrix<T, N, N> &mat)
+{
+    constexpr T epsilon                  = 1e-9; // Tolerance for convergence
+    constexpr std::size_t max_iterations = 1000;
+
+    // Ensure the input matrix is symmetric.
+    for (std::size_t i = 0; i < N; ++i) {
+        for (std::size_t j = 0; j < i; ++j) {
+            if (std::abs(mat[i][j] - mat[j][i]) > epsilon) {
+                throw std::runtime_error("Eigen decomposition: Matrix is not symmetric.");
+            }
+        }
+    }
+
+    fsmlib::Vector<T, N> eigenvalues     = {};                       // Eigenvalues
+    fsmlib::Matrix<T, N, N> eigenvectors = fsmlib::zeros<T, N, N>(); // Eigenvectors
+
+    // Copy of the matrix to perform deflation
+    fsmlib::Matrix<T, N, N> A = mat;
+
+    for (std::size_t k = 0; k < N; ++k) {
+        // Start with a random initial vector
+        fsmlib::Vector<T, N> v = fsmlib::ones<T, N>(); // Use a vector of ones as the initial guess
+        v[0]                   = 1.0;                  // Ensure non-zero
+
+        // Normalize the initial vector
+        T norm = std::sqrt(fsmlib::inner_product(v, v));
+        for (std::size_t i = 0; i < N; ++i) {
+            v[i] /= norm;
+        }
+
+        T lambda = 0; // Eigenvalue approximation
+
+        for (std::size_t iter = 0; iter < max_iterations; ++iter) {
+            // Multiply A * v
+            auto Av = fsmlib::multiply(A, v);
+
+            // Compute Rayleigh quotient for the eigenvalue
+            T new_lambda = fsmlib::inner_product(v, Av);
+
+            // Normalize Av to get the next iteration of v
+            norm = std::sqrt(fsmlib::inner_product(Av, Av));
+            for (std::size_t i = 0; i < N; ++i) {
+                v[i] = Av[i] / norm;
+            }
+
+            // Check for convergence
+            if (std::abs(new_lambda - lambda) < epsilon) {
+                break;
+            }
+
+            lambda = new_lambda;
+        }
+
+        // Store the eigenvalue and eigenvector
+        eigenvalues[k] = lambda;
+        for (std::size_t i = 0; i < N; ++i) {
+            eigenvectors[i][k] = v[i];
+        }
+
+        // Deflate the matrix to find the next eigenpair
+        auto vvT = fsmlib::outer_product(v, v);
+        for (std::size_t i = 0; i < N; ++i) {
+            for (std::size_t j = 0; j < N; ++j) {
+                A[i][j] -= lambda * vvT[i][j];
+            }
+        }
+    }
+
+    // Sorting eigenvalues in ascending order and reordering eigenvectors
+    std::array<std::pair<T, fsmlib::Vector<T, N>>, N> eig_pairs;
+    for (std::size_t i = 0; i < N; ++i) {
+        eig_pairs[i].first  = eigenvalues[i];
+        eig_pairs[i].second = fsmlib::column(eigenvectors, i);
+    }
+
+    std::sort(eig_pairs.begin(), eig_pairs.end(),
+              [](const auto &a, const auto &b) { return a.first < b.first; });
+
+    for (std::size_t i = 0; i < N; ++i) {
+        eigenvalues[i] = eig_pairs[i].first;
+        for (std::size_t j = 0; j < N; ++j) {
+            eigenvectors[j][i] = eig_pairs[i].second[j];
+        }
+    }
+
+    return { eigenvalues, eigenvectors };
 }
 
 } // namespace linalg

@@ -1,0 +1,45 @@
+name: Build with Multiple Compilers
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include: [
+          { pkgs: "gcc-10 g++-10", cc: gcc-10, cxx: g++-10, os: ubuntu-latest },
+          { pkgs: "gcc-11 g++-11", cc: gcc-11, cxx: g++-11, os: ubuntu-latest },
+          { pkgs: "gcc-12 g++-12", cc: gcc-12, cxx: g++-12, os: ubuntu-latest },
+          { pkgs: "clang-13 clang++-13", cc: clang-13, cxx: clang++-13, os: ubuntu-latest },
+          { pkgs: "clang-14 clang++-14", cc: clang-14, cxx: clang++-14, os: ubuntu-latest },
+          { pkgs: "clang-15 clang++-15", cc: clang-15, cxx: clang++-15, os: ubuntu-latest }
+        ]
+
+    env:
+      CC: ${{ matrix.cc }}
+      CXX: ${{ matrix.cxx }}
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    - name: Install Compiler Dependencies for HIF
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ${{ matrix.pkgs }}
+
+    - name: Build Project
+      run: |
+        mkdir -p build
+        cd build
+        cmake -DCMAKE_C_COMPILER=${{ env.CC }} -DCMAKE_CXX_COMPILER=${{ env.CXX }} ..
+        cmake --build . --parallel 2

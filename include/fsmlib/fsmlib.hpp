@@ -495,4 +495,73 @@ constexpr fsmlib::Matrix<T, Rows, Cols> ones()
     return result;
 }
 
+/// @brief Creates a vector filled with zeros.
+/// @tparam T The type of the elements in the vector.
+/// @tparam N The number of elements in the vector.
+/// @return A vector of size N filled with zeros.
+template <typename T, std::size_t N>
+constexpr fsmlib::Vector<T, N> zeros()
+{
+    fsmlib::Vector<T, N> result = {};
+    for (std::size_t i = 0; i < N; ++i) {
+        result[i] = static_cast<T>(0);
+    }
+    return result;
+}
+
+/// @brief Creates a vector filled with ones.
+/// @tparam T The type of the elements in the vector.
+/// @tparam N The number of elements in the vector.
+/// @return A vector of size N filled with ones.
+template <typename T, std::size_t N>
+constexpr fsmlib::Vector<T, N> ones()
+{
+    fsmlib::Vector<T, N> result = {};
+    for (std::size_t i = 0; i < N; ++i) {
+        result[i] = static_cast<T>(1);
+    }
+    return result;
+}
+
+/// @brief Extracts a column from the matrix.
+/// @tparam T The type of the matrix elements.
+/// @tparam N1 The number of rows in the matrix.
+/// @tparam N2 The number of columns in the matrix.
+/// @param mat The input matrix.
+/// @param col_index The index of the column to extract.
+/// @return A vector containing the elements of the specified column.
+/// @throws std::out_of_range If the column index is out of bounds.
+template <typename T, std::size_t N1, std::size_t N2>
+constexpr fsmlib::Vector<T, N1> column(const fsmlib::Matrix<T, N1, N2> &mat, std::size_t col_index)
+{
+    if (col_index >= N2) {
+        throw std::out_of_range("column: Column index out of bounds");
+    }
+
+    fsmlib::Vector<T, N1> col_vector = {};
+    for (std::size_t i = 0; i < N1; ++i) {
+        col_vector[i] = mat[i][col_index];
+    }
+
+    return col_vector;
+}
+
+/// @brief Extracts a row from the matrix.
+/// @tparam T The type of the matrix elements.
+/// @tparam N1 The number of rows in the matrix.
+/// @tparam N2 The number of columns in the matrix.
+/// @param mat The input matrix.
+/// @param row_index The index of the row to extract.
+/// @return A vector containing the elements of the specified row.
+/// @throws std::out_of_range If the row index is out of bounds.
+template <typename T, std::size_t N1, std::size_t N2>
+constexpr fsmlib::Vector<T, N2> row(const fsmlib::Matrix<T, N1, N2> &mat, std::size_t row_index)
+{
+    if (row_index >= N1) {
+        throw std::out_of_range("row: Row index out of bounds");
+    }
+
+    return mat[row_index];
+}
+
 } // namespace fsmlib

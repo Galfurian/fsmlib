@@ -275,6 +275,19 @@ constexpr inline auto inner_product(const fsmlib::Vector<T, N> &l, const fsmlib:
     return ret;
 }
 
+/// @brief Computes the dot product (inner product) of two vectors.
+/// @tparam T The type of the first vector elements.
+/// @tparam U The type of the second vector elements.
+/// @tparam N The number of elements in the vectors.
+/// @param l The first vector.
+/// @param r The second vector.
+/// @returns The inner product of the two vectors.
+template <class T, class U, std::size_t N>
+constexpr inline auto dot(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r)
+{
+    return fsmlib::inner_product(l, r);
+}
+
 /// @brief Computes the outer product of two vectors.
 /// @tparam T The type of the first vector elements.
 /// @tparam U The type of the second vector elements.

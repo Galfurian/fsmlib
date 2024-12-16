@@ -90,8 +90,8 @@ Output:
 #include <iostream>
 
 int main() {
-    fsmlib::Matrix<int, 2, 2> mat1 = {{{1, 2}, {3, 4}}};
-    fsmlib::Matrix<int, 2, 2> mat2 = {{{5, 6}, {7, 8}}};
+    fsmlib::Matrix<int, 2, 2> mat1 = {{1, 2}, {3, 4}};
+    fsmlib::Matrix<int, 2, 2> mat2 = {{5, 6}, {7, 8}};
     
     auto result = mat1 + mat2;
 

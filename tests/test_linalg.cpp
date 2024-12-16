@@ -431,6 +431,161 @@ int main()
             std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: solve with 4x4 system\n";
         }
 
+        {
+            // Define a symmetric positive-definite matrix
+            fsmlib::Matrix<double, 3, 3> A = {
+                { { 4.0, 12.0, -16.0 },
+                  { 12.0, 37.0, -43.0 },
+                  { -16.0, -43.0, 98.0 } }
+            };
+
+            // Perform Cholesky decomposition
+            auto L = fsmlib::linalg::cholesky_decomposition(A);
+
+            // Expected lower triangular matrix
+            fsmlib::Matrix<double, 3, 3> expected_L = {
+                { { 2.0, 0.0, 0.0 },
+                  { 6.0, 1.0, 0.0 },
+                  { -8.0, 5.0, 3.0 } }
+            };
+
+            // Reconstruct the original matrix from L
+            auto reconstructed_A = fsmlib::multiply(L, fsmlib::linalg::transpose(L));
+
+            // Check if the decomposition matches the expected result
+            if (fsmlib::any(fsmlib::abs(L - expected_L) > 1e-3)) {
+                std::cerr << "Expected L:\n"
+                          << expected_L << "\nGot L:\n"
+                          << L << "\n";
+                throw std::runtime_error("Test failed: Cholesky decomposition (L mismatch)");
+            }
+
+            // Check if reconstruction matches the original matrix
+            if (fsmlib::any(fsmlib::abs(reconstructed_A - A) > 1e-3)) {
+                std::cerr << "Expected A:\n"
+                          << A << "\nGot Reconstructed A:\n"
+                          << reconstructed_A << "\n";
+                throw std::runtime_error("Test failed: Cholesky decomposition (reconstruction mismatch)");
+            }
+
+            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: Cholesky decomposition\n";
+        }
+
+        {
+            // Define a 4x4 matrix
+            fsmlib::Matrix<double, 4, 4> mat = {
+                { { 1.0, 2.0, 3.0, 4.0 },
+                  { 5.0, 6.0, 7.0, 8.0 },
+                  { 9.0, 10.0, 11.0, 12.0 },
+                  { 13.0, 14.0, 15.0, 16.0 } }
+            };
+
+            // Compute the rank
+            std::size_t computed_rank = fsmlib::linalg::rank(mat);
+
+            // Expected rank
+            std::size_t expected_rank = 2;
+
+            // Verify the result
+            if (computed_rank != expected_rank) {
+                std::cerr << "Expected rank: " << expected_rank
+                          << "\nGot rank: " << computed_rank << "\n";
+                throw std::runtime_error("Test failed: rank computation for 4x4 matrix");
+            }
+
+            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: rank computation for 4x4 matrix\n";
+        }
+
+        {
+            // Define a 2x2 symmetric matrix
+            fsmlib::Matrix<double, 2, 2> A = { { 4.0, 1.0 }, { 1.0, 3.0 } };
+
+            // Perform eigen decomposition
+            auto [eigenvalues, eigenvectors] = fsmlib::linalg::eigen(A);
+
+            // Expected eigenvalues.
+            fsmlib::Vector<double, 2> expected_eigenvalues = { 2.382, 4.618 };
+
+            // Expected eigenvectors.
+            fsmlib::Matrix<double, 2, 2> expected_eigenvectors = { { -0.526, 0.851 }, { 0.851, 0.526 } };
+
+            // Verify eigenvalues by comparing with expected values.
+            for (std::size_t i = 0; i < 2; ++i) {
+                if (std::abs(eigenvalues[i] - expected_eigenvalues[i]) > 1e-3) {
+                    std::cerr << "Expected : " << expected_eigenvalues << "\n";
+                    std::cerr << "Got      : " << eigenvalues << "\n";
+                    throw std::runtime_error("Test failed: eigenvalues mismatch");
+                }
+            }
+
+            // Verify eigenvectors by comparing each element of the matrix
+            for (std::size_t i = 0; i < 2; ++i) {
+                for (std::size_t j = 0; j < 2; ++j) {
+                    if (std::abs(eigenvectors[i][j] - expected_eigenvectors[i][j]) > 1e-3) {
+                        std::cerr << "Expected :\n"
+                                  << expected_eigenvectors << "\n";
+                        std::cerr << "Got      :\n"
+                                  << eigenvectors << "\n";
+                        throw std::runtime_error("Test failed: eigenvectors mismatch");
+                    }
+                }
+            }
+
+            // If no mismatches are found, the test passes
+            std::cout << "Test " << std::setw(2) << std::right << test_count++
+                      << " passed: eigen decomposition for 2x2 matrix\n";
+        }
+
+        {
+            // Define a 4x4 symmetric matrix with more complex floating-point values
+            fsmlib::Matrix<double, 4, 4> A = {
+                { 5.5, -2.3, 1.7, 3.9 },
+                { -2.3, 6.8, 2.1, -1.4 },
+                { 1.7, 2.1, 7.2, 0.5 },
+                { 3.9, -1.4, 0.5, 4.3 },
+            };
+
+            // Perform eigen decomposition
+            auto [eigenvalues, eigenvectors] = fsmlib::linalg::eigen(A);
+
+            // Expected eigenvalues.
+            fsmlib::Vector<double, 4> expected_eigenvalues = { 0.7314, 3.4125, 8.9685, 10.6876 };
+
+            // Expected eigenvectors.
+            fsmlib::Matrix<double, 4, 4> expected_eigenvectors = {
+                { 0.698290, 0.185699, 0.218389, 0.655906 },
+                { 0.176076, 0.658882, 0.494653, -0.538693 },
+                { -0.189077, -0.516567, 0.832130, 0.070480 },
+                { -0.667561, 0.514344, 0.123223, 0.524050 },
+            };
+
+            // Verify eigenvalues
+            for (std::size_t i = 0; i < 4; ++i) {
+                if (std::abs(eigenvalues[i] - expected_eigenvalues[i]) > 1e-3) {
+                    std::cerr << "Expected : " << expected_eigenvalues << "\n";
+                    std::cerr << "Got      : " << eigenvalues << "\n";
+                    throw std::runtime_error("Test failed: eigenvalues mismatch for 4x4 matrix");
+                }
+            }
+
+            // Verify eigenvectors
+            for (std::size_t i = 0; i < 4; ++i) {
+                for (std::size_t j = 0; j < 4; ++j) {
+                    if (std::abs(eigenvectors[i][j] - expected_eigenvectors[i][j]) > 1e-3) {
+                        std::cerr << "Expected :\n"
+                                  << expected_eigenvectors << "\n";
+                        std::cerr << "Got      :\n"
+                                  << eigenvectors << "\n";
+                        throw std::runtime_error("Test failed: eigenvectors mismatch for 4x4 matrix");
+                    }
+                }
+            }
+
+            // If no mismatches are found, the test passes
+            std::cout << "Test " << std::setw(2) << std::right << test_count++
+                      << " passed: eigen decomposition for 4x4 matrix\n";
+        }
+
         std::cout << "All linear algebra tests passed!\n";
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
