@@ -98,7 +98,9 @@ std::ostream &operator<<(std::ostream &os, const fsmlib::Matrix<T, N1, N2> &mat)
                 os << " ";
             }
         }
-        os << "\n";
+        if (r < N1 - 1) {
+            os << "\n";
+        }
     }
 
     return os;
@@ -170,7 +172,8 @@ inline std::ostream &operator<<(std::ostream &os, const fsmlib::control::StateSp
 /// @param ss The discrete-time state-space model.
 /// @returns The output stream with the state-space model contents.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-inline std::ostream &operator<<(std::ostream &os, const fsmlib::control::DiscreteStateSpace<T, N_state, N_input, N_output> &ss)
+inline std::ostream &operator<<(std::ostream &os,
+                                const fsmlib::control::DiscreteStateSpace<T, N_state, N_input, N_output> &ss)
 {
     os << "A =\n"
        << ss.A << "\n"
@@ -184,3 +187,56 @@ inline std::ostream &operator<<(std::ostream &os, const fsmlib::control::Discret
        << "Discrete-time state-space model.\n";
     return os;
 }
+
+namespace fsmlib
+{
+#include <sstream>
+#include <iomanip>
+
+/// @brief Converts a fixed-size vector to an Octave-compatible variable assignment.
+/// @tparam T The type of the vector elements.
+/// @tparam N The size of the vector.
+/// @param name The name of the variable.
+/// @param vec The input vector.
+/// @returns A string representing the vector in Octave format.
+template <typename T, std::size_t N>
+inline std::string to_octave(const std::string &name, const fsmlib::Vector<T, N> &vec)
+{
+    std::ostringstream ss;
+    ss << name << " = [";
+    for (std::size_t i = 0; i < N; ++i) {
+        ss << std::setprecision(6) << vec[i];
+        if (i < N - 1) {
+            ss << ", ";
+        }
+    }
+    ss << "];";
+    return ss.str();
+}
+
+/// @brief Converts a fixed-size matrix to an Octave-compatible variable assignment.
+/// @tparam T The type of the matrix elements.
+/// @tparam Rows The number of rows in the matrix.
+/// @tparam Cols The number of columns in the matrix.
+/// @param name The name of the variable.
+/// @param mat The input matrix.
+/// @returns A string representing the matrix in Octave format.
+template <typename T, std::size_t Rows, std::size_t Cols>
+inline std::string to_octave(const std::string &name, const fsmlib::Matrix<T, Rows, Cols> &mat)
+{
+    std::ostringstream ss;
+    ss << name << " = [";
+    for (std::size_t i = 0; i < Rows; ++i) {
+        for (std::size_t j = 0; j < Cols; ++j) {
+            ss << std::setprecision(6) << mat[i][j];
+            if (j < Cols - 1) {
+                ss << ", ";
+            }
+        }
+        ss << ";";
+    }
+    ss << "];";
+    return ss.str();
+}
+
+} // namespace fsmlib

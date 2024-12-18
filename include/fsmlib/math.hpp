@@ -26,7 +26,8 @@ namespace details
 /// @param func The binary operation to apply.
 /// @return The resulting vector after applying the operation.
 template <class T, class U, class F, std::size_t... N>
-constexpr inline auto apply_binary_helper(
+[[nodiscard]] constexpr inline auto
+apply_binary_helper(
     const fsmlib::Vector<T, sizeof...(N)> &l,
     const fsmlib::Vector<U, sizeof...(N)> &r,
     F func,
@@ -45,7 +46,8 @@ constexpr inline auto apply_binary_helper(
 /// @param r The second vector.
 /// @param func The binary operation to apply.
 template <class T, class U, class F, std::size_t... N>
-constexpr inline void apply_binary_helper(
+constexpr inline void
+apply_binary_helper(
     fsmlib::Vector<T, sizeof...(N)> &l,
     const fsmlib::Vector<U, sizeof...(N)> &r,
     F func,
@@ -65,7 +67,8 @@ constexpr inline void apply_binary_helper(
 /// @param s The sequence of indices.
 /// @return The resulting vector after applying the operation.
 template <class T, class U, class F, std::size_t... N>
-constexpr inline auto apply_binary_helper(
+[[nodiscard]] constexpr inline auto
+apply_binary_helper(
     const fsmlib::Vector<T, sizeof...(N)> &l,
     const U &r,
     F func,
@@ -84,7 +87,8 @@ constexpr inline auto apply_binary_helper(
 /// @param r The scalar.
 /// @param func The binary operation to apply.
 template <class T, class U, class F, std::size_t... N>
-constexpr inline void apply_binary_helper(
+constexpr inline void
+apply_binary_helper(
     fsmlib::Vector<T, sizeof...(N)> &l,
     const U &r,
     F func,
@@ -104,7 +108,8 @@ constexpr inline void apply_binary_helper(
 /// @param s The sequence of indices.
 /// @return The resulting vector after applying the operation.
 template <class T, class U, class F, std::size_t... N>
-constexpr inline auto apply_binary_helper(
+[[nodiscard]] constexpr inline auto
+apply_binary_helper(
     const U &l,
     const fsmlib::Vector<T, sizeof...(N)> &r,
     F func,
@@ -123,7 +128,8 @@ constexpr inline auto apply_binary_helper(
 /// @param s The sequence of indices.
 /// @return The resulting vector after applying the operation.
 template <class T, class F, std::size_t... N>
-constexpr inline auto apply_unary_helper(
+[[nodiscard]] constexpr inline auto
+apply_unary_helper(
     const fsmlib::Vector<T, sizeof...(N)> &v,
     F func,
     std::integer_sequence<std::size_t, N...> s)
@@ -140,7 +146,8 @@ constexpr inline auto apply_unary_helper(
 /// @param func The unary operation to apply.
 /// @param s The sequence of indices.
 template <class T, class F, std::size_t... N>
-constexpr inline void apply_unary_helper(
+constexpr inline void
+apply_unary_helper(
     fsmlib::Vector<T, sizeof...(N)> &v,
     F func,
     std::integer_sequence<std::size_t, N...>)
@@ -156,7 +163,8 @@ constexpr inline void apply_unary_helper(
 /// @param arg The container to operate on.
 /// @return The resulting container after applying the operation.
 template <std::size_t N, class F, class T>
-constexpr auto apply_unary(F func, const T &arg)
+[[nodiscard]] constexpr inline auto
+apply_unary(F func, const T &arg)
 {
     return apply_unary_helper(arg, func, std::make_integer_sequence<std::size_t, N>{});
 }
@@ -168,7 +176,8 @@ constexpr auto apply_unary(F func, const T &arg)
 /// @param func The unary operation to apply.
 /// @param arg The container to operate on (modified in-place).
 template <std::size_t N, class F, class T>
-constexpr void apply_unary(F func, T &arg)
+constexpr inline void
+apply_unary(F func, T &arg)
 {
     apply_unary_helper(arg, func, std::make_integer_sequence<std::size_t, N>{});
 }
@@ -183,7 +192,8 @@ constexpr void apply_unary(F func, T &arg)
 /// @param arg2 The second container.
 /// @return The resulting container after applying the operation.
 template <std::size_t N, class F, class T1, class T2>
-constexpr auto apply_binary(F func, const T1 &arg1, const T2 &arg2)
+[[nodiscard]] constexpr inline auto
+apply_binary(F func, const T1 &arg1, const T2 &arg2)
 {
     return apply_binary_helper(arg1, arg2, func, std::make_integer_sequence<std::size_t, N>{});
 }
@@ -248,7 +258,8 @@ inline bool approximately_greater_than_equal(T1 a, T2 b)
 /// @param value The value to place on the diagonal (default is 1).
 /// @returns An identity matrix with the specified diagonal value.
 template <class T, std::size_t N1, std::size_t N2 = N1>
-constexpr inline auto eye(T value = 1)
+[[nodiscard]] constexpr inline auto
+eye(T value = 1)
 {
     constexpr std::size_t cnt = N1 < N2 ? N1 : N2;
     fsmlib::Matrix<T, N1, N2> r{};
@@ -266,7 +277,8 @@ constexpr inline auto eye(T value = 1)
 /// @param r The second vector.
 /// @returns The inner product of the two vectors.
 template <class T, class U, std::size_t N>
-constexpr inline auto inner_product(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r)
+[[nodiscard]] constexpr inline auto
+inner_product(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r)
 {
     decltype(l[0] * r[0]) ret{};
     for (std::size_t i = 0; i < N; ++i) {
@@ -283,7 +295,8 @@ constexpr inline auto inner_product(const fsmlib::Vector<T, N> &l, const fsmlib:
 /// @param r The second vector.
 /// @returns The inner product of the two vectors.
 template <class T, class U, std::size_t N>
-constexpr inline auto dot(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r)
+[[nodiscard]] constexpr inline auto
+dot(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U, N> &r)
 {
     return fsmlib::inner_product(l, r);
 }
@@ -297,7 +310,8 @@ constexpr inline auto dot(const fsmlib::Vector<T, N> &l, const fsmlib::Vector<U,
 /// @param rv The second vector.
 /// @returns A matrix representing the outer product of the two vectors.
 template <class T, class U, std::size_t M, std::size_t N>
-constexpr inline auto outer_product(const fsmlib::Vector<T, M> &lv, const fsmlib::Vector<U, N> &rv)
+[[nodiscard]] constexpr inline auto
+outer_product(const fsmlib::Vector<T, M> &lv, const fsmlib::Vector<U, N> &rv)
 {
     fsmlib::Matrix<decltype(lv[0] * rv[0]), M, N> ret{};
     for (std::size_t r = 0; r < M; ++r) {
@@ -315,10 +329,13 @@ constexpr inline auto outer_product(const fsmlib::Vector<T, M> &lv, const fsmlib
 /// @param mat The matrix to multiply.
 /// @param vec The vector to multiply.
 /// @returns A vector representing the result of the multiplication.
-template <typename T, std::size_t N1, std::size_t N2>
-constexpr inline auto multiply(const Matrix<T, N1, N2> &mat, const Vector<T, N2> &vec)
+template <typename T1, typename T2, std::size_t N1, std::size_t N2>
+[[nodiscard]] constexpr inline auto
+multiply(const Matrix<T1, N1, N2> &mat, const Vector<T2, N2> &vec)
 {
-    Vector<T, N1> result = {};
+    using result_type_t = std::remove_const_t<std::common_type_t<T1, T2>>;
+    // Prepare the result.Z
+    fsmlib::Vector<result_type_t, N1> result = {};
     for (std::size_t i = 0; i < N1; ++i) {
         for (std::size_t j = 0; j < N2; ++j) {
             result[i] += mat[i][j] * vec[j];
@@ -337,17 +354,22 @@ constexpr inline auto multiply(const Matrix<T, N1, N2> &mat, const Vector<T, N2>
 /// @param B The second matrix.
 /// @returns The resulting matrix after multiplication.
 template <typename T1, typename T2, std::size_t N1, std::size_t N2, std::size_t N3>
-constexpr inline auto multiply(const fsmlib::Matrix<T1, N1, N2> &A, const fsmlib::Matrix<T2, N2, N3> &B)
+[[nodiscard]] constexpr inline auto
+multiply(const fsmlib::Matrix<T1, N1, N2> &A, const fsmlib::Matrix<T2, N2, N3> &B)
 {
-    using data_type_t                          = std::remove_const_t<decltype(T1(0) * T2(0))>;
-    fsmlib::Matrix<data_type_t, N1, N3> result = {};
+    // Promotes types for compatibility.
+    using result_type_t = std::remove_const_t<std::common_type_t<T1, T2>>;
+    // Prepare the result.
+    fsmlib::Matrix<result_type_t, N1, N3> result = {};
     for (std::size_t r = 0; r < N1; ++r) {
         for (std::size_t c = 0; c < N3; ++c) {
+            result[r][c] = 0;
             for (std::size_t k = 0; k < N2; ++k) {
-                result[r][c] += A[r][k] * B[k][c];
+                result[r][c] += static_cast<result_type_t>(A[r][k]) * static_cast<result_type_t>(B[k][c]);
             }
         }
     }
+
     return result;
 }
 
@@ -359,7 +381,8 @@ constexpr inline auto multiply(const fsmlib::Matrix<T1, N1, N2> &A, const fsmlib
 /// @param pred The predicate to apply.
 /// @returns True if the predicate is true for all elements, false otherwise.
 template <class T, std::size_t N, class F>
-constexpr inline bool all(const fsmlib::Vector<T, N> &container, F pred)
+[[nodiscard]] constexpr inline auto
+all(const fsmlib::Vector<T, N> &container, F pred)
 {
     for (std::size_t i = 0; i < N; ++i) {
         // Base case: Apply the predicate to the boolean value.
@@ -383,7 +406,8 @@ constexpr inline bool all(const fsmlib::Vector<T, N> &container, F pred)
 /// @param container The container to check.
 /// @returns True if all elements are true, false otherwise.
 template <class T, std::size_t N>
-constexpr inline bool all(const fsmlib::Vector<T, N> &container)
+[[nodiscard]] constexpr inline auto
+all(const fsmlib::Vector<T, N> &container)
 {
     for (std::size_t i = 0; i < N; ++i) {
         // Base case: Check if the current element is true.
@@ -410,7 +434,8 @@ constexpr inline bool all(const fsmlib::Vector<T, N> &container)
 /// @param pred The predicate to apply.
 /// @returns True if the predicate is true for any element, false otherwise.
 template <class T, std::size_t N, class F>
-constexpr inline bool any(const fsmlib::Vector<T, N> &container, F pred)
+[[nodiscard]] constexpr inline auto
+any(const fsmlib::Vector<T, N> &container, F pred)
 {
     for (std::size_t i = 0; i < N; ++i) {
         // Base case: Apply the predicate to the boolean value.
@@ -434,7 +459,8 @@ constexpr inline bool any(const fsmlib::Vector<T, N> &container, F pred)
 /// @param container The container to check.
 /// @returns True if any element is true, false otherwise.
 template <class T, std::size_t N>
-constexpr inline bool any(const fsmlib::Vector<T, N> &container)
+[[nodiscard]] constexpr inline auto
+any(const fsmlib::Vector<T, N> &container)
 {
     for (std::size_t i = 0; i < N; ++i) {
         // Base case: Check if the current element is true.
@@ -462,7 +488,8 @@ constexpr inline bool any(const fsmlib::Vector<T, N> &container)
 /// @param start_column The starting column for the swap (default: 0).
 /// @param end_column The ending column for the swap (default: all columns).
 template <typename T, std::size_t N>
-inline void swap_rows(fsmlib::Matrix<T, N> &matrix, std::size_t i, std::size_t j, std::size_t start_column = 0, std::size_t end_column = std::numeric_limits<std::size_t>::max())
+constexpr inline void
+swap_rows(fsmlib::Matrix<T, N> &matrix, std::size_t i, std::size_t j, std::size_t start_column = 0, std::size_t end_column = std::numeric_limits<std::size_t>::max())
 {
     end_column = std::min(end_column, N);
     for (std::size_t c = start_column; c < end_column; ++c) {
@@ -476,7 +503,8 @@ inline void swap_rows(fsmlib::Matrix<T, N> &matrix, std::size_t i, std::size_t j
 /// @param v The input vector.
 /// @returns A vector with the absolute value of each element.
 template <class T, std::size_t N>
-constexpr auto abs(const fsmlib::Vector<T, N> &v)
+[[nodiscard]] constexpr inline auto
+abs(const fsmlib::Vector<T, N> &v)
 {
     if constexpr (std::is_arithmetic_v<T>) {
         return fsmlib::details::apply_unary<N>([](const T &value) { return std::abs(value); }, v);
@@ -491,7 +519,8 @@ constexpr auto abs(const fsmlib::Vector<T, N> &v)
 /// @param v The input vector.
 /// @returns A vector with the square root of each element.
 template <class T, std::size_t N>
-constexpr auto sqrt(const fsmlib::Vector<T, N> &v)
+[[nodiscard]] constexpr inline auto
+sqrt(const fsmlib::Vector<T, N> &v)
 {
     if constexpr (std::is_arithmetic_v<T>) {
         return fsmlib::details::apply_unary<N>([](const T &value) { return std::sqrt(value); }, v);
@@ -506,7 +535,8 @@ constexpr auto sqrt(const fsmlib::Vector<T, N> &v)
 /// @param v The input vector.
 /// @returns A vector with the log of each element.
 template <class T, std::size_t N>
-constexpr auto log(const fsmlib::Vector<T, N> &v)
+[[nodiscard]] constexpr inline auto
+log(const fsmlib::Vector<T, N> &v)
 {
     if constexpr (std::is_arithmetic_v<T>) {
         return fsmlib::details::apply_unary<N>([](const T &value) { return std::log(value); }, v);
@@ -521,7 +551,8 @@ constexpr auto log(const fsmlib::Vector<T, N> &v)
 /// @param A The input square matrix.
 /// @return The sum of the diagonal elements.
 template <typename T, std::size_t Size>
-constexpr T trace(const fsmlib::Matrix<T, Size, Size> &A)
+[[nodiscard]] constexpr inline auto
+trace(const fsmlib::Matrix<T, Size, Size> &A)
 {
     T result = 0;
     // Sum the diagonal elements.
@@ -535,7 +566,8 @@ template <typename E1,
           typename E2,
           typename Operation,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
-constexpr auto apply_elementwise(const E1 &lhs, const E2 &rhs, Operation op)
+[[nodiscard]] constexpr inline auto
+apply_elementwise(const E1 &lhs, const E2 &rhs, Operation op)
 {
     if constexpr (fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) {
         // Both are containers with fixed sizes.
@@ -578,7 +610,8 @@ template <typename E1,
           typename E2,
           typename Operation,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>)>>
-constexpr auto apply_elementwise(E1 &lhs, const E2 &rhs, Operation op)
+[[nodiscard]] constexpr inline auto
+apply_elementwise(E1 &lhs, const E2 &rhs, Operation op)
 {
     if constexpr (fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) {
         // Both are containers with fixed sizes.
@@ -611,7 +644,8 @@ constexpr auto apply_elementwise(E1 &lhs, const E2 &rhs, Operation op)
 template <typename E1,
           typename E2,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
-constexpr auto operator+(const E1 &lhs, const E2 &rhs)
+[[nodiscard]] constexpr inline auto
+operator+(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a + b; });
 }
@@ -626,7 +660,8 @@ constexpr auto operator+(const E1 &lhs, const E2 &rhs)
 template <typename E1,
           typename E2,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
-constexpr auto operator-(const E1 &lhs, const E2 &rhs)
+[[nodiscard]] constexpr inline auto
+operator-(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a - b; });
 }
@@ -641,7 +676,8 @@ constexpr auto operator-(const E1 &lhs, const E2 &rhs)
 template <typename E1,
           typename E2,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
-constexpr auto operator*(const E1 &lhs, const E2 &rhs)
+[[nodiscard]] constexpr inline auto
+operator*(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a * b; });
 }
@@ -656,7 +692,8 @@ constexpr auto operator*(const E1 &lhs, const E2 &rhs)
 template <typename E1,
           typename E2,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
-constexpr auto operator/(const E1 &lhs, const E2 &rhs)
+[[nodiscard]] constexpr inline auto
+operator/(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a / b; });
 }
@@ -671,7 +708,8 @@ constexpr auto operator/(const E1 &lhs, const E2 &rhs)
 template <typename E1,
           typename E2,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
-constexpr auto operator==(const E1 &lhs, const E2 &rhs)
+[[nodiscard]] constexpr inline auto
+operator==(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a == b; });
 }
@@ -686,7 +724,8 @@ constexpr auto operator==(const E1 &lhs, const E2 &rhs)
 template <typename E1,
           typename E2,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
-constexpr auto operator!=(const E1 &lhs, const E2 &rhs)
+[[nodiscard]] constexpr inline auto
+operator!=(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a != b; });
 }
@@ -701,7 +740,8 @@ constexpr auto operator!=(const E1 &lhs, const E2 &rhs)
 template <typename E1,
           typename E2,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
-constexpr auto operator<(const E1 &lhs, const E2 &rhs)
+[[nodiscard]] constexpr inline auto
+operator<(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a < b; });
 }
@@ -716,7 +756,8 @@ constexpr auto operator<(const E1 &lhs, const E2 &rhs)
 template <typename E1,
           typename E2,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
-constexpr auto operator>(const E1 &lhs, const E2 &rhs)
+[[nodiscard]] constexpr inline auto
+operator>(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a > b; });
 }
@@ -731,7 +772,8 @@ constexpr auto operator>(const E1 &lhs, const E2 &rhs)
 template <typename E1,
           typename E2,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
-constexpr auto operator<=(const E1 &lhs, const E2 &rhs)
+[[nodiscard]] constexpr inline auto
+operator<=(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a <= b; });
 }
@@ -746,7 +788,8 @@ constexpr auto operator<=(const E1 &lhs, const E2 &rhs)
 template <typename E1,
           typename E2,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) || (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
-constexpr auto operator>=(const E1 &lhs, const E2 &rhs)
+[[nodiscard]] constexpr inline auto
+operator>=(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a >= b; });
 }
@@ -761,7 +804,8 @@ constexpr auto operator>=(const E1 &lhs, const E2 &rhs)
 template <typename E1,
           typename E2,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>)>>
-constexpr auto operator+=(E1 &lhs, const E2 &rhs)
+constexpr inline auto
+operator+=(E1 &lhs, const E2 &rhs)
 {
     return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a + b; });
 }
@@ -776,7 +820,8 @@ constexpr auto operator+=(E1 &lhs, const E2 &rhs)
 template <typename E1,
           typename E2,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>)>>
-constexpr auto operator-=(E1 &lhs, const E2 &rhs)
+constexpr inline auto
+operator-=(E1 &lhs, const E2 &rhs)
 {
     return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a - b; });
 }
@@ -791,7 +836,8 @@ constexpr auto operator-=(E1 &lhs, const E2 &rhs)
 template <typename E1,
           typename E2,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>)>>
-constexpr auto operator*=(E1 &lhs, const E2 &rhs)
+constexpr inline auto
+operator*=(E1 &lhs, const E2 &rhs)
 {
     return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a * b; });
 }
@@ -806,7 +852,8 @@ constexpr auto operator*=(E1 &lhs, const E2 &rhs)
 template <typename E1,
           typename E2,
           typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) || (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>)>>
-constexpr auto operator/=(E1 &lhs, const E2 &rhs)
+constexpr inline auto
+operator/=(E1 &lhs, const E2 &rhs)
 {
     return fsmlib::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a / b; });
 }

@@ -451,7 +451,7 @@ int main()
 
         {
             fsmlib::Matrix<double, 2, 2> A = { { 1.0, 2.0 }, { 3.0, 4.0 } };
-            double tr                      = trace(A);
+            double tr                      = fsmlib::trace(A);
             double expected                = 1.0 + 4.0;
             if (std::abs(tr - expected) > 1e-6) {
                 std::cerr << "Expected trace: " << expected << "\nGot trace: " << tr << "\n";
@@ -462,7 +462,7 @@ int main()
 
         {
             fsmlib::Matrix<double, 3, 3> B = { { 5.0, 2.0, 3.0 }, { 1.0, 6.0, 4.0 }, { 7.0, 8.0, 9.0 } };
-            double tr                      = trace(B);
+            double tr                      = fsmlib::trace(B);
             double expected                = 5.0 + 6.0 + 9.0;
             if (std::abs(tr - expected) > 1e-6) {
                 std::cerr << "Expected trace: " << expected << "\nGot trace: " << tr << "\n";

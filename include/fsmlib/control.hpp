@@ -51,7 +51,8 @@ struct DiscreteStateSpace {
 /// @param sample_time The sample time for discretization.
 /// @returns The discretized state-space model.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-inline auto c2d(const StateSpace<T, N_state, N_input, N_output> &sys, T sample_time)
+[[nodiscard]] constexpr inline auto
+c2d(const StateSpace<T, N_state, N_input, N_output> &sys, T sample_time)
 {
     DiscreteStateSpace<T, N_state, N_input, N_output> dsys;
 
@@ -88,7 +89,8 @@ inline auto c2d(const StateSpace<T, N_state, N_input, N_output> &sys, T sample_t
 /// and the output is computed as:
 /// \f$ y = C \cdot x + D \cdot u \f$.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-inline void step(
+constexpr inline void
+step(
     const DiscreteStateSpace<T, N_state, N_input, N_output> &dsys,
     const Vector<T, N_state> &x,
     const Vector<T, N_input> &u,
@@ -110,7 +112,8 @@ inline void step(
 /// @return The controllability matrix.
 /// @details CM = [ B    A*B    A^2*B    ...    A^(N-1)*B ]
 template <typename T, std::size_t N, std::size_t Q>
-constexpr Matrix<T, N, N * Q> ctrb(const Matrix<T, N, N> &A, const Matrix<T, N, Q> &B)
+[[nodiscard]] constexpr inline auto
+ctrb(const Matrix<T, N, N> &A, const Matrix<T, N, Q> &B)
 {
     // Initialize the controllability matrix with zeros.
     Matrix<T, N, N * Q> result = {};
@@ -150,7 +153,8 @@ constexpr Matrix<T, N, N * Q> ctrb(const Matrix<T, N, N> &A, const Matrix<T, N, 
 ///      | ...       |
 ///      | C*A^(n-1) |
 template <typename T, std::size_t N, std::size_t P>
-constexpr Matrix<T, P * N, N> obsv(const Matrix<T, N, N> &A, const Matrix<T, P, N> &C)
+[[nodiscard]] constexpr inline auto
+obsv(const Matrix<T, N, N> &A, const Matrix<T, P, N> &C)
 {
     // Initialize the observability matrix with the first block (C).
     Matrix<T, P * N, N> result = {};
@@ -182,7 +186,8 @@ constexpr Matrix<T, P * N, N> obsv(const Matrix<T, N, N> &A, const Matrix<T, P, 
 /// @param a The input vector containing the roots of the polynomial.
 /// @return A vector of coefficients of the polynomial.
 template <typename T, std::size_t N>
-constexpr fsmlib::Vector<T, N + 1> poly(const fsmlib::Vector<T, N> &a)
+[[nodiscard]] constexpr inline auto
+poly(const fsmlib::Vector<T, N> &a)
 {
     // Initialize the coefficients vector with size N + 1 (degree of polynomial + 1).
     fsmlib::Vector<T, N + 1> c = {};
@@ -204,7 +209,8 @@ constexpr fsmlib::Vector<T, N + 1> poly(const fsmlib::Vector<T, N> &a)
 /// @param a The input vector of coefficients.
 /// @return A reduced vector with leading zeros removed.
 template <typename T, std::size_t N>
-constexpr fsmlib::Vector<T, N> polyreduce(const fsmlib::Vector<T, N> &a)
+[[nodiscard]] constexpr inline auto
+polyreduce(const fsmlib::Vector<T, N> &a)
 {
     fsmlib::Vector<T, N> result = {};
     std::size_t first_nonzero   = N;
@@ -232,9 +238,8 @@ constexpr fsmlib::Vector<T, N> polyreduce(const fsmlib::Vector<T, N> &a)
 /// @param poles The desired poles for generating the closed-loop behavior (fixed-size vector).
 /// @return Gains \( K \) such that \( A - BK \) has the given eigenvalues.
 template <typename T, std::size_t Rows, std::size_t Cols, std::size_t NumPoles>
-constexpr auto acker(const fsmlib::Matrix<T, Rows, Rows> &A,
-                     const fsmlib::Matrix<T, Rows, Cols> &B,
-                     const fsmlib::Vector<T, NumPoles> &poles)
+[[nodiscard]] constexpr inline auto
+acker(const fsmlib::Matrix<T, Rows, Rows> &A, const fsmlib::Matrix<T, Rows, Cols> &B, const fsmlib::Vector<T, NumPoles> &poles)
 {
     static_assert(Rows == NumPoles, "The number of poles must match the system order.");
     // Ensure the system is controllable.

@@ -22,26 +22,25 @@ class valid_container_t {};
 /// @tparam N The number of elements in the vector.
 template <typename T, std::size_t N>
 class Vector : public valid_container_t {
-private:
-    T data[N]; ///< Internal storage for the vector elements.
-
 public:
     using value_type = T;
     using size_type  = std::integral_constant<std::size_t, N>;
 
     /// @brief Default constructor.
-    constexpr Vector()
-        : data{}
+    constexpr Vector() : data{}
     {
     }
 
     /// @brief Constructor from an initializer list.
-    constexpr Vector(std::initializer_list<T> init)
+    constexpr Vector(std::initializer_list<T> init) : data{}
     {
         if (init.size() != N) {
             throw std::out_of_range("Initializer list size does not match vector size");
         }
-        std::copy(init.begin(), init.end(), data);
+        std::size_t i = 0;
+        for (const auto &value : init) {
+            data[i++] = value;
+        }
     }
 
     /// @brief Access an element by index (const version).
@@ -85,6 +84,9 @@ public:
     {
         return data + N;
     }
+
+private:
+    std::remove_const_t<T> data[N]; ///< Internal storage for the vector elements.
 };
 
 /// @brief Alias for a fixed-size matrix.
@@ -138,8 +140,8 @@ inline constexpr bool always_false_v = always_false<Args...>::value;
 template <typename T, std::size_t M, bool IsConst = false>
 class View : public valid_container_t {
 private:
-    using PointerType = std::conditional_t<IsConst, const T *, T *>;
-    PointerType data;   ///< Pointer to the start of the underlying memory.
+    using pointer_type = std::conditional_t<IsConst, const T *, T *>;
+    pointer_type data;  ///< Pointer to the start of the underlying memory.
     std::size_t offset; ///< Offset from the start of the underlying memory.
 
 public:
@@ -149,8 +151,7 @@ public:
     /// @brief Constructor for creating a view from a Vector.
     /// @param vector The Vector from which the view is created.
     /// @param offset The offset within the Vector where the view starts (default is 0).
-    constexpr View(PointerType data, std::size_t offset = 0)
-        : data(data), offset(offset)
+    constexpr View(pointer_type data, std::size_t offset = 0) : data(data), offset(offset)
     {
         // Nothing to do.
     }
@@ -223,8 +224,8 @@ public:
 template <typename T, std::size_t Rows, std::size_t Cols, bool IsConst = false>
 class MatrixView : public valid_container_t {
 private:
-    using PointerType = std::conditional_t<IsConst, const T *, T *>;
-    PointerType data;       ///< Pointer to the start of the underlying memory.
+    using pointer_type = std::conditional_t<IsConst, const T *, T *>;
+    pointer_type data;      ///< Pointer to the start of the underlying memory.
     std::size_t stride;     ///< Number of elements per row in the original matrix.
     std::size_t row_offset; ///< Starting row offset in the matrix.
     std::size_t col_offset; ///< Starting column offset in the matrix.
@@ -238,7 +239,7 @@ public:
     /// @param stride The number of elements per row in the original matrix.
     /// @param row_offset The starting row offset.
     /// @param col_offset The starting column offset.
-    constexpr MatrixView(PointerType data, std::size_t stride, std::size_t row_offset = 0, std::size_t col_offset = 0)
+    constexpr MatrixView(pointer_type data, std::size_t stride, std::size_t row_offset = 0, std::size_t col_offset = 0)
         : data(data), stride(stride), row_offset(row_offset), col_offset(col_offset)
     {
         // Nothing to do.
@@ -337,7 +338,8 @@ constexpr auto view(Matrix<T, MatrixRows, MatrixCols> &matrix, std::size_t row_o
 /// @param col_offset The starting column offset for the view.
 /// @return A MatrixView object spanning the specified range of the matrix.
 template <typename T, std::size_t Rows, std::size_t Cols, std::size_t MatrixRows, std::size_t MatrixCols>
-constexpr auto view(const Matrix<T, MatrixRows, MatrixCols> &matrix, std::size_t row_offset = 0, std::size_t col_offset = 0)
+constexpr auto
+view(const Matrix<T, MatrixRows, MatrixCols> &matrix, std::size_t row_offset = 0, std::size_t col_offset = 0)
 {
     if ((row_offset + Rows) > MatrixRows || (col_offset + Cols) > MatrixCols) {
         throw std::out_of_range("MatrixView range exceeds the bounds of the matrix");
@@ -563,5 +565,111 @@ constexpr fsmlib::Vector<T, N2> row(const fsmlib::Matrix<T, N1, N2> &mat, std::s
 
     return mat[row_index];
 }
+
+/// @brief Sorts the indices of a vector based on its values, either in ascending or descending order.
+/// @tparam T The type of the vector elements.
+/// @tparam N The number of elements in the vector.
+/// @tparam Ascending A boolean flag indicating the sort order (true for ascending, false for descending).
+/// @param vec The input vector whose indices are to be sorted.
+/// @returns A vector of indices sorted based on the values of the input vector.
+template <bool Ascending, typename T, std::size_t N>
+[[nodiscard]] constexpr inline auto sort_indices(const fsmlib::Vector<T, N> &vec)
+{
+    fsmlib::Vector<std::size_t, N> indices = {};
+    for (std::size_t i = 0; i < N; ++i) {
+        indices[i] = i;
+    }
+
+    // Sort indices based on the values in the vector
+    for (std::size_t i = 0; i < N - 1; ++i) {
+        for (std::size_t j = i + 1; j < N; ++j) {
+            bool condition = Ascending ? (vec[indices[i]] > vec[indices[j]]) : (vec[indices[i]] < vec[indices[j]]);
+            if (condition) {
+                std::swap(indices[i], indices[j]);
+            }
+        }
+    }
+
+    return indices;
+}
+
+/// @brief Reorders the elements of a vector based on the provided indices.
+/// @tparam T The type of the vector elements.
+/// @tparam N The number of elements in the vector.
+/// @param vec The input vector to be reordered.
+/// @param indices A vector of indices specifying the new order of elements.
+/// @returns A reordered vector with elements arranged according to the provided indices.
+/// @details This function creates a new vector with elements of the input vector
+///          rearranged based on the `indices` vector.
+/// @note The `indices` vector must have the same size as the input vector.
+template <typename T, std::size_t N>
+[[nodiscard]] constexpr inline auto reorder(const fsmlib::Vector<T, N> &vec,
+                                            const fsmlib::Vector<std::size_t, N> &indices)
+{
+    fsmlib::Vector<T, N> result = {};
+    for (std::size_t i = 0; i < N; ++i) {
+        result[i] = vec[indices[i]];
+    }
+    return result;
+}
+
+/// @brief Reorders the rows or columns of a matrix based on the provided indices.
+/// @tparam T The type of the matrix elements.
+/// @tparam Rows The number of rows in the matrix.
+/// @tparam Cols The number of columns in the matrix.
+/// @tparam IsColumnReorder A boolean flag indicating whether to reorder columns (true) or rows (false).
+/// @param mat The input matrix to be reordered.
+/// @param indices A vector of indices specifying the new order of columns or rows.
+/// @returns A matrix with columns or rows rearranged according to the provided indices.
+/// @details This function uses a compile-time flag to determine whether to reorder rows or columns.
+///          The size of the `indices` vector must match the dimension being reordered.
+template <bool IsColumnReorder, typename T, std::size_t Rows, std::size_t Cols>
+[[nodiscard]] constexpr inline auto reorder(const fsmlib::Matrix<T, Rows, Cols> &mat,
+                                            const fsmlib::Vector<std::size_t, IsColumnReorder ? Cols : Rows> &indices)
+{
+    // Ensure indices size matches the dimension being reordered
+    static_assert(IsColumnReorder ? (Cols > 0) : (Rows > 0), "Matrix dimensions must be non-zero.");
+
+    fsmlib::Matrix<T, Rows, Cols> result = {};
+
+    if constexpr (IsColumnReorder) {
+        // Reorder columns
+        for (std::size_t col = 0; col < Cols; ++col) {
+            for (std::size_t row = 0; row < Rows; ++row) {
+                result[row][col] = mat[row][indices[col]];
+            }
+        }
+    } else {
+        // Reorder rows
+        for (std::size_t row = 0; row < Rows; ++row) {
+            for (std::size_t col = 0; col < Cols; ++col) {
+                result[row][col] = mat[indices[row]][col];
+            }
+        }
+    }
+
+    return result;
+}
+
+/// @brief Checks if a matrix is symmetric.
+/// @tparam T The type of the matrix elements.
+/// @tparam N The size of the square matrix.
+/// @param mat The input matrix.
+/// @param tolerance The tolerance for checking symmetry.
+/// @return True if the matrix is symmetric; false otherwise.
+template <typename T, std::size_t N>
+[[nodiscard]] constexpr inline bool is_symmetric(const fsmlib::Matrix<T, N, N> &mat, T tolerance = 1e-9)
+{
+    for (std::size_t i = 0; i < N; ++i) {
+        for (std::size_t j = 0; j < i; ++j) {
+            if (std::abs(mat[i][j] - mat[j][i]) > tolerance) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+
 
 } // namespace fsmlib
