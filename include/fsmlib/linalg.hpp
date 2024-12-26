@@ -10,6 +10,7 @@
 #include <array>
 #include <tuple>
 
+#include "fsmlib/view.hpp"
 #include "fsmlib/math.hpp"
 
 namespace fsmlib
@@ -314,20 +315,28 @@ template <typename CT, std::size_t N>
 template <typename T, std::size_t N>
 [[nodiscard]] constexpr inline auto adjoint(const fsmlib::MatrixBase<T, N> &matrix)
 {
-    // Return 1.
+    // Return 1 for 1x1 matrix.
     if constexpr (N == 1) {
-        return matrix[0][0];
+        Matrix<std::remove_const_t<T>, 1, 1> adj;
+        adj(0, 0) = matrix(0, 0);
+        return adj;
     } else {
         // Prepare the output matrix.
-        Matrix<std::remove_const_t<T>, N> adj;
+        Matrix<std::remove_const_t<T>, N, N> adj;
+
+        // Create a CofactorView for efficient cofactor computation.
+        auto view = fsmlib::cofactor_view(matrix, 0, 0);
+
         for (std::size_t i = 0; i < N; ++i) {
             for (std::size_t j = 0; j < N; ++j) {
-                // Get cofactor of A(i, j)
-                auto support = fsmlib::linalg::cofactor(matrix, i, j);
+                // Update the row and column to skip for the cofactor view.
+                view.set_row_to_skip(i);
+                view.set_col_to_skip(j);
+
                 // Sign of adj(j, i) positive if sum of row and column indexes is
                 // even. Interchanging rows and columns to get the transpose of the
                 // cofactor matrix.
-                adj(j, i) = (((i + j) % 2 == 0) ? 1 : -1) * fsmlib::linalg::determinant(support);
+                adj(j, i) = (((i + j) % 2 == 0) ? 1 : -1) * fsmlib::linalg::determinant(view);
             }
         }
         return adj;

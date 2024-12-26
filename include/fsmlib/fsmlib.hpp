@@ -12,6 +12,8 @@
 
 #include "fsmlib/traits.hpp"
 
+#define COLUMN_MAJOR
+
 namespace fsmlib
 {
 
@@ -32,6 +34,23 @@ public:
     /// @brief Virtual destructor.
     virtual ~VectorBase() = default;
 
+    /// @brief Returns the size of the vector.
+    /// @return Size of the vector.
+    virtual constexpr std::size_t size() const noexcept
+    {
+        return N;
+    }
+
+    /// @brief Access an element by index (const version).
+    /// @param index Index of the element to access.
+    /// @return const reference to the element.
+    virtual const T &at(std::size_t index) const = 0;
+
+    /// @brief Access an element by index (non-const version).
+    /// @param index Index of the element to access.
+    /// @return Reference to the element.
+    virtual T &at(std::size_t index) = 0;
+
     /// @brief Access an element by index (const version).
     /// @param index Index of the element to access.
     /// @return const reference to the element.
@@ -41,13 +60,6 @@ public:
     /// @param index Index of the element to access.
     /// @return Reference to the element.
     virtual T &operator[](std::size_t index) = 0;
-
-    /// @brief Returns the size of the vector.
-    /// @return Size of the vector.
-    virtual constexpr std::size_t size() const noexcept
-    {
-        return N;
-    }
 
     /// @brief Provides access to the underlying data (const version).
     /// @return Pointer to the underlying data.
@@ -72,6 +84,11 @@ public:
     /// @brief End iterator (const version).
     /// @return Const pointer to the end of the vector.
     virtual const T *end() const noexcept = 0;
+
+protected:
+    /// @brief Checks if the index is within bounds.
+    /// @param index index to check.
+    virtual void check_bounds(std::size_t index) const = 0;
 };
 
 /// @brief Concrete class for a fixed-size vector.
@@ -93,6 +110,14 @@ public:
         }
     }
 
+    /// @brief Copy constructor.
+    Vector(const fsmlib::VectorBase<const T, N> &other) : data_{}
+    {
+        if (this != &other) {
+            std::copy(other.data(), other.data() + N, data_);
+        }
+    }
+
     /// @brief Constructor from an initializer list.
     /// @param init Initializer list of elements.
     constexpr Vector(std::initializer_list<T> init) : data_{}
@@ -106,62 +131,63 @@ public:
         }
     }
 
-    /// @brief Provides access to the underlying data (const version).
+    constexpr const T &at(std::size_t index) const override
+    {
+        check_bounds(index);
+        return data_[index];
+    }
+
+    constexpr T &at(std::size_t index) override
+    {
+        check_bounds(index);
+        return data_[index];
+    }
+
+    constexpr const T &operator[](std::size_t index) const override
+    {
+        check_bounds(index);
+        return data_[index];
+    }
+
+    constexpr T &operator[](std::size_t index) override
+    {
+        check_bounds(index);
+        return data_[index];
+    }
+
     constexpr const T *data() const noexcept override
     {
         return data_;
     }
 
-    /// @brief Provides access to the underlying data (non-const version).
     constexpr T *data() noexcept override
     {
         return data_;
     }
 
-    /// @brief Access an element by index (const version).
-    /// @param index Index of the element to access.
-    /// @return const reference to the element.
-    constexpr const T &operator[](std::size_t index) const override
-    {
-        return data_[index];
-    }
-
-    /// @brief Access an element by index (non-const version).
-    /// @param index Index of the element to access.
-    /// @return Reference to the element.
-    constexpr T &operator[](std::size_t index) override
-    {
-        return data_[index];
-    }
-
-    /// @brief Begin iterator (non-const version).
-    /// @return Pointer to the beginning of the vector.
     constexpr T *begin() noexcept override
     {
         return data_;
     }
 
-    /// @brief End iterator (non-const version).
-    /// @return Pointer to the end of the vector.
     constexpr T *end() noexcept override
     {
         return data_ + N;
     }
 
-    /// @brief Begin iterator (const version).
-    /// @return Const pointer to the beginning of the vector.
     constexpr const T *begin() const noexcept override
     {
         return data_;
     }
 
-    /// @brief End iterator (const version).
-    /// @return Const pointer to the end of the vector.
     constexpr const T *end() const noexcept override
     {
         return data_ + N;
     }
 
+    /// @brief Copy assignment operator.
+    /// @param other The vector to copy from.
+    /// @return Reference to the assigned vector.
     Vector &operator=(const fsmlib::VectorBase<T, N> &other)
     {
         if (this != &other) {
@@ -172,6 +198,13 @@ public:
 
 private:
     T data_[N]; ///< Internal storage for the vector elements.
+
+    void check_bounds(std::size_t index) const override
+    {
+        if (index >= N) {
+            throw std::out_of_range("Vector index out of bounds");
+        }
+    }
 };
 
 /// @brief Base class for fixed-size matrices.
@@ -187,6 +220,27 @@ public:
     /// @brief Virtual destructor.
     virtual ~MatrixBase() = default;
 
+    /// @brief Returns the size of the matrix.
+    /// @return Pair containing the number of rows and columns.
+    virtual constexpr std::size_t size() const noexcept
+    {
+        return Rows * Cols;
+    }
+
+    /// @brief Returns the number of rows in the matrix.
+    /// @return Number of rows.
+    constexpr std::size_t rows() const noexcept
+    {
+        return Rows;
+    }
+
+    /// @brief Returns the number of columns in the matrix.
+    /// @return Number of columns.
+    constexpr std::size_t cols() const noexcept
+    {
+        return Cols;
+    }
+
     /// @brief Access an element by row and column (const version).
     /// @param row Row index of the element.
     /// @param col Column index of the element.
@@ -198,6 +252,16 @@ public:
     /// @param col Column index of the element.
     /// @return Reference to the element.
     virtual T &at(std::size_t row, std::size_t col) = 0;
+
+    /// @brief Access an element by linear index (const version).
+    /// @param index Linear index of the element.
+    /// @return const reference to the element.
+    virtual const T &at(std::size_t index) const = 0;
+
+    /// @brief Access an element by linear index (non-const version).
+    /// @param index Linear index of the element.
+    /// @return Reference to the element.
+    virtual T &at(std::size_t index) = 0;
 
     /// @brief Access an element by row and column (const version).
     /// @param row Row index of the element.
@@ -212,17 +276,14 @@ public:
     virtual T &operator()(std::size_t row, std::size_t col) = 0;
 
     /// @brief Access an element by linear index (const version).
+    /// @param index Linear index of the element.
+    /// @return const reference to the element.
     virtual const T &operator[](std::size_t index) const = 0;
 
     /// @brief Access an element by linear index (non-const version).
+    /// @param index Linear index of the element.
+    /// @return Reference to the element.
     virtual T &operator[](std::size_t index) = 0;
-
-    /// @brief Returns the size of the matrix.
-    /// @return Pair containing the number of rows and columns.
-    virtual constexpr std::size_t size() const noexcept
-    {
-        return Rows * Cols;
-    }
 
     /// @brief Provides access to the underlying data (const version).
     /// @return Pointer to the underlying data.
@@ -232,19 +293,21 @@ public:
     /// @return Pointer to the underlying data.
     virtual T *data() noexcept = 0;
 
-    /// @brief Returns the number of rows in the matrix.
-    /// @return Number of rows.
-    constexpr std::size_t row_count() const noexcept
-    {
-        return Rows;
-    }
+protected:
+    /// @brief Converts row and column indices to a linear index.
+    /// @param row the row index.
+    /// @param col the column index.
+    /// @return the linear index.
+    virtual std::size_t indices_to_linear_index(std::size_t row, std::size_t col) const = 0;
 
-    /// @brief Returns the number of columns in the matrix.
-    /// @return Number of columns.
-    constexpr std::size_t col_count() const noexcept
-    {
-        return Cols;
-    }
+    /// @brief Checks if the row and column indices are within bounds.
+    /// @param row Row index to check.
+    /// @param col Column index to check.
+    virtual void check_bounds(std::size_t row, std::size_t col) const = 0;
+
+    /// @brief Checks if the linear index is within bounds.
+    /// @param index Linear index to check.
+    virtual void check_bounds(std::size_t index) const = 0;
 };
 
 /// @brief Fixed-size matrix class in column-major order.
@@ -267,6 +330,12 @@ public:
         }
     }
 
+    /// @brief Copy constructor.
+    Matrix(const MatrixBase<const T, Rows, Cols> &other) : data_{}
+    {
+        std::copy(other.data(), other.data() + (Rows * Cols), data_);
+    }
+
     /// @brief Constructor from an initializer list of initializer lists.
     /// @param init Initializer list of rows, each being an initializer list of elements.
     constexpr Matrix(std::initializer_list<std::initializer_list<T>> init) : data_{}
@@ -274,7 +343,7 @@ public:
         if (init.size() != Rows) {
             throw std::out_of_range("Initializer list row count does not match matrix row count");
         }
-
+#ifdef COLUMN_MAJOR
         std::size_t row = 0;
         for (const auto &row_init : init) {
             if (row_init.size() != Cols) {
@@ -282,82 +351,86 @@ public:
             }
             std::size_t col = 0;
             for (const auto &value : row_init) {
-                at(row, col++) = value; // Store in column-major order.
+                at(row, col++) = value;
             }
             ++row;
         }
+#else
+        std::size_t col = 0;
+        for (const auto &col_init : init) {
+            if (col_init.size() != Rows) {
+                throw std::out_of_range("Initializer list row count does not match matrix row count");
+            }
+            std::size_t row = 0;
+            for (const auto &value : col_init) {
+                at(row++, col) = value;
+            }
+            ++col;
+        }
+#endif
     }
 
-    /// @brief Access an element by row and column (const version).
-    /// @param row Row index of the element.
-    /// @param col Column index of the element.
-    /// @return const reference to the element.
     constexpr const T &at(std::size_t row, std::size_t col) const override
     {
         check_bounds(row, col);
-        return data_[col * Rows + row]; // Column-major order.
+        return data_[this->indices_to_linear_index(row, col)];
     }
 
-    /// @brief Access an element by row and column (non-const version).
-    /// @param row Row index of the element.
-    /// @param col Column index of the element.
-    /// @return Reference to the element.
     constexpr T &at(std::size_t row, std::size_t col) override
     {
         check_bounds(row, col);
-        return data_[col * Rows + row]; // Column-major order.
+        return data_[this->indices_to_linear_index(row, col)];
     }
 
-    /// @brief Access an element by row and column (const version).
-    /// @param row Row index of the element.
-    /// @param col Column index of the element.
-    /// @return const reference to the element.
+    constexpr const T &at(std::size_t index) const override
+    {
+        check_bounds(index);
+        return data_[index];
+    }
+
+    constexpr T &at(std::size_t index) override
+    {
+        check_bounds(index);
+        return data_[index];
+    }
+
     constexpr const T &operator()(std::size_t row, std::size_t col) const override
     {
         check_bounds(row, col);
-        return data_[col * Rows + row]; // Column-major order.
+        return data_[this->indices_to_linear_index(row, col)];
     }
 
-    /// @brief Access an element by row and column (non-const version).
-    /// @param row Row index of the element.
-    /// @param col Column index of the element.
-    /// @return Reference to the element.
     constexpr T &operator()(std::size_t row, std::size_t col) override
     {
         check_bounds(row, col);
-        return data_[col * Rows + row]; // Column-major order.
+        return data_[this->indices_to_linear_index(row, col)];
     }
 
-    /// @brief Access an element by linear index (const version).
     constexpr const T &operator[](std::size_t index) const override
     {
-        if (index >= Rows * Cols) {
-            throw std::out_of_range("Matrix linear index out of bounds");
-        }
+        check_bounds(index);
         return data_[index];
     }
 
-    /// @brief Access an element by linear index (non-const version).
     constexpr T &operator[](std::size_t index) override
     {
-        if (index >= Rows * Cols) {
-            throw std::out_of_range("Matrix linear index out of bounds");
-        }
+        check_bounds(index);
         return data_[index];
     }
 
-    /// @brief Provides access to the underlying data (const version).
     constexpr const T *data() const noexcept override
     {
         return data_;
     }
 
-    /// @brief Provides access to the underlying data (non-const version).
     constexpr T *data() noexcept override
     {
         return data_;
     }
 
+    /// @brief Copy assignment operator.
+    /// @param other The matrix to copy from.
+    /// @return Reference to the assigned matrix.
     Matrix &operator=(const MatrixBase<T, Rows, Cols> &other)
     {
         if (this != &other) {
@@ -369,13 +442,26 @@ public:
 private:
     T data_[Rows * Cols]; ///< Internal storage in column-major order.
 
-    /// @brief Checks if the row and column indices are within bounds.
-    /// @param row Row index to check.
-    /// @param col Column index to check.
-    void check_bounds(std::size_t row, std::size_t col) const
+    std::size_t indices_to_linear_index(std::size_t row, std::size_t col) const override
+    {
+#ifdef COLUMN_MAJOR
+        return col * Rows + row;
+#else
+        return row * Cols + col;
+#endif
+    }
+
+    void check_bounds(std::size_t row, std::size_t col) const override
     {
         if (row >= Rows || col >= Cols) {
             throw std::out_of_range("Matrix indices out of bounds");
+        }
+    }
+
+    void check_bounds(std::size_t index) const override
+    {
+        if (index >= Rows * Cols) {
+            throw std::out_of_range("Matrix linear index out of bounds");
         }
     }
 };
