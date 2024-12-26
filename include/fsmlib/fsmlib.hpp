@@ -85,6 +85,14 @@ public:
     {
     }
 
+    /// @brief Copy constructor.
+    Vector(const fsmlib::VectorBase<T, N> &other) : data_{}
+    {
+        if (this != &other) {
+            std::copy(other.data(), other.data() + N, data_);
+        }
+    }
+
     /// @brief Constructor from an initializer list.
     /// @param init Initializer list of elements.
     constexpr Vector(std::initializer_list<T> init) : data_{}
@@ -152,6 +160,14 @@ public:
     constexpr const T *end() const noexcept override
     {
         return data_ + N;
+    }
+
+    Vector &operator=(const fsmlib::VectorBase<T, N> &other)
+    {
+        if (this != &other) {
+            std::copy(other.data(), other.data() + N, data_);
+        }
+        return *this;
     }
 
 private:
@@ -241,6 +257,14 @@ public:
     /// @brief Default constructor.
     constexpr Matrix() : data_{}
     {
+    }
+
+    /// @brief Copy constructor.
+    Matrix(const MatrixBase<T, Rows, Cols> &other) : data_{}
+    {
+        if (this != &other) {
+            std::copy(other.data(), other.data() + (Rows * Cols), data_);
+        }
     }
 
     /// @brief Constructor from an initializer list of initializer lists.
@@ -334,6 +358,14 @@ public:
         return data_;
     }
 
+    Matrix &operator=(const MatrixBase<T, Rows, Cols> &other)
+    {
+        if (this != &other) {
+            std::copy(other.data(), other.data() + (Rows * Cols), data_);
+        }
+        return *this;
+    }
+
 private:
     T data_[Rows * Cols]; ///< Internal storage in column-major order.
 
@@ -413,7 +445,8 @@ constexpr auto to_vector(const fsmlib::MatrixBase<T, 1, Cols> &mat)
 /// @param B The second matrix (Rows x Cols2).
 /// @return A matrix of size Rows x (Cols1 + Cols2) containing A and B stacked horizontally.
 template <typename T, std::size_t Rows, std::size_t Cols1, std::size_t Cols2>
-constexpr Matrix<T, Rows, Cols1 + Cols2> hstack(const Matrix<T, Rows, Cols1> &A, const Matrix<T, Rows, Cols2> &B)
+constexpr Matrix<T, Rows, Cols1 + Cols2> hstack(const MatrixBase<T, Rows, Cols1> &A,
+                                                const MatrixBase<T, Rows, Cols2> &B)
 {
     Matrix<T, Rows, Cols1 + Cols2> result = {};
 
@@ -443,7 +476,8 @@ constexpr Matrix<T, Rows, Cols1 + Cols2> hstack(const Matrix<T, Rows, Cols1> &A,
 /// @param B The second matrix (Rows2 x Cols).
 /// @return A matrix of size (Rows1 + Rows2) x Cols containing A and B stacked vertically.
 template <typename T, std::size_t Rows1, std::size_t Rows2, std::size_t Cols>
-constexpr Matrix<T, Rows1 + Rows2, Cols> vstack(const Matrix<T, Rows1, Cols> &A, const Matrix<T, Rows2, Cols> &B)
+constexpr Matrix<T, Rows1 + Rows2, Cols> vstack(const MatrixBase<T, Rows1, Cols> &A,
+                                                const MatrixBase<T, Rows2, Cols> &B)
 {
     Matrix<T, Rows1 + Rows2, Cols> result = {};
 
@@ -660,7 +694,7 @@ reorder(const fsmlib::MatrixBase<T, Rows, Cols> &mat,
 /// @param tolerance The tolerance for checking symmetry.
 /// @return True if the matrix is symmetric; false otherwise.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline bool is_symmetric(const fsmlib::Matrix<T, N, N> &mat, T tolerance = 1e-9)
+[[nodiscard]] constexpr inline bool is_symmetric(const fsmlib::MatrixBase<T, N, N> &mat, T tolerance = 1e-9)
 {
     for (std::size_t i = 0; i < N; ++i) {
         for (std::size_t j = 0; j < i; ++j) {
@@ -678,7 +712,7 @@ template <typename T, std::size_t N>
 /// @param vec The input vector.
 /// @return A diagonal matrix with the vector elements on the main diagonal.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline Matrix<T, N, N> diag(const Vector<T, N> &vec)
+[[nodiscard]] constexpr inline Matrix<T, N, N> diag(const fsmlib::VectorBase<T, N> &vec)
 {
     Matrix<T, N, N> result{};
     for (std::size_t i = 0; i < N; ++i) {
@@ -694,7 +728,7 @@ template <typename T, std::size_t N>
 /// @param mat The input matrix.
 /// @return A vector containing the diagonal elements of the matrix.
 template <typename T, std::size_t N1, std::size_t N2>
-[[nodiscard]] constexpr inline Vector<T, (N1 < N2 ? N1 : N2)> diag(const Matrix<T, N1, N2> &mat)
+[[nodiscard]] constexpr inline Vector<T, (N1 < N2 ? N1 : N2)> diag(const MatrixBase<T, N1, N2> &mat)
 {
     constexpr std::size_t min_dim = (N1 < N2 ? N1 : N2);
     Vector<T, min_dim> result{};

@@ -103,6 +103,16 @@ public:
         return data_ + offset_ + Size;
     }
 
+    VectorView &operator=(const VectorView &other)
+    {
+        if (this != &other) {          // Self-assignment check
+            data_       = other.data_; // Reference to the same underlying data
+            offset_     = other.offset_;
+            total_size_ = other.total_size_;
+        }
+        return *this;
+    }
+
 private:
     T *data_;                ///< Pointer to the start of the larger vector.
     std::size_t offset_;     ///< Offset into the larger vector where the view begins.
@@ -217,6 +227,16 @@ public:
     constexpr T *data() noexcept override
     {
         return data_;
+    }
+
+    MatrixView &operator=(const MatrixView &other)
+    {
+        if (this != &other) {          // Self-assignment check
+            data_       = other.data_; // Reference to the same underlying data
+            row_offset_ = other.row_offset_;
+            col_offset_ = other.col_offset_;
+        }
+        return *this;
     }
 
 private:

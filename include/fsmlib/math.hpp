@@ -421,7 +421,7 @@ template <class T, std::size_t N1, std::size_t N2 = N1>
 /// @param r The second vector.
 /// @returns The inner product of the two vectors.
 template <class T, class U, std::size_t N>
-[[nodiscard]] constexpr inline auto inner_product(const fsmlib::VectorBase<T, N> &l, const fsmlib::Vector<U, N> &r)
+[[nodiscard]] constexpr inline auto inner_product(const fsmlib::VectorBase<T, N> &l, const fsmlib::VectorBase<U, N> &r)
 {
     decltype(l[0] * r[0]) ret{};
     for (std::size_t i = 0; i < N; ++i) {
@@ -438,7 +438,7 @@ template <class T, class U, std::size_t N>
 /// @param r The second vector.
 /// @returns The inner product of the two vectors.
 template <class T, class U, std::size_t N>
-[[nodiscard]] constexpr inline auto dot(const fsmlib::VectorBase<T, N> &l, const fsmlib::Vector<U, N> &r)
+[[nodiscard]] constexpr inline auto dot(const fsmlib::VectorBase<T, N> &l, const fsmlib::VectorBase<U, N> &r)
 {
     return fsmlib::inner_product(l, r);
 }
@@ -452,7 +452,7 @@ template <class T, class U, std::size_t N>
 /// @param rv The second vector.
 /// @returns A matrix representing the outer product of the two vectors.
 template <class T, class U, std::size_t M, std::size_t N>
-[[nodiscard]] constexpr inline auto outer_product(const fsmlib::Vector<T, M> &lv, const fsmlib::Vector<U, N> &rv)
+[[nodiscard]] constexpr inline auto outer_product(const fsmlib::VectorBase<T, M> &lv, const fsmlib::VectorBase<U, N> &rv)
 {
     fsmlib::Matrix<decltype(lv[0] * rv[0]), M, N> ret{};
     for (std::size_t r = 0; r < M; ++r) {
@@ -471,7 +471,7 @@ template <class T, class U, std::size_t M, std::size_t N>
 /// @param vec The vector to multiply.
 /// @returns A vector representing the result of the multiplication.
 template <typename T1, typename T2, std::size_t N1, std::size_t N2>
-[[nodiscard]] constexpr inline auto multiply(const Matrix<T1, N1, N2> &mat, const Vector<T2, N2> &vec)
+[[nodiscard]] constexpr inline auto multiply(const fsmlib::MatrixBase<T1, N1, N2> &mat, const fsmlib::VectorBase<T2, N2> &vec)
 {
     using result_type_t = std::remove_const_t<std::common_type_t<T1, T2>>;
     // Prepare the result.Z
@@ -494,7 +494,7 @@ template <typename T1, typename T2, std::size_t N1, std::size_t N2>
 /// @param B The second matrix.
 /// @returns The resulting matrix after multiplication.
 template <typename T1, typename T2, std::size_t N1, std::size_t N2, std::size_t N3>
-[[nodiscard]] constexpr inline auto multiply(const fsmlib::Matrix<T1, N1, N2> &A, const fsmlib::Matrix<T2, N2, N3> &B)
+[[nodiscard]] constexpr inline auto multiply(const fsmlib::MatrixBase<T1, N1, N2> &A, const fsmlib::MatrixBase<T2, N2, N3> &B)
 {
     // Promotes types for compatibility.
     using result_type_t = std::remove_const_t<std::common_type_t<T1, T2>>;
