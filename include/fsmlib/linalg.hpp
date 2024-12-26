@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "fsmlib/math.hpp"
-
 #include <array>
 #include <tuple>
+
+#include "fsmlib/math.hpp"
 
 namespace fsmlib
 {
@@ -28,7 +28,7 @@ template <typename T, std::size_t N1, std::size_t N2 = N1>
     for (std::size_t r = 0; r < N1; ++r) {
         accum = 0.;
         for (std::size_t c = 0; c < N2; ++c) {
-            accum += std::abs(A[r][c]);
+            accum += std::abs(A(r, c));
         }
         max = std::max(max, accum);
     }
@@ -58,7 +58,7 @@ template <typename T, std::size_t N1, std::size_t N2 = N1>
     // Compute the sum of squares of the elements of the given matrix.
     for (std::size_t r = 0; r < N1; ++r) {
         for (std::size_t c = 0; c < N2; ++c) {
-            accum += A[r][c] * A[r][c];
+            accum += A(r, c) * A(r, c);
         }
     }
     // Return the square root of the sum of squares.
@@ -77,7 +77,7 @@ template <typename T, std::size_t Rows, std::size_t Cols>
     T sum = 0;
     for (std::size_t i = 0; i < Rows; ++i) {
         for (std::size_t j = 0; j < Cols; ++j) {
-            sum += mat[i][j] * mat[i][j];
+            sum += mat(i, j) * mat(i, j);
         }
     }
     return std::sqrt(sum);
@@ -147,8 +147,8 @@ template <typename T, std::size_t N>
 
             for (std::size_t j = 0; j < N; ++j) {
                 if (i != j) {
-                    row_norm += std::abs(result[i][j]);
-                    col_norm += std::abs(result[j][i]);
+                    row_norm += std::abs(result(i, j));
+                    col_norm += std::abs(result(j, i));
                 }
             }
 
@@ -165,8 +165,8 @@ template <typename T, std::size_t N>
                 if (factor != 1.0) {
                     converged = false;
                     for (std::size_t j = 0; j < N; ++j) {
-                        result[i][j] *= factor;
-                        result[j][i] /= factor;
+                        result(i, j) *= factor;
+                        result(j, i) /= factor;
                     }
                     scale[i] *= factor;
                 }
@@ -186,7 +186,7 @@ template <class T, std::size_t Rows, std::size_t Cols>
     fsmlib::Matrix<T, Cols, Rows> ret{};
     for (std::size_t r = 0; r < Rows; ++r) {
         for (std::size_t c = 0; c < Cols; ++c) {
-            ret[c][r] = m[r][c];
+            ret(c, r) = m(r, c);
         }
     }
     return ret;
@@ -209,7 +209,7 @@ template <typename T, std::size_t N>
         for (col = 0; col < N; ++col) {
             // Copying only those element which are not in given row and column.
             if ((row != p) && (col != q)) {
-                output[i][j++] = matrix[row][col];
+                output(i, j++) = matrix(row, col);
                 // When the row is filled, increase row index and reset col index.
                 if (j == (N - 1)) {
                     j = 0, ++i;
@@ -228,44 +228,44 @@ template <typename CT, std::size_t N>
 {
     // Fast exit with a 1x1.
     if constexpr (N == 1) {
-        return matrix[0][0];
+        return matrix(0, 0);
     }
     // Fast exit with a 2x2.
     if constexpr (N == 2) {
-        return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+        return matrix(0, 0) * matrix(1, 1) - matrix(0, 1) * matrix(1, 0);
     }
     // Fast exit with a 3x3.
     if constexpr (N == 3) {
-        return matrix[0][0] * (matrix[1][1] * matrix[2][2] - matrix[2][1] * matrix[1][2]) -
-               matrix[0][1] * (matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0]) +
-               matrix[0][2] * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0]);
+        return matrix(0, 0) * (matrix(1, 1) * matrix(2, 2) - matrix(2, 1) * matrix(1, 2)) -
+               matrix(0, 1) * (matrix(1, 0) * matrix(2, 2) - matrix(1, 2) * matrix(2, 0)) +
+               matrix(0, 2) * (matrix(1, 0) * matrix(2, 1) - matrix(1, 1) * matrix(2, 0));
     }
     // Fast exit with a 4x4.
     if constexpr (N == 4) {
-        return matrix[0][3] * matrix[1][2] * matrix[2][1] * matrix[3][0] -
-               matrix[0][2] * matrix[1][3] * matrix[2][1] * matrix[3][0] -
-               matrix[0][3] * matrix[1][1] * matrix[2][2] * matrix[3][0] +
-               matrix[0][1] * matrix[1][3] * matrix[2][2] * matrix[3][0] +
-               matrix[0][2] * matrix[1][1] * matrix[2][3] * matrix[3][0] -
-               matrix[0][1] * matrix[1][2] * matrix[2][3] * matrix[3][0] -
-               matrix[0][3] * matrix[1][2] * matrix[2][0] * matrix[3][1] +
-               matrix[0][2] * matrix[1][3] * matrix[2][0] * matrix[3][1] +
-               matrix[0][3] * matrix[1][0] * matrix[2][2] * matrix[3][1] -
-               matrix[0][0] * matrix[1][3] * matrix[2][2] * matrix[3][1] -
-               matrix[0][2] * matrix[1][0] * matrix[2][3] * matrix[3][1] +
-               matrix[0][0] * matrix[1][2] * matrix[2][3] * matrix[3][1] +
-               matrix[0][3] * matrix[1][1] * matrix[2][0] * matrix[3][2] -
-               matrix[0][1] * matrix[1][3] * matrix[2][0] * matrix[3][2] -
-               matrix[0][3] * matrix[1][0] * matrix[2][1] * matrix[3][2] +
-               matrix[0][0] * matrix[1][3] * matrix[2][1] * matrix[3][2] +
-               matrix[0][1] * matrix[1][0] * matrix[2][3] * matrix[3][2] -
-               matrix[0][0] * matrix[1][1] * matrix[2][3] * matrix[3][2] -
-               matrix[0][2] * matrix[1][1] * matrix[2][0] * matrix[3][3] +
-               matrix[0][1] * matrix[1][2] * matrix[2][0] * matrix[3][3] +
-               matrix[0][2] * matrix[1][0] * matrix[2][1] * matrix[3][3] -
-               matrix[0][0] * matrix[1][2] * matrix[2][1] * matrix[3][3] -
-               matrix[0][1] * matrix[1][0] * matrix[2][2] * matrix[3][3] +
-               matrix[0][0] * matrix[1][1] * matrix[2][2] * matrix[3][3];
+        return matrix(0, 3) * matrix(1, 2) * matrix(2, 1) * matrix(3, 0) -
+               matrix(0, 2) * matrix(1, 3) * matrix(2, 1) * matrix(3, 0) -
+               matrix(0, 3) * matrix(1, 1) * matrix(2, 2) * matrix(3, 0) +
+               matrix(0, 1) * matrix(1, 3) * matrix(2, 2) * matrix(3, 0) +
+               matrix(0, 2) * matrix(1, 1) * matrix(2, 3) * matrix(3, 0) -
+               matrix(0, 1) * matrix(1, 2) * matrix(2, 3) * matrix(3, 0) -
+               matrix(0, 3) * matrix(1, 2) * matrix(2, 0) * matrix(3, 1) +
+               matrix(0, 2) * matrix(1, 3) * matrix(2, 0) * matrix(3, 1) +
+               matrix(0, 3) * matrix(1, 0) * matrix(2, 2) * matrix(3, 1) -
+               matrix(0, 0) * matrix(1, 3) * matrix(2, 2) * matrix(3, 1) -
+               matrix(0, 2) * matrix(1, 0) * matrix(2, 3) * matrix(3, 1) +
+               matrix(0, 0) * matrix(1, 2) * matrix(2, 3) * matrix(3, 1) +
+               matrix(0, 3) * matrix(1, 1) * matrix(2, 0) * matrix(3, 2) -
+               matrix(0, 1) * matrix(1, 3) * matrix(2, 0) * matrix(3, 2) -
+               matrix(0, 3) * matrix(1, 0) * matrix(2, 1) * matrix(3, 2) +
+               matrix(0, 0) * matrix(1, 3) * matrix(2, 1) * matrix(3, 2) +
+               matrix(0, 1) * matrix(1, 0) * matrix(2, 3) * matrix(3, 2) -
+               matrix(0, 0) * matrix(1, 1) * matrix(2, 3) * matrix(3, 2) -
+               matrix(0, 2) * matrix(1, 1) * matrix(2, 0) * matrix(3, 3) +
+               matrix(0, 1) * matrix(1, 2) * matrix(2, 0) * matrix(3, 3) +
+               matrix(0, 2) * matrix(1, 0) * matrix(2, 1) * matrix(3, 3) -
+               matrix(0, 0) * matrix(1, 2) * matrix(2, 1) * matrix(3, 3) -
+               matrix(0, 1) * matrix(1, 0) * matrix(2, 2) * matrix(3, 3) +
+               matrix(0, 0) * matrix(1, 1) * matrix(2, 2) * matrix(3, 3);
     }
     using T = std::remove_const_t<CT>;
     // We need to create a temporary.
@@ -278,10 +278,10 @@ template <typename CT, std::size_t N>
     for (c = 0; c < N; ++c) {
         // If we have a negative value on the diagonal, we need to move it
         // somewhere else.
-        if (A[c][c] == 0.) {
+        if (A(c, c) == 0.) {
             // Right now, I'm trying to find a place below the current
             k = c + 1;
-            while ((k < N) && (A[k][c] == 0.)) {
+            while ((k < N) && (A(k, c) == 0.)) {
                 k++;
             }
             // If we did not find a non-zero value, we have a singular matrix.
@@ -295,11 +295,11 @@ template <typename CT, std::size_t N>
             det *= -1;
         }
         // Store the pivot.
-        pivot = A[c][c];
+        pivot = A(c, c);
         for (r = c + 1; r < N; ++r) {
-            ratio = A[r][c] / pivot;
+            ratio = A(r, c) / pivot;
             for (k = c; k < N; ++k) {
-                A[r][k] -= ratio * A[c][k];
+                A(r, k) -= ratio * A(c, k);
             }
         }
         // Multiply the pivot for the determinant variable.
@@ -322,12 +322,12 @@ template <typename T, std::size_t N>
         Matrix<std::remove_const_t<T>, N> adj;
         for (std::size_t i = 0; i < N; ++i) {
             for (std::size_t j = 0; j < N; ++j) {
-                // Get cofactor of A[i][j]
+                // Get cofactor of A(i, j)
                 auto support = fsmlib::linalg::cofactor(matrix, i, j);
-                // Sign of adj[j][i] positive if sum of row and column indexes is
+                // Sign of adj(j, i) positive if sum of row and column indexes is
                 // even. Interchanging rows and columns to get the transpose of the
                 // cofactor matrix.
-                adj[j][i] = (((i + j) % 2 == 0) ? 1 : -1) * fsmlib::linalg::determinant(support);
+                adj(j, i) = (((i + j) % 2 == 0) ? 1 : -1) * fsmlib::linalg::determinant(support);
             }
         }
         return adj;
@@ -355,7 +355,7 @@ template <typename T, std::size_t N>
     // Find Inverse using formula "inv(A) = adj(A)/det(A)".
     for (std::size_t r = 0; r < N; ++r) {
         for (std::size_t c = 0; c < N; ++c) {
-            inv[r][c] = adjoint[r][c] / det;
+            inv(r, c) = adjoint(r, c) / det;
         }
     }
     return inv;
@@ -412,32 +412,32 @@ template <typename T, std::size_t Rows, std::size_t Cols>
         // Find the pivot
         std::size_t pivot = row;
         for (std::size_t i = row + 1; i < Rows; ++i) {
-            if (std::abs(mat[i][col]) > std::abs(mat[pivot][col])) {
+            if (std::abs(mat(i, col)) > std::abs(mat(pivot, col))) {
                 pivot = i;
             }
         }
 
         // If the pivot is effectively zero, skip this column
-        if (std::abs(mat[pivot][col]) < epsilon) {
+        if (std::abs(mat(pivot, col)) < epsilon) {
             continue;
         }
 
         // Swap the current row with the pivot row
         for (std::size_t j = 0; j < Cols; ++j) {
-            std::swap(mat[row][j], mat[pivot][j]);
+            std::swap(mat(row, j), mat(pivot, j));
         }
 
         // Normalize the pivot row
-        T pivot_value = mat[row][col];
+        T pivot_value = mat(row, col);
         for (std::size_t j = 0; j < Cols; ++j) {
-            mat[row][j] /= pivot_value;
+            mat(row, j) /= pivot_value;
         }
 
         // Eliminate the column below the pivot
         for (std::size_t i = row + 1; i < Rows; ++i) {
-            T factor = mat[i][col];
+            T factor = mat(i, col);
             for (std::size_t j = 0; j < Cols; ++j) {
-                mat[i][j] -= factor * mat[row][j];
+                mat(i, j) -= factor * mat(row, j);
             }
         }
 
@@ -466,32 +466,32 @@ template <typename T, std::size_t Rows, std::size_t Cols>
     for (std::size_t k = 0; k < Cols; ++k) {
         // Compute the k-th column of Q.
         for (std::size_t i = 0; i < Rows; ++i) {
-            Q[i][k] = A[i][k];
+            Q(i, k) = A(i, k);
         }
         for (std::size_t j = 0; j < k; ++j) {
             T dot_product = 0;
             for (std::size_t i = 0; i < Rows; ++i) {
-                dot_product += Q[i][j] * A[i][k];
+                dot_product += Q(i, j) * A(i, k);
             }
-            R[j][k] = dot_product;
+            R(j, k) = dot_product;
 
             for (std::size_t i = 0; i < Rows; ++i) {
-                Q[i][k] -= R[j][k] * Q[i][j];
+                Q(i, k) -= R(j, k) * Q(i, j);
             }
         }
         // Normalize the k-th column of Q.
         T norm = 0;
         for (std::size_t i = 0; i < Rows; ++i) {
-            norm += Q[i][k] * Q[i][k];
+            norm += Q(i, k) * Q(i, k);
         }
-        R[k][k] = std::sqrt(norm);
+        R(k, k) = std::sqrt(norm);
         for (std::size_t i = 0; i < Rows; ++i) {
-            Q[i][k] /= R[k][k];
+            Q(i, k) /= R(k, k);
         }
-        if (R[k][k] > 0) {
-            R[k][k] = -R[k][k];
+        if (R(k, k) > 0) {
+            R(k, k) = -R(k, k);
             for (std::size_t i = 0; i < Rows; ++i) {
-                Q[i][k] = -Q[i][k];
+                Q(i, k) = -Q(i, k);
             }
         }
     }
@@ -519,22 +519,22 @@ template <typename T, std::size_t Rows, std::size_t Cols>
         for (std::size_t k = i; k < Cols; ++k) {
             T sum = 0;
             for (std::size_t j = 0; j < i; ++j) {
-                sum += L[i][j] * U[j][k];
+                sum += L(i, j) * U(j, k);
             }
-            U[i][k] = A[i][k] - sum;
+            U(i, k) = A(i, k) - sum;
         }
 
         // Compute the lower triangular matrix L.
         for (std::size_t k = i; k < Rows; ++k) {
             if (i == k) {
                 // Diagonal elements of L are set to 1.
-                L[i][i] = 1;
+                L(i, i) = 1;
             } else {
                 T sum = 0;
                 for (std::size_t j = 0; j < i; ++j) {
-                    sum += L[k][j] * U[j][i];
+                    sum += L(k, j) * U(j, i);
                 }
-                L[k][i] = (A[k][i] - sum) / U[i][i];
+                L(k, i) = (A(k, i) - sum) / U(i, i);
             }
         }
     }
@@ -570,7 +570,7 @@ template <typename T, std::size_t N>
     // Ensure the input matrix is symmetric
     for (std::size_t i = 0; i < N; ++i) {
         for (std::size_t j = 0; j < i; ++j) {
-            if (mat[i][j] != mat[j][i]) {
+            if (mat(i, j) != mat(j, i)) {
                 throw std::runtime_error("Cholesky decomposition: Matrix is not symmetric.");
             }
         }
@@ -584,19 +584,19 @@ template <typename T, std::size_t N>
 
             // Summation for diagonal and non-diagonal elements
             for (std::size_t k = 0; k < j; ++k) {
-                sum += lower[i][k] * lower[j][k];
+                sum += lower(i, k) * lower(j, k);
             }
 
             if (i == j) {
                 // Diagonal elements
-                T diag = mat[i][i] - sum;
+                T diag = mat(i, i) - sum;
                 if (diag <= 0) {
                     throw std::runtime_error("Cholesky decomposition: Matrix is not positive definite.");
                 }
-                lower[i][j] = std::sqrt(diag);
+                lower(i, j) = std::sqrt(diag);
             } else {
                 // Non-diagonal elements
-                lower[i][j] = (mat[i][j] - sum) / lower[j][j];
+                lower(i, j) = (mat(i, j) - sum) / lower(j, j);
             }
         }
     }
@@ -624,7 +624,7 @@ template <typename T, std::size_t Rows, std::size_t Cols>
     for (std::size_t i = 0; i < Rows; ++i) {
         T sum = 0;
         for (std::size_t j = 0; j < i; ++j) {
-            sum += L[i][j] * y[j];
+            sum += L(i, j) * y[j];
         }
         y[i] = b[i] - sum;
     }
@@ -634,9 +634,9 @@ template <typename T, std::size_t Rows, std::size_t Cols>
     for (std::size_t i = Rows; i-- > 0;) {
         T sum = 0;
         for (std::size_t j = i + 1; j < Rows; ++j) {
-            sum += U[i][j] * x[j];
+            sum += U(i, j) * x[j];
         }
-        x[i] = (y[i] - sum) / U[i][i];
+        x[i] = (y[i] - sum) / U(i, i);
     }
 
     return x;
@@ -717,7 +717,7 @@ template <typename T, std::size_t N>
     fsmlib::Matrix<T, N, N> result = mat;
     for (std::size_t i = 0; i < N; ++i) {
         for (std::size_t j = 0; j < N; ++j) {
-            result[i][j] -= lambda * vvT[i][j];
+            result(i, j) -= lambda * vvT(i, j);
         }
     }
 
@@ -746,7 +746,7 @@ template <typename T, std::size_t N>
     for (std::size_t i = 0; i < N; ++i) {
         eigenvalues[i] = eig_pairs[i].first;
         for (std::size_t j = 0; j < N; ++j) {
-            eigenvectors[j][i] = eig_pairs[i].second[j];
+            eigenvectors(j, i) = eig_pairs[i].second[j];
         }
     }
 
@@ -802,7 +802,7 @@ template <typename T, std::size_t Size>
     // Initialize the result as the identity matrix
     Matrix<T, Size, Size> result = {};
     for (std::size_t i = 0; i < Size; ++i) {
-        result[i][i] = 1;
+        result(i, i) = 1;
     }
 
     // Temporary variable to store intermediate results
@@ -817,9 +817,9 @@ template <typename T, std::size_t Size>
                 for (std::size_t j = 0; j < Size; ++j) {
                     T sum = 0;
                     for (std::size_t k = 0; k < Size; ++k) {
-                        sum += result[i][k] * base[k][j];
+                        sum += result(i, k) * base(k, j);
                     }
-                    temp[i][j] = sum;
+                    temp(i, j) = sum;
                 }
             }
             result = temp;
@@ -831,9 +831,9 @@ template <typename T, std::size_t Size>
             for (std::size_t j = 0; j < Size; ++j) {
                 T sum = 0;
                 for (std::size_t k = 0; k < Size; ++k) {
-                    sum += base[i][k] * base[k][j];
+                    sum += base(i, k) * base(k, j);
                 }
-                temp[i][j] = sum;
+                temp(i, j) = sum;
             }
         }
         base = temp;
@@ -911,7 +911,7 @@ eigen(const fsmlib::Matrix<T, N, N> &mat, std::size_t max_iterations = 1000, T t
 
         eigenvalues[k] = lambda;
         for (std::size_t i = 0; i < N; ++i) {
-            eigenvectors[i][k] = v[i];
+            eigenvectors(i, k) = v[i];
         }
 
         A = fsmlib::linalg::deflate(A, lambda, v);
@@ -985,20 +985,20 @@ template <typename T, std::size_t M, std::size_t N>
         T norm_U = std::sqrt(fsmlib::dot(fsmlib::column(U, i), fsmlib::column(U, i)));
         T norm_V = std::sqrt(fsmlib::dot(fsmlib::column(V, i), fsmlib::column(V, i)));
         for (std::size_t j = 0; j < M; ++j) {
-            U[j][i] /= norm_U;
+            U(j, i) /= norm_U;
         }
         for (std::size_t j = 0; j < N; ++j) {
-            V[j][i] /= norm_V;
+            V(j, i) /= norm_V;
         }
 
         // Align signs to ensure \( Av_i = \Sigma_i u_i \)
         auto Av   = fsmlib::multiply(A, fsmlib::column(V, i)); // Compute \( A v_i \)
         auto sign = (fsmlib::inner_product(Av, fsmlib::column(U, i)) < 0) ? -1.0 : 1.0;
         for (std::size_t j = 0; j < M; ++j) {
-            U[j][i] *= sign;
+            U(j, i) *= sign;
         }
         for (std::size_t j = 0; j < N; ++j) {
-            V[j][i] *= sign;
+            V(j, i) *= sign;
         }
     }
 

@@ -51,8 +51,7 @@ struct DiscreteStateSpace {
 /// @param sample_time The sample time for discretization.
 /// @returns The discretized state-space model.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-[[nodiscard]] constexpr inline auto
-c2d(const StateSpace<T, N_state, N_input, N_output> &sys, T sample_time)
+[[nodiscard]] constexpr inline auto c2d(const StateSpace<T, N_state, N_input, N_output> &sys, T sample_time)
 {
     DiscreteStateSpace<T, N_state, N_input, N_output> dsys;
 
@@ -60,8 +59,8 @@ c2d(const StateSpace<T, N_state, N_input, N_output> &sys, T sample_time)
     dsys.A = fsmlib::linalg::expm(sys.A * sample_time, 1e-06);
 
     // Discretize the input matrix using the zero-order hold method.
-    dsys.B = fsmlib::multiply(
-        fsmlib::multiply(fsmlib::linalg::inverse(sys.A), dsys.A - fsmlib::eye<T, N_state>()), sys.B);
+    dsys.B =
+        fsmlib::multiply(fsmlib::multiply(fsmlib::linalg::inverse(sys.A), dsys.A - fsmlib::eye<T, N_state>()), sys.B);
 
     // Copy the output and feedforward matrices.
     dsys.C = sys.C;
@@ -73,34 +72,144 @@ c2d(const StateSpace<T, N_state, N_input, N_output> &sys, T sample_time)
     return dsys;
 }
 
-/// @brief Simulates one step of a discrete-time state-space model.
+/// @brief Simulates one step of a state-space model.
 /// @tparam T The type of the elements in the matrices and vectors.
 /// @tparam N_state The number of states.
 /// @tparam N_input The number of inputs.
 /// @tparam N_output The number of outputs.
-/// @param dsys The discretized state-space model.
+/// @param sys The state-space model.
 /// @param x The current state vector.
 /// @param u The input vector.
-/// @param state Reference to a vector that will hold the next state after simulation.
-/// @param output Reference to a vector that will hold the computed output.
-/// @details This function computes the next state and output of a discrete-time state-space model
+/// @param next Reference to a vector that will hold the next state after simulation.
+/// @param y Reference to a vector that will hold the computed output.
+/// @details This function computes the next state and output of a state-space model
 /// based on the provided current state and input. The next state is computed as:
 /// \f$ x_{next} = A \cdot x + B \cdot u \f$
 /// and the output is computed as:
 /// \f$ y = C \cdot x + D \cdot u \f$.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-constexpr inline void
-step(
-    const DiscreteStateSpace<T, N_state, N_input, N_output> &dsys,
-    const Vector<T, N_state> &x,
-    const Vector<T, N_input> &u,
-    Vector<T, N_state> &state,
-    Vector<T, N_output> &output)
+constexpr inline void step(const StateSpace<T, N_state, N_input, N_output> &sys,
+                           const Vector<T, N_state> &x,
+                           const Vector<T, N_input> &u,
+                           Vector<T, N_state> &next,
+                           Vector<T, N_output> &y)
 {
-    // Compute the next state: x_next = A * x + B * u
-    state = fsmlib::multiply(dsys.A, x) + fsmlib::multiply(dsys.B, u);
-    // Compute the output: y = C * x + D * u
-    output = fsmlib::multiply(dsys.C, x) + fsmlib::multiply(dsys.D, u);
+    // Compute the next state: x_next = A * x + B * u.
+    next = fsmlib::multiply(sys.A, x) + fsmlib::multiply(sys.B, u);
+    // Compute the output: y = C * x + D * u.
+    y = fsmlib::multiply(sys.C, x) + fsmlib::multiply(sys.D, u);
+}
+
+/// @brief Simulates one step of a state-space model.
+/// @tparam T The type of the elements in the matrices and vectors.
+/// @tparam N_state The number of states.
+/// @tparam N_input The number of inputs.
+/// @tparam N_output The number of outputs.
+/// @param sys The state-space model.
+/// @param x The current state vector.
+/// @param u The input vector.
+/// @param next Reference to a vector that will hold the next state after simulation.
+/// @param y Reference to a vector that will hold the computed output.
+/// @details This function computes the next state and output of a state-space model
+/// based on the provided current state and input. The next state is computed as:
+/// \f$ x_{next} = A \cdot x + B \cdot u \f$
+/// and the output is computed as:
+/// \f$ y = C \cdot x + D \cdot u \f$.
+template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
+constexpr inline void dstep(const DiscreteStateSpace<T, N_state, N_input, N_output> &sys,
+                            const Vector<T, N_state> &x,
+                            const Vector<T, N_input> &u,
+                            Vector<T, N_state> &next,
+                            Vector<T, N_output> &y)
+{
+    // Compute the next state: x_next = A * x + B * u.
+    next = fsmlib::multiply(sys.A, x) + fsmlib::multiply(sys.B, u);
+    // Compute the output: y = C * x + D * u.
+    y = fsmlib::multiply(sys.C, x) + fsmlib::multiply(sys.D, u);
+}
+
+/// @brief Simulates the continuous-time state-space model.
+/// @tparam T The type of the elements in the matrices.
+/// @tparam N_state The number of states.
+/// @tparam N_input The number of inputs.
+/// @tparam N_output The number of outputs.
+/// @tparam TimeSteps The number of time steps.
+/// @param ss The state-space model.
+/// @param input The input signal.
+/// @param x0 The initial state vector.
+/// @param time_step The time step for numerical integration.
+/// @return The system output as a matrix.
+template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output, std::size_t TimeSteps>
+fsmlib::Matrix<T, N_output, TimeSteps> lsim(const StateSpace<T, N_state, N_input, N_output> &ss,
+                                            const fsmlib::Matrix<T, N_input, TimeSteps> &input,
+                                            const fsmlib::Vector<T, N_state> &x0,
+                                            T time_step)
+{ // Output matrix to store the results.
+    fsmlib::Matrix<T, N_output, TimeSteps> output{};
+    // State vector initialized to the initial state x0.
+    fsmlib::Vector<T, N_state> x = x0;
+    // Temporary vector to hold the state derivative (x_dot).
+    fsmlib::Vector<T, N_state> x_dot{};
+    // Iterate over the time steps.
+    for (std::size_t k = 0; k < TimeSteps; ++k) {
+        // Extract the column vector for the current time step input.
+        fsmlib::Vector<T, N_input> u{};
+        for (std::size_t i = 0; i < N_input; ++i) {
+            u[i] = input(i, k);
+        }
+        // Extract the column vector for the current time step output.
+        fsmlib::Vector<T, N_output> y{};
+        // Compute the state derivative and output using the step function.
+        fsmlib::control::step(ss, x, u, x_dot, y);
+        // Store the computed output back into the output matrix.
+        for (std::size_t i = 0; i < N_output; ++i) {
+            output(i, k) = y[i];
+        }
+        // Scale the state derivative by the time step for the continuous update.
+        x += x_dot * time_step;
+    }
+    return output;
+}
+
+/// @brief Simulates the discrete-time state-space model.
+/// @tparam T The type of the elements in the matrices.
+/// @tparam N_state The number of states.
+/// @tparam N_input The number of inputs.
+/// @tparam N_output The number of outputs.
+/// @tparam TimeSteps The number of time steps.
+/// @param dsys The discrete-time state-space model.
+/// @param input The input signal.
+/// @param x0 The initial state vector.
+/// @return The system output as a matrix.
+template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output, std::size_t TimeSteps>
+fsmlib::Matrix<T, N_output, TimeSteps> dlsim(const DiscreteStateSpace<T, N_state, N_input, N_output> &dsys,
+                                             const fsmlib::Matrix<T, N_input, TimeSteps> &input,
+                                             const fsmlib::Vector<T, N_state> &x0)
+{
+    // Output matrix to store the results.
+    fsmlib::Matrix<T, N_output, TimeSteps> output{};
+    // State vector initialized to the initial state x0.
+    fsmlib::Vector<T, N_state> x = x0;
+    // Temporary vectors for the next state and output.
+    fsmlib::Vector<T, N_state> x_next{};
+    fsmlib::Vector<T, N_input> u{};
+    fsmlib::Vector<T, N_output> y{};
+    // Iterate over time steps.
+    for (std::size_t k = 0; k < TimeSteps; ++k) {
+        // Extract the column vector for the current time step input.
+        for (std::size_t i = 0; i < N_input; ++i) {
+            u[i] = input(i, k);
+        }
+        // Compute the next state and output using the step function.
+        fsmlib::control::dstep(dsys, x, u, x_next, y);
+        // Store the computed output back into the output matrix.
+        for (std::size_t i = 0; i < N_output; ++i) {
+            output(i, k) = y[i];
+        }
+        // Update the current state to the next state.
+        x = x_next;
+    }
+    return output;
 }
 
 /// @brief Computes the controllability matrix of a state-space system.
@@ -112,29 +221,29 @@ step(
 /// @return The controllability matrix.
 /// @details CM = [ B    A*B    A^2*B    ...    A^(N-1)*B ]
 template <typename T, std::size_t N, std::size_t Q>
-[[nodiscard]] constexpr inline auto
-ctrb(const Matrix<T, N, N> &A, const Matrix<T, N, Q> &B)
+[[nodiscard]] constexpr inline auto ctrb(const Matrix<T, N, N> &A, const Matrix<T, N, Q> &B)
 {
     // Initialize the controllability matrix with zeros.
     Matrix<T, N, N * Q> result = {};
     // Copy the first block (B) into the result.
     for (std::size_t i = 0; i < N; ++i) {
         for (std::size_t j = 0; j < Q; ++j) {
-            result[i][j] = B[i][j];
+            result(i, j) = B(i, j);
         }
     }
-    // Construct the controllability matrix
+    // Construct the controllability matrix.
     for (std::size_t p = 1; p < N; ++p) {
-        // Compute A^p * B
-        auto Ap  = fsmlib::linalg::powm(A, p); // Compute A^p
-        auto ApB = fsmlib::multiply(Ap, B);    // Multiply A^p with B
-        // Insert ApB into the result matrix
+        // Compute A^p * B.
+        auto Ap  = fsmlib::linalg::powm(A, p); // Compute A^p.
+        auto ApB = fsmlib::multiply(Ap, B);    // Multiply A^p with B.
+        // Insert ApB into the result matrix.
         for (std::size_t i = 0; i < N; ++i) {
             for (std::size_t j = 0; j < Q; ++j) {
-                result[i][p * Q + j] = ApB[i][j];
+                result(i, p * Q + j) = ApB(i, j);
             }
         }
     }
+
     return result;
 }
 
@@ -153,15 +262,14 @@ ctrb(const Matrix<T, N, N> &A, const Matrix<T, N, Q> &B)
 ///      | ...       |
 ///      | C*A^(n-1) |
 template <typename T, std::size_t N, std::size_t P>
-[[nodiscard]] constexpr inline auto
-obsv(const Matrix<T, N, N> &A, const Matrix<T, P, N> &C)
+[[nodiscard]] constexpr inline auto obsv(const Matrix<T, N, N> &A, const Matrix<T, P, N> &C)
 {
     // Initialize the observability matrix with the first block (C).
     Matrix<T, P * N, N> result = {};
     // Copy the first block (C) into the result.
     for (std::size_t i = 0; i < P; ++i) {
         for (std::size_t j = 0; j < N; ++j) {
-            result[i][j] = C[i][j];
+            result(i, j) = C(i, j);
         }
     }
     // Construct the observability matrix.
@@ -173,7 +281,7 @@ obsv(const Matrix<T, N, N> &A, const Matrix<T, P, N> &C)
         // Insert CA into the result matrix.
         for (std::size_t i = 0; i < P; ++i) {
             for (std::size_t j = 0; j < N; ++j) {
-                result[p * P + i][j] = CA[i][j];
+                result(p * P + i, j) = CA(i, j);
             }
         }
     }
@@ -186,8 +294,7 @@ obsv(const Matrix<T, N, N> &A, const Matrix<T, P, N> &C)
 /// @param a The input vector containing the roots of the polynomial.
 /// @return A vector of coefficients of the polynomial.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto
-poly(const fsmlib::Vector<T, N> &a)
+[[nodiscard]] constexpr inline auto poly(const fsmlib::Vector<T, N> &a)
 {
     // Initialize the coefficients vector with size N + 1 (degree of polynomial + 1).
     fsmlib::Vector<T, N + 1> c = {};
@@ -209,8 +316,7 @@ poly(const fsmlib::Vector<T, N> &a)
 /// @param a The input vector of coefficients.
 /// @return A reduced vector with leading zeros removed.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto
-polyreduce(const fsmlib::Vector<T, N> &a)
+[[nodiscard]] constexpr inline auto polyreduce(const fsmlib::Vector<T, N> &a)
 {
     fsmlib::Vector<T, N> result = {};
     std::size_t first_nonzero   = N;
@@ -238,8 +344,9 @@ polyreduce(const fsmlib::Vector<T, N> &a)
 /// @param poles The desired poles for generating the closed-loop behavior (fixed-size vector).
 /// @return Gains \( K \) such that \( A - BK \) has the given eigenvalues.
 template <typename T, std::size_t Rows, std::size_t Cols, std::size_t NumPoles>
-[[nodiscard]] constexpr inline auto
-acker(const fsmlib::Matrix<T, Rows, Rows> &A, const fsmlib::Matrix<T, Rows, Cols> &B, const fsmlib::Vector<T, NumPoles> &poles)
+[[nodiscard]] constexpr inline auto acker(const fsmlib::Matrix<T, Rows, Rows> &A,
+                                          const fsmlib::Matrix<T, Rows, Cols> &B,
+                                          const fsmlib::Vector<T, NumPoles> &poles)
 {
     static_assert(Rows == NumPoles, "The number of poles must match the system order.");
     // Ensure the system is controllable.
@@ -256,7 +363,7 @@ acker(const fsmlib::Matrix<T, Rows, Rows> &A, const fsmlib::Matrix<T, Rows, Cols
     }
     // Selection matrix to extract the last row of the controllability matrix
     fsmlib::Matrix<T, 1, Rows> selection = {};
-    selection[0][Rows - 1]               = 1;
+    selection(0, Rows - 1)               = 1;
     // Compute the gain matrix.
     return fsmlib::multiply(selection, fsmlib::multiply(fsmlib::linalg::inverse(ct), Ap));
 }

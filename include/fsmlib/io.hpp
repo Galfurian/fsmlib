@@ -7,12 +7,13 @@
 
 #pragma once
 
-#include "fsmlib/fsmlib.hpp"
-#include "fsmlib/control.hpp"
-
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+
+#include "fsmlib/fsmlib.hpp"
+#include "fsmlib/control.hpp"
+#include "fsmlib/view.hpp"
 
 /// @brief Overload the << operator for Vector.
 /// @tparam T The type of the vector elements.
@@ -21,7 +22,7 @@
 /// @param vec The vector to print.
 /// @return The output stream with the vector contents.
 template <typename T, std::size_t N>
-std::ostream &operator<<(std::ostream &os, const fsmlib::Vector<T, N> &vec)
+std::ostream &operator<<(std::ostream &os, const fsmlib::VectorBase<T, N> &vec)
 {
     // Determine the maximum width of the elements for alignment.
     std::size_t max_width = 0;
@@ -41,6 +42,44 @@ std::ostream &operator<<(std::ostream &os, const fsmlib::Vector<T, N> &vec)
 
     return os;
 }
+
+/// @brief Overload the << operator for Matrix.
+/// @tparam T The type of the matrix elements.
+/// @tparam N1 The number of rows in the matrix.
+/// @tparam N2 The number of columns in the matrix.
+/// @param os The output stream.
+/// @param mat The matrix to print.
+/// @return The output stream with the matrix contents.
+template <typename T, std::size_t N1, std::size_t N2>
+std::ostream &operator<<(std::ostream &os, const fsmlib::MatrixBase<T, N1, N2> &mat)
+{
+    // Determine the maximum width of the elements for alignment.
+    std::size_t max_width = 0;
+    for (std::size_t r = 0; r < N1; ++r) {
+        for (std::size_t c = 0; c < N2; ++c) {
+            std::ostringstream ss;
+            ss << std::setprecision(6) << std::fixed << mat(r, c);
+            max_width = std::max(max_width, ss.str().length());
+        }
+    }
+
+    // Print the matrix rows.
+    for (std::size_t r = 0; r < N1; ++r) {
+        for (std::size_t c = 0; c < N2; ++c) {
+            os << std::setw(static_cast<int>(max_width)) << std::setprecision(6) << std::fixed << mat(r, c);
+            if (c < N2 - 1) {
+                os << " ";
+            }
+        }
+        if (r < N1 - 1) {
+            os << "\n";
+        }
+    }
+
+    return os;
+}
+
+#if 0
 
 /// @brief Overload the << operator for View.
 /// @tparam T The type of the view elements.
@@ -70,42 +109,6 @@ std::ostream &operator<<(std::ostream &os, const fsmlib::View<T, N> &vec)
     return os;
 }
 
-/// @brief Overload the << operator for Matrix.
-/// @tparam T The type of the matrix elements.
-/// @tparam N1 The number of rows in the matrix.
-/// @tparam N2 The number of columns in the matrix.
-/// @param os The output stream.
-/// @param mat The matrix to print.
-/// @return The output stream with the matrix contents.
-template <typename T, std::size_t N1, std::size_t N2>
-std::ostream &operator<<(std::ostream &os, const fsmlib::Matrix<T, N1, N2> &mat)
-{
-    // Determine the maximum width of the elements for alignment.
-    std::size_t max_width = 0;
-    for (std::size_t r = 0; r < N1; ++r) {
-        for (std::size_t c = 0; c < N2; ++c) {
-            std::ostringstream ss;
-            ss << std::setprecision(6) << std::fixed << mat[r][c];
-            max_width = std::max(max_width, ss.str().length());
-        }
-    }
-
-    // Print the matrix rows.
-    for (std::size_t r = 0; r < N1; ++r) {
-        for (std::size_t c = 0; c < N2; ++c) {
-            os << std::setw(static_cast<int>(max_width)) << std::setprecision(6) << std::fixed << mat[r][c];
-            if (c < N2 - 1) {
-                os << " ";
-            }
-        }
-        if (r < N1 - 1) {
-            os << "\n";
-        }
-    }
-
-    return os;
-}
-
 /// @brief Overload the << operator for MatrixView.
 /// @tparam T The type of the matrix view elements.
 /// @tparam N1 The number of rows in the view.
@@ -121,7 +124,7 @@ std::ostream &operator<<(std::ostream &os, const fsmlib::MatrixView<T, N1, N2> &
     for (std::size_t r = 0; r < N1; ++r) {
         for (std::size_t c = 0; c < N2; ++c) {
             std::ostringstream ss;
-            ss << std::setprecision(6) << std::fixed << mat[r][c];
+            ss << std::setprecision(6) << std::fixed << mat(r, c);
             max_width = std::max(max_width, ss.str().length());
         }
     }
@@ -129,7 +132,7 @@ std::ostream &operator<<(std::ostream &os, const fsmlib::MatrixView<T, N1, N2> &
     // Print the matrix view rows.
     for (std::size_t r = 0; r < N1; ++r) {
         for (std::size_t c = 0; c < N2; ++c) {
-            os << std::setw(static_cast<int>(max_width)) << std::setprecision(6) << std::fixed << mat[r][c];
+            os << std::setw(static_cast<int>(max_width)) << std::setprecision(6) << std::fixed << mat(r, c);
             if (c < N2 - 1) {
                 os << " ";
             }
@@ -139,6 +142,8 @@ std::ostream &operator<<(std::ostream &os, const fsmlib::MatrixView<T, N1, N2> &
 
     return os;
 }
+
+#endif
 
 /// @brief Overload the << operator for continuous-time state-space models.
 /// @tparam T The type of the state-space model elements.

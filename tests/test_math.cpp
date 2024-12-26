@@ -108,7 +108,8 @@ int main()
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix-Vector multiplication");
             }
-            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: Matrix-Vector multiplication\n";
+            std::cout << "Test " << std::setw(2) << std::right << test_count++
+                      << " passed: Matrix-Vector multiplication\n";
         }
 
         {
@@ -119,7 +120,8 @@ int main()
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix-Matrix multiplication");
             }
-            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: Matrix-Matrix multiplication\n";
+            std::cout << "Test " << std::setw(2) << std::right << test_count++
+                      << " passed: Matrix-Matrix multiplication\n";
         }
 
         {
@@ -386,10 +388,12 @@ int main()
             std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: Matrix <= Matrix\n";
         }
         {
+            // Test: Vector + View
             fsmlib::Vector<int, 3> vec1     = { 1, 2, 3 };
             fsmlib::Vector<int, 5> vec2     = { 10, 20, 30, 40, 50 };
             fsmlib::Vector<int, 3> expected = { 31, 42, 53 };
 
+            // View over vec2 elements 30, 40, 50 (offset 2, size 3)
             auto view   = fsmlib::view<int, 3>(vec2, 2);
             auto result = vec1 + view;
 
@@ -398,55 +402,65 @@ int main()
                 std::cerr << "Result:   " << result << "\n";
                 throw std::runtime_error("Test failed: Vector + View addition with offset");
             }
-            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: Vector + View addition with offset\n";
+            std::cout << "Test " << std::setw(2) << std::right << test_count++
+                      << " passed: Vector + View addition with offset\n";
         }
 
         {
+            // Test: Vector - View
             fsmlib::Vector<int, 3> vec1     = { 50, 60, 70 };
             fsmlib::Vector<int, 5> vec2     = { 10, 20, 30, 40, 50 };
             fsmlib::Vector<int, 3> expected = { 30, 30, 30 };
 
+            // View over vec2 elements 20, 30, 40 (offset 1, size 3)
             auto view   = fsmlib::view<int, 3>(vec2, 1);
             auto result = vec1 - view;
 
             if (fsmlib::any(result != expected)) {
-                std::cerr << expected << "\n";
-                std::cerr << result << "\n";
+                std::cerr << "Expected: " << expected << "\n";
+                std::cerr << "Result:   " << result << "\n";
                 throw std::runtime_error("Test failed: Vector - View subtraction with offset");
             }
-            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: Vector - View subtraction with offset\n";
+            std::cout << "Test " << std::setw(2) << std::right << test_count++
+                      << " passed: Vector - View subtraction with offset\n";
         }
 
         {
+            // Test: Vector * View
             fsmlib::Vector<int, 3> vec1     = { 2, 3, 4 };
             fsmlib::Vector<int, 5> vec2     = { 1, 2, 3, 4, 5 };
             fsmlib::Vector<int, 3> expected = { 6, 12, 20 };
 
+            // View over vec2 elements 3, 4, 5 (offset 2, size 3)
             auto view   = fsmlib::view<int, 3>(vec2, 2);
             auto result = vec1 * view;
 
             if (fsmlib::any(result != expected)) {
-                std::cerr << expected << "\n";
-                std::cerr << result << "\n";
+                std::cerr << "Expected: " << expected << "\n";
+                std::cerr << "Result:   " << result << "\n";
                 throw std::runtime_error("Test failed: Vector * View multiplication with offset");
             }
-            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: Vector * View multiplication with offset\n";
+            std::cout << "Test " << std::setw(2) << std::right << test_count++
+                      << " passed: Vector * View multiplication with offset\n";
         }
 
         {
+            // Test: Vector / View
             fsmlib::Vector<int, 3> vec1     = { 40, 50, 60 };
             fsmlib::Vector<int, 5> vec2     = { 1, 2, 4, 5, 6 };
             fsmlib::Vector<int, 3> expected = { 10, 10, 10 };
 
+            // View over vec2 elements 4, 5, 6 (offset 2, size 3)
             auto view   = fsmlib::view<int, 3>(vec2, 2);
             auto result = vec1 / view;
 
             if (fsmlib::any(result != expected)) {
-                std::cerr << expected << "\n";
-                std::cerr << result << "\n";
+                std::cerr << "Expected: " << expected << "\n";
+                std::cerr << "Result:   " << result << "\n";
                 throw std::runtime_error("Test failed: Vector / View division with offset");
             }
-            std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: Vector / View division with offset\n";
+            std::cout << "Test " << std::setw(2) << std::right << test_count++
+                      << " passed: Vector / View division with offset\n";
         }
 
         {

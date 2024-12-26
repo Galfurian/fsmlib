@@ -145,10 +145,10 @@ int main()
                 { -2.0, 1.0 },
                 { 1.5, -0.5 },
             };
-            if (!fsmlib::details::approximately_equal(result[0][0], expected[0][0]) ||
-                !fsmlib::details::approximately_equal(result[0][1], expected[0][1]) ||
-                !fsmlib::details::approximately_equal(result[1][0], expected[1][0]) ||
-                !fsmlib::details::approximately_equal(result[1][1], expected[1][1])) {
+            if (!fsmlib::details::approximately_equal(result(0, 0), expected(0, 0)) ||
+                !fsmlib::details::approximately_equal(result(0, 1), expected(0, 1)) ||
+                !fsmlib::details::approximately_equal(result(1, 0), expected(1, 0)) ||
+                !fsmlib::details::approximately_equal(result(1, 1), expected(1, 1))) {
                 throw std::runtime_error("Test failed: Matrix inverse");
             }
             std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: Matrix inverse\n";
