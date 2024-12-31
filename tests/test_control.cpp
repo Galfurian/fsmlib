@@ -163,7 +163,7 @@ int main()
             // Define the roots of the polynomial
             fsmlib::Vector<double, 3> roots = { 2.0, -3.0, 1.5 };
             // Compute the polynomial coefficients
-            auto result = fsmlib::control::poly(roots);
+            auto result = fsmlib::linalg::poly(roots);
             // Expected coefficients for polynomial.
             fsmlib::Vector<double, 4> expected = { 1.0, -0.5, -7.5, 9.0 };
             // Verify the result
@@ -178,7 +178,7 @@ int main()
         {
             fsmlib::Vector<double, 6> coefficients = { 0, 0, 0, 1.0, -0.5, 9.0 };
             // Reduce the polynomial coefficients
-            auto result = fsmlib::control::polyreduce(coefficients);
+            auto result = fsmlib::linalg::polyreduce(coefficients);
             // Expected result
             fsmlib::Vector<double, 6> expected = { 1.0, -0.5, 9.0, 0., 0., 0. };
             if (fsmlib::any(result != expected)) {
@@ -206,6 +206,7 @@ int main()
             std::cout << "Test " << std::setw(2) << std::right << test_count++
                       << " passed: acker with 2x2 system and 2 poles\n";
         }
+
         {
             // Define the state matrix A and input matrix B.
             fsmlib::Matrix<double, 3, 3> A = { { 1.5, -2.3, 0.7 }, { 3.1, 0.4, -1.2 }, { 0.0, 4.0, -0.5 } };
@@ -224,6 +225,58 @@ int main()
             std::cout << "Test " << std::setw(2) << std::right << test_count++
                       << " passed: acker with 3x3 system and 3 poles\n";
         }
+
+        {
+            fsmlib::control::StateSpace<double, 2, 2, 2> ss = {
+                .A = { { 0.0, 1.0 }, { -4.0, -5.0 } },
+                .B = { { 1.0, 0.0 }, { 0.0, 1.0 } },
+                .C = { { 1.0, 0.0 }, { 0.0, 1.0 } },
+                .D = { { 0.0, 0.0 }, { 0.0, 0.0 } },
+            };
+
+            // Compute the transfer function representation.
+            auto transfer_functions = fsmlib::control::ss2tf(ss);
+
+            // Expected transfer functions for each input-output pair.
+            fsmlib::control::TransferFunction<double, 3, 3> expected_tf[2][2] = {
+                {
+                    // Row 1 (Output 1)
+                    { { 1.0, 5.0, 0.0 }, { 1.0, 5.0, 4.0 } }, // H11
+                    { { 1.0, 0.0, 0.0 }, { 1.0, 5.0, 4.0 } }  // H12
+                },
+                {
+                    // Row 2 (Output 2)
+                    { { -4.0, 0.0, 0.0 }, { 1.0, 5.0, 4.0 } }, // H21
+                    { { 1.0, 0.0, 0.0 }, { 1.0, 5.0, 4.0 } }   // H22
+                }
+            };
+
+            // Validate transfer functions for all input-output pairs.
+            for (std::size_t i = 0; i < 2; ++i) {
+                for (std::size_t j = 0; j < 2; ++j) {
+                    const auto &tf       = transfer_functions[i][j];
+                    const auto &expected = expected_tf[i][j];
+                    // Check numerator
+                    if (fsmlib::any(fsmlib::abs(tf.numerator - expected.numerator) > 1e-06)) {
+                        std::cerr << "Expected numerator for H(" << i + 1 << ", " << j + 1 << "):\n"
+                                  << expected.numerator << "\nGot numerator:\n"
+                                  << tf.numerator << "\n";
+                        throw std::runtime_error("Test failed: numerator mismatch in MIMO transfer function");
+                    }
+                    // Check denominator
+                    if (fsmlib::any(fsmlib::abs(tf.denominator - expected.denominator) > 1e-06)) {
+                        std::cerr << "Expected denominator for H(" << i + 1 << ", " << j + 1 << "):\n"
+                                  << expected.denominator << "\nGot denominator:\n"
+                                  << tf.denominator << "\n";
+                        throw std::runtime_error("Test failed: denominator mismatch in MIMO transfer function");
+                    }
+                }
+            }
+
+            std::cout << "Test " << std::setw(2) << std::right << test_count++
+                      << " passed: ss2tf with 2x2 system and MIMO model\n";
+        }
+
         std::cout << "All control tests passed!\n";
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;

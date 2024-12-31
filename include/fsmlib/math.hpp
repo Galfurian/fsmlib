@@ -752,15 +752,18 @@ template <class T, std::size_t Rows, std::size_t Cols>
 
 /// @brief Computes the trace of a square matrix, i.e., the sum of the elements along the main diagonal.
 /// @tparam T The type of the matrix elements.
-/// @tparam Size The size of the square matrix (Size x Size).
+/// @tparam N The size of the square matrix (N x N).
 /// @param A The input square matrix.
 /// @return The sum of the diagonal elements.
-template <typename T, std::size_t Size>
-[[nodiscard]] constexpr inline auto trace(const fsmlib::MatrixBase<T, Size, Size> &A)
+template <typename T, std::size_t N>
+[[nodiscard]] constexpr inline auto trace(const fsmlib::MatrixBase<T, N, N> &A)
 {
-    T result = 0;
+    // Select the right type.
+    using data_type_t = std::remove_const_t<T>;
+    // Initialize the result.
+    data_type_t result = 0;
     // Sum the diagonal elements.
-    for (std::size_t i = 0; i < Size; ++i) {
+    for (std::size_t i = 0; i < N; ++i) {
         result += A(i, i);
     }
     return result;

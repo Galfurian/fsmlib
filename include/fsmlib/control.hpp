@@ -42,6 +42,29 @@ struct DiscreteStateSpace {
     T sample_time;                          ///< The sample time used for discretization.
 };
 
+/// @brief Represents a single transfer function for a MIMO system.
+/// @tparam T The type of the coefficients (e.g., double, float).
+/// @tparam N_num The number of numerator coefficients (polynomial order + 1).
+/// @tparam N_den The number of denominator coefficients (polynomial order + 1).
+template <typename T, std::size_t N_num, std::size_t N_den>
+struct TransferFunction {
+    fsmlib::Vector<T, N_num> numerator;   ///< Fixed-size vector for numerator coefficients.
+    fsmlib::Vector<T, N_den> denominator; ///< Fixed-size vector for denominator coefficients.
+
+    /// @brief Constructor to initialize a transfer function with zero coefficients.
+    constexpr TransferFunction() : numerator{}, denominator{}
+    {
+    }
+
+    /// @brief Constructor to initialize a transfer function with given coefficients.
+    /// @param num The numerator coefficients.
+    /// @param den The denominator coefficients.
+    constexpr TransferFunction(const fsmlib::Vector<T, N_num> &num, const fsmlib::Vector<T, N_den> &den)
+        : numerator(num), denominator(den)
+    {
+    }
+};
+
 /// @brief Discretizes a continuous-time state-space model using a given sample time.
 /// @tparam T The type of the elements in the matrices.
 /// @tparam N_state The number of states.
@@ -288,52 +311,6 @@ template <typename T, std::size_t N, std::size_t P>
     return result;
 }
 
-/// @brief Computes the coefficients of the polynomial whose roots are the elements of a.
-/// @tparam T The type of the elements in the input vector.
-/// @tparam N The size of the input vector.
-/// @param a The input vector containing the roots of the polynomial.
-/// @return A vector of coefficients of the polynomial.
-template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto poly(const fsmlib::Vector<T, N> &a)
-{
-    // Initialize the coefficients vector with size N + 1 (degree of polynomial + 1).
-    fsmlib::Vector<T, N + 1> c = {};
-    // The leading coefficient is always 1 for monic polynomials.
-    c[0] = 1;
-    // Compute the polynomial coefficients using the recurrence relation.
-    for (std::size_t j = 0; j < N; ++j) {
-        for (std::size_t i = j + 1; i >= 1; --i) {
-            c[i] -= a[j] * c[i - 1];
-        }
-    }
-    return c;
-}
-
-/// @brief Reduces a polynomial coefficient vector to a minimum number of terms
-/// by stripping off any leading zeros.
-/// @tparam T The type of the elements in the input vector.
-/// @tparam N The size of the input vector.
-/// @param a The input vector of coefficients.
-/// @return A reduced vector with leading zeros removed.
-template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto polyreduce(const fsmlib::Vector<T, N> &a)
-{
-    fsmlib::Vector<T, N> result = {};
-    std::size_t first_nonzero   = N;
-    // Find the first non-zero element
-    for (std::size_t i = 0; i < N; ++i) {
-        if (a[i] != 0) {
-            first_nonzero = i;
-            break;
-        }
-    }
-    // Copy the reduced coefficients to the result
-    for (std::size_t i = first_nonzero; i < N; ++i) {
-        result[i - first_nonzero] = a[i];
-    }
-    return result;
-}
-
 /// @brief Pole placement using Ackermann method.
 /// @tparam T The type of the elements in the matrices.
 /// @tparam Rows The number of rows in the state matrix A.
@@ -355,7 +332,7 @@ template <typename T, std::size_t Rows, std::size_t Cols, std::size_t NumPoles>
         throw std::runtime_error("acker: system not controllable, pole placement invalid.");
     }
     // Compute the desired characteristic polynomial.
-    auto p = poly(poles);
+    auto p = fsmlib::linalg::poly(poles);
     // Construct the Ackermann matrix.
     fsmlib::Matrix<T, Rows, Rows> Ap = {};
     for (std::size_t i = 0; i < (Rows + 1); ++i) {
@@ -366,6 +343,44 @@ template <typename T, std::size_t Rows, std::size_t Cols, std::size_t NumPoles>
     selection(0, Rows - 1)               = 1;
     // Compute the gain matrix.
     return fsmlib::multiply(selection, fsmlib::multiply(fsmlib::linalg::inverse(ct), Ap));
+}
+
+/// @brief Converts a state-space model to its transfer function representation.
+/// @tparam T The type of the matrix elements.
+/// @tparam N_state The number of states.
+/// @tparam N_input The number of inputs.
+/// @tparam N_output The number of outputs.
+/// @param ss The state-space model.
+/// @return A 2D array of TransferFunction objects for each input-output pair.
+template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
+[[nodiscard]] constexpr inline auto ss2tf(const StateSpace<T, N_state, N_input, N_output> &ss)
+{
+    using TransferFunc = TransferFunction<T, N_state + 1, N_state + 1>;
+
+    // Result container for MIMO transfer functions
+    std::array<std::array<TransferFunc, N_input>, N_output> transfer_functions;
+
+    // Compute the denominator (shared by all input-output pairs).
+    auto denominator = fsmlib::linalg::characteristic_poly(ss.A);
+
+    // Compute numerators for each input-output pair.
+    for (std::size_t i = 0; i < N_output; ++i) {
+        for (std::size_t j = 0; j < N_input; ++j) {
+            // Initialize numerator coefficients to zero.
+            fsmlib::Vector<T, N_state + 1> numerator{};
+            for (std::size_t k = 0; k <= N_state; ++k) {
+                numerator[k] = static_cast<T>(0); // Replace with actual logic for numerator calculation.
+            }
+
+            // Add the D contribution (direct feedthrough term).
+            numerator[0] += ss.D(i, j);
+
+            // Store the transfer function for this input-output pair.
+            transfer_functions[i][j] = TransferFunc(numerator, denominator);
+        }
+    }
+
+    return transfer_functions;
 }
 
 } // namespace control
