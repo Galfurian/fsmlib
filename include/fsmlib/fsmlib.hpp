@@ -639,7 +639,10 @@ constexpr fsmlib::Vector<T, N> zeros()
 template <typename T, std::size_t N>
 constexpr fsmlib::Vector<T, N> ones()
 {
-    fsmlib::Vector<T, N> result = {};
+    // Select the right type.
+    using data_type_t = std::remove_const_t<T>;
+    // Create a vector to store the ones.
+    fsmlib::Vector<data_type_t, N> result{};
     for (std::size_t i = 0; i < N; ++i) {
         result[i] = static_cast<T>(1);
     }
@@ -657,16 +660,19 @@ constexpr fsmlib::Vector<T, N> ones()
 template <typename T, std::size_t N1, std::size_t N2>
 constexpr fsmlib::Vector<T, N1> column(const fsmlib::MatrixBase<T, N1, N2> &mat, std::size_t col_index)
 {
+    // Select the right type.
+    using data_type_t = std::remove_const_t<T>;
+    // Check if the column index is out of bounds.
     if (col_index >= N2) {
         throw std::out_of_range("column: Column index out of bounds");
     }
-
-    fsmlib::Vector<T, N1> col_vector = {};
+    // Create a vector to store the column elements.
+    fsmlib::Vector<data_type_t, N1> result{};
+    // Copy the elements of the column.
     for (std::size_t i = 0; i < N1; ++i) {
-        col_vector[i] = mat(i, col_index);
+        result[i] = mat(i, col_index);
     }
-
-    return col_vector;
+    return result;
 }
 
 /// @brief Extracts a row from the matrix.
@@ -680,11 +686,19 @@ constexpr fsmlib::Vector<T, N1> column(const fsmlib::MatrixBase<T, N1, N2> &mat,
 template <typename T, std::size_t N1, std::size_t N2>
 constexpr fsmlib::Vector<T, N2> row(const fsmlib::MatrixBase<T, N1, N2> &mat, std::size_t row_index)
 {
+    // Select the right type.
+    using data_type_t = std::remove_const_t<T>;
+    // Check if the row index is out of bounds.
     if (row_index >= N1) {
         throw std::out_of_range("row: Row index out of bounds");
     }
-
-    return mat[row_index];
+    // Create a vector to store the row elements.
+    fsmlib::Vector<data_type_t, N2> result{};
+    // Copy the elements of the row.
+    for (std::size_t j = 0; j < N2; ++j) {
+        result[j] = mat(row_index, j);
+    }
+    return result;
 }
 
 /// @brief Sorts the indices of a vector based on its values, either in ascending or descending order.

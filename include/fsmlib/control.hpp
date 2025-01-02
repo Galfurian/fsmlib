@@ -345,44 +345,6 @@ template <typename T, std::size_t Rows, std::size_t Cols, std::size_t NumPoles>
     return fsmlib::multiply(selection, fsmlib::multiply(fsmlib::linalg::inverse(ct), Ap));
 }
 
-/// @brief Converts a state-space model to its transfer function representation.
-/// @tparam T The type of the matrix elements.
-/// @tparam N_state The number of states.
-/// @tparam N_input The number of inputs.
-/// @tparam N_output The number of outputs.
-/// @param ss The state-space model.
-/// @return A 2D array of TransferFunction objects for each input-output pair.
-template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-[[nodiscard]] constexpr inline auto ss2tf(const StateSpace<T, N_state, N_input, N_output> &ss)
-{
-    using TransferFunc = TransferFunction<T, N_state + 1, N_state + 1>;
-
-    // Result container for MIMO transfer functions
-    std::array<std::array<TransferFunc, N_input>, N_output> transfer_functions;
-
-    // Compute the denominator (shared by all input-output pairs).
-    auto denominator = fsmlib::linalg::characteristic_poly(ss.A);
-
-    // Compute numerators for each input-output pair.
-    for (std::size_t i = 0; i < N_output; ++i) {
-        for (std::size_t j = 0; j < N_input; ++j) {
-            // Initialize numerator coefficients to zero.
-            fsmlib::Vector<T, N_state + 1> numerator{};
-            for (std::size_t k = 0; k <= N_state; ++k) {
-                numerator[k] = static_cast<T>(0); // Replace with actual logic for numerator calculation.
-            }
-
-            // Add the D contribution (direct feedthrough term).
-            numerator[0] += ss.D(i, j);
-
-            // Store the transfer function for this input-output pair.
-            transfer_functions[i][j] = TransferFunc(numerator, denominator);
-        }
-    }
-
-    return transfer_functions;
-}
-
 } // namespace control
 
 } // namespace fsmlib

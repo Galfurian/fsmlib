@@ -125,13 +125,97 @@ int main()
                 { 0., 3., 67. },
                 { 0., 4., 67. },
             };
-            if (fsmlib::any(result != expected)) {
+            if (fsmlib::any(fsmlib::abs(result - expected) > 1e-06)) {
                 std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
                 throw std::runtime_error("Test failed: ctrb with 3x3 system");
             }
 
             std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: ctrb with 3x3 system\n";
         }
+        {
+            fsmlib::Matrix<double, 4, 4> A = {
+                { 1.12, 2.34, 3.45, 4.56 },
+                { 0.78, 1.23, 4.56, 5.67 },
+                { 0.89, 0.12, 2.34, 6.78 },
+                { 0.01, 0.23, 0.45, 1.89 },
+            };
+            fsmlib::Matrix<double, 4, 1> B = {
+                { 1.00 },
+                { 0.00 },
+                { 0.00 },
+                { 0.00 },
+            };
+
+            auto result                           = fsmlib::control::ctrb(A, B);
+            fsmlib::Matrix<double, 4, 4> expected = {
+                { 1.0000, 1.1200, 6.1957, 34.8201 },
+                { 0.0000, 0.7800, 5.9481, 30.3856 },
+                { 0.0000, 0.8900, 3.2408, 17.9472 },
+                { 0.0000, 0.0100, 0.6100, 4.0413 },
+            };
+
+            if (fsmlib::any(fsmlib::abs(result - expected) > 1e-03)) {
+                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                throw std::runtime_error("Test failed: ctrb with 4x4 system (single input)");
+            }
+
+            std::cout << "Test " << std::setw(2) << std::right << test_count++
+                      << " passed: ctrb with 4x4 system (single input)\n";
+        }
+        {
+            fsmlib::Matrix<double, 3, 3> A = {
+                { 2.34, 1.23, 0.45 },
+                { 0.78, 1.12, 1.56 },
+                { 0.34, 0.67, 3.21 },
+            };
+            fsmlib::Matrix<double, 3, 2> B = {
+                { 1.23, 0.45 },
+                { 0.78, 1.12 },
+                { 0.34, 0.67 },
+            };
+
+            auto result                           = fsmlib::control::ctrb(A, B);
+            fsmlib::Matrix<double, 3, 6> expected = {
+                { 1.2300, 0.4500, 3.9906, 2.7321, 13.1595, 11.0277 },
+                { 0.7800, 1.1200, 2.3634, 2.6506, 8.9299, 9.8641 },
+                { 0.3400, 0.6700, 2.0322, 3.0541, 9.4636, 12.5085 },
+            };
+
+            if (fsmlib::any(fsmlib::abs(result - expected) > 1e-03)) {
+                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                throw std::runtime_error("Test failed: ctrb with 3x3 system (two inputs)");
+            }
+
+            std::cout << "Test " << std::setw(2) << std::right << test_count++
+                      << " passed: ctrb with 3x3 system (two inputs)\n";
+        }
+        {
+            fsmlib::Matrix<double, 5, 5> A = {
+                { 0.12, 1.34, 0.56, 0.78, 0.90 }, { 0.23, 0.45, 1.23, 0.67, 0.89 }, { 0.34, 0.56, 0.78, 1.34, 1.45 },
+                { 0.45, 0.67, 0.89, 1.12, 1.23 }, { 0.56, 0.78, 1.34, 0.90, 1.11 },
+            };
+            fsmlib::Matrix<double, 5, 2> B = {
+                { 1.12, 0.45 }, { 0.78, 1.34 }, { 0.34, 0.67 }, { 0.23, 0.89 }, { 0.56, 1.12 },
+            };
+
+            auto result                            = fsmlib::control::ctrb(A, B);
+            fsmlib::Matrix<double, 5, 10> expected = {
+                { 1.1200, 0.4500, 2.0534, 3.9270, 7.7731, 14.0235, 33.6552, 60.9582, 143.9747, 260.1241 },
+                { 0.7800, 1.3400, 1.6793, 3.1237, 7.7049, 14.0277, 33.2281, 59.9712, 141.7037, 256.1486 },
+                { 0.3400, 0.6700, 2.2030, 4.2426, 10.0599, 17.9957, 42.6182, 77.0898, 181.9789, 328.9044 },
+                { 0.2300, 0.8900, 2.2756, 4.0710, 9.6579, 17.4097, 41.0462, 74.2130, 175.3315, 316.9085 },
+                { 0.5600, 1.1200, 2.5198, 4.2392, 10.2568, 18.6901, 43.9202, 79.3237, 187.5662, 339.0554 },
+            };
+
+            if (fsmlib::any(fsmlib::abs(result - expected) > 1e-03)) {
+                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                throw std::runtime_error("Test failed: ctrb with 5x5 system (two inputs)");
+            }
+
+            std::cout << "Test " << std::setw(2) << std::right << test_count++
+                      << " passed: ctrb with 5x5 system (two inputs)\n";
+        }
+
         {
             // Define a state matrix A and output matrix C
             fsmlib::Matrix<double, 3, 3> A = {
@@ -224,57 +308,6 @@ int main()
             }
             std::cout << "Test " << std::setw(2) << std::right << test_count++
                       << " passed: acker with 3x3 system and 3 poles\n";
-        }
-
-        {
-            fsmlib::control::StateSpace<double, 2, 2, 2> ss = {
-                .A = { { 0.0, 1.0 }, { -4.0, -5.0 } },
-                .B = { { 1.0, 0.0 }, { 0.0, 1.0 } },
-                .C = { { 1.0, 0.0 }, { 0.0, 1.0 } },
-                .D = { { 0.0, 0.0 }, { 0.0, 0.0 } },
-            };
-
-            // Compute the transfer function representation.
-            auto transfer_functions = fsmlib::control::ss2tf(ss);
-
-            // Expected transfer functions for each input-output pair.
-            fsmlib::control::TransferFunction<double, 3, 3> expected_tf[2][2] = {
-                {
-                    // Row 1 (Output 1)
-                    { { 1.0, 5.0, 0.0 }, { 1.0, 5.0, 4.0 } }, // H11
-                    { { 1.0, 0.0, 0.0 }, { 1.0, 5.0, 4.0 } }  // H12
-                },
-                {
-                    // Row 2 (Output 2)
-                    { { -4.0, 0.0, 0.0 }, { 1.0, 5.0, 4.0 } }, // H21
-                    { { 1.0, 0.0, 0.0 }, { 1.0, 5.0, 4.0 } }   // H22
-                }
-            };
-
-            // Validate transfer functions for all input-output pairs.
-            for (std::size_t i = 0; i < 2; ++i) {
-                for (std::size_t j = 0; j < 2; ++j) {
-                    const auto &tf       = transfer_functions[i][j];
-                    const auto &expected = expected_tf[i][j];
-                    // Check numerator
-                    if (fsmlib::any(fsmlib::abs(tf.numerator - expected.numerator) > 1e-06)) {
-                        std::cerr << "Expected numerator for H(" << i + 1 << ", " << j + 1 << "):\n"
-                                  << expected.numerator << "\nGot numerator:\n"
-                                  << tf.numerator << "\n";
-                        throw std::runtime_error("Test failed: numerator mismatch in MIMO transfer function");
-                    }
-                    // Check denominator
-                    if (fsmlib::any(fsmlib::abs(tf.denominator - expected.denominator) > 1e-06)) {
-                        std::cerr << "Expected denominator for H(" << i + 1 << ", " << j + 1 << "):\n"
-                                  << expected.denominator << "\nGot denominator:\n"
-                                  << tf.denominator << "\n";
-                        throw std::runtime_error("Test failed: denominator mismatch in MIMO transfer function");
-                    }
-                }
-            }
-
-            std::cout << "Test " << std::setw(2) << std::right << test_count++
-                      << " passed: ss2tf with 2x2 system and MIMO model\n";
         }
 
         std::cout << "All control tests passed!\n";
