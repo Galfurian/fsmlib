@@ -175,10 +175,13 @@ if(DOXYGEN_FOUND)
     doxygen_add_docs(
         fsmlib_documentation
         ${PROJECT_SOURCE_DIR}/README.md
-        ${PROJECT_SOURCE_DIR}/include/fsmlib/fsmlib.hpp
+        ${PROJECT_SOURCE_DIR}/LICENSE.md
         ${PROJECT_SOURCE_DIR}/include/fsmlib/control.hpp
+        ${PROJECT_SOURCE_DIR}/include/fsmlib/fsmlib.hpp
         ${PROJECT_SOURCE_DIR}/include/fsmlib/io.hpp
         ${PROJECT_SOURCE_DIR}/include/fsmlib/linalg.hpp
         ${PROJECT_SOURCE_DIR}/include/fsmlib/math.hpp
+        ${PROJECT_SOURCE_DIR}/include/fsmlib/traits.hpp
+        ${PROJECT_SOURCE_DIR}/include/fsmlib/view.hpp
     )
 endif()

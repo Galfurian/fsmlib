@@ -7,20 +7,18 @@
 #pragma once
 
 #include <initializer_list>
+#include <type_traits>
 #include <stdexcept>
 #include <algorithm>
+#include <cstddef>
 
 #include "fsmlib/traits.hpp"
 
 #define COLUMN_MAJOR
 
+/// @brief Namespace for the fixed-size matrix and vector library.
 namespace fsmlib
 {
-
-#include <initializer_list>
-#include <stdexcept>
-#include <cstddef>
-#include <type_traits>
 
 /// @brief Abstract base class for fixed-size vectors.
 /// @tparam T The type of the vector elements.
@@ -28,7 +26,9 @@ namespace fsmlib
 template <typename T, std::size_t N>
 class VectorBase : public valid_container_t {
 public:
+    /// @brief Type of the elements in the vector.
     using value_type = T;
+    /// @brief Type of the size of the vector.
     using size_type  = std::integral_constant<std::size_t, N>;
 
     /// @brief Virtual destructor.
@@ -214,7 +214,9 @@ private:
 template <typename T, std::size_t Rows, std::size_t Cols = Rows>
 class MatrixBase : public fsmlib::valid_container_t {
 public:
+    /// @brief Type of the elements in the matrix.
     using value_type = T;
+    /// @brief Type of the size of the matrix.
     using size_type  = std::pair<std::size_t, std::size_t>;
 
     /// @brief Virtual destructor.

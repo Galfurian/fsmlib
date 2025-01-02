@@ -6,14 +6,14 @@
 
 #pragma once
 
+#include <type_traits>
+#include <stdexcept>
+#include <cstddef>
+
 #include "fsmlib/fsmlib.hpp"
 
 namespace fsmlib
 {
-
-#include <cstddef>
-#include <stdexcept>
-#include <type_traits>
 
 /// @brief A view into a subset of a larger vector.
 /// @tparam T The type of elements in the vector.

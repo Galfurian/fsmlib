@@ -12,6 +12,7 @@
 namespace fsmlib
 {
 
+/// @brief Namespace for control systems.
 namespace control
 {
 

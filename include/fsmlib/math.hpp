@@ -13,6 +13,7 @@
 namespace fsmlib
 {
 
+/// @brief Namespace for supporting math operations.
 namespace details
 {
 
@@ -452,7 +453,8 @@ template <class T, class U, std::size_t N>
 /// @param rv The second vector.
 /// @returns A matrix representing the outer product of the two vectors.
 template <class T, class U, std::size_t M, std::size_t N>
-[[nodiscard]] constexpr inline auto outer_product(const fsmlib::VectorBase<T, M> &lv, const fsmlib::VectorBase<U, N> &rv)
+[[nodiscard]] constexpr inline auto outer_product(const fsmlib::VectorBase<T, M> &lv,
+                                                  const fsmlib::VectorBase<U, N> &rv)
 {
     fsmlib::Matrix<decltype(lv[0] * rv[0]), M, N> ret{};
     for (std::size_t r = 0; r < M; ++r) {
@@ -471,7 +473,8 @@ template <class T, class U, std::size_t M, std::size_t N>
 /// @param vec The vector to multiply.
 /// @returns A vector representing the result of the multiplication.
 template <typename T1, typename T2, std::size_t N1, std::size_t N2>
-[[nodiscard]] constexpr inline auto multiply(const fsmlib::MatrixBase<T1, N1, N2> &mat, const fsmlib::VectorBase<T2, N2> &vec)
+[[nodiscard]] constexpr inline auto multiply(const fsmlib::MatrixBase<T1, N1, N2> &mat,
+                                             const fsmlib::VectorBase<T2, N2> &vec)
 {
     using result_type_t = std::remove_const_t<std::common_type_t<T1, T2>>;
     // Prepare the result.Z
@@ -494,7 +497,8 @@ template <typename T1, typename T2, std::size_t N1, std::size_t N2>
 /// @param B The second matrix.
 /// @returns The resulting matrix after multiplication.
 template <typename T1, typename T2, std::size_t N1, std::size_t N2, std::size_t N3>
-[[nodiscard]] constexpr inline auto multiply(const fsmlib::MatrixBase<T1, N1, N2> &A, const fsmlib::MatrixBase<T2, N2, N3> &B)
+[[nodiscard]] constexpr inline auto multiply(const fsmlib::MatrixBase<T1, N1, N2> &A,
+                                             const fsmlib::MatrixBase<T2, N2, N3> &B)
 {
     // Promotes types for compatibility.
     using result_type_t = std::remove_const_t<std::common_type_t<T1, T2>>;
@@ -778,11 +782,7 @@ template <typename T, std::size_t N>
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of the element-wise addition.
-template <typename E1,
-          typename E2,
-          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-                                      (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) ||
-                                      (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator+(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a + b; });
@@ -795,11 +795,7 @@ template <typename E1,
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of the element-wise subtraction.
-template <typename E1,
-          typename E2,
-          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-                                      (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) ||
-                                      (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator-(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a - b; });
@@ -812,11 +808,7 @@ template <typename E1,
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of the element-wise multiplication.
-template <typename E1,
-          typename E2,
-          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-                                      (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) ||
-                                      (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator*(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a * b; });
@@ -829,11 +821,7 @@ template <typename E1,
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of the element-wise division.
-template <typename E1,
-          typename E2,
-          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-                                      (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) ||
-                                      (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator/(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a / b; });
@@ -846,11 +834,7 @@ template <typename E1,
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise equality comparison.
-template <typename E1,
-          typename E2,
-          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-                                      (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) ||
-                                      (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator==(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a == b; });
@@ -863,11 +847,7 @@ template <typename E1,
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise inequality comparison.
-template <typename E1,
-          typename E2,
-          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-                                      (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) ||
-                                      (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator!=(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a != b; });
@@ -880,11 +860,7 @@ template <typename E1,
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise less-than comparison.
-template <typename E1,
-          typename E2,
-          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-                                      (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) ||
-                                      (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator<(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a < b; });
@@ -897,11 +873,7 @@ template <typename E1,
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise greater-than comparison.
-template <typename E1,
-          typename E2,
-          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-                                      (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) ||
-                                      (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator>(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a > b; });
@@ -914,11 +886,7 @@ template <typename E1,
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise less-than-or-equal comparison.
-template <typename E1,
-          typename E2,
-          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-                                      (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) ||
-                                      (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator<=(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a <= b; });
@@ -931,11 +899,7 @@ template <typename E1,
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise greater-than-or-equal comparison.
-template <typename E1,
-          typename E2,
-          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-                                      (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) ||
-                                      (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>)>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator>=(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a >= b; });
@@ -948,10 +912,7 @@ template <typename E1,
 /// @param lhs The left-hand side operand, modified in place.
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return The modified left-hand side operand after the addition.
-template <typename E1,
-          typename E2,
-          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-                                      (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>)>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_mutable_combination_v<E1, E2>>>
 constexpr inline auto operator+=(E1 &lhs, const E2 &rhs)
 {
     fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a + b; });
@@ -965,10 +926,7 @@ constexpr inline auto operator+=(E1 &lhs, const E2 &rhs)
 /// @param lhs The left-hand side operand, modified in place.
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return The modified left-hand side operand after the subtraction.
-template <typename E1,
-          typename E2,
-          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-                                      (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>)>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_mutable_combination_v<E1, E2>>>
 constexpr inline auto operator-=(E1 &lhs, const E2 &rhs)
 {
     fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a - b; });
@@ -982,10 +940,7 @@ constexpr inline auto operator-=(E1 &lhs, const E2 &rhs)
 /// @param lhs The left-hand side operand, modified in place.
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return The modified left-hand side operand after the multiplication.
-template <typename E1,
-          typename E2,
-          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-                                      (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>)>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_mutable_combination_v<E1, E2>>>
 constexpr inline auto operator*=(E1 &lhs, const E2 &rhs)
 {
     fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a * b; });
@@ -999,10 +954,7 @@ constexpr inline auto operator*=(E1 &lhs, const E2 &rhs)
 /// @param lhs The left-hand side operand, modified in place.
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return The modified left-hand side operand after the division.
-template <typename E1,
-          typename E2,
-          typename = std::enable_if_t<(fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-                                      (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>)>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_mutable_combination_v<E1, E2>>>
 constexpr inline auto operator/=(E1 &lhs, const E2 &rhs)
 {
     fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a / b; });

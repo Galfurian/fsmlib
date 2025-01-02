@@ -19,6 +19,7 @@
 namespace fsmlib
 {
 
+/// @brief Linear algebra operations and utilities.
 namespace linalg
 {
 
@@ -425,7 +426,7 @@ template <typename T1, typename T2, std::size_t N1, std::size_t N2, std::size_t 
 /// @details
 /// This function calculates the rank of the input matrix by performing Gaussian elimination.
 /// The rank is defined as the number of linearly independent rows or columns in the matrix.
-/// A small tolerance (\( \epsilon = 1e-9 \)) is used to handle floating-point precision issues.
+/// A small tolerance (\( epsilon = 1e-9 \)) is used to handle floating-point precision issues.
 ///
 /// The rank is determined as the number of non-zero rows in the row-echelon form of the matrix.
 ///
@@ -591,12 +592,12 @@ template <typename T, std::size_t Rows, std::size_t Cols>
 /// @tparam T The type of the matrix elements.
 /// @tparam N The size of the square matrix (N x N).
 /// @param mat The input symmetric positive-definite matrix.
-/// @return A lower triangular matrix \( L \) such that \( A = L \cdot L^T \).
+/// @return A lower triangular matrix (L) such that (A=L*L^T).
 /// @throws std::runtime_error If the input matrix is not symmetric or not positive definite.
 /// @details
 /// This function computes the Cholesky decomposition, which decomposes a symmetric positive-definite
 /// matrix \( A \) into the product of a lower triangular matrix \( L \) and its transpose \( L^T \),
-/// i.e., \( A = L \cdot L^T \). The input matrix must satisfy the following conditions:
+/// i.e., \( A = L * L^T \). The input matrix must satisfy the following conditions:
 /// - Symmetry: \( A_{ij} = A_{ji} \).
 /// - Positive definiteness: All eigenvalues of \( A \) must be positive.
 ///
@@ -917,7 +918,7 @@ template <typename T, std::size_t N>
 /// @tparam N The size of the square matrix (N x N).
 /// @param mat The input symmetric matrix.
 /// @param max_iterations The maximum number of iterations.
-/// @param tol The convergence tolerance.
+/// @param tolerance The convergence tolerance.
 /// @return A pair consisting of:
 ///         - A vector of eigenvalues.
 ///         - A matrix whose columns are the corresponding eigenvectors.
@@ -935,7 +936,7 @@ template <typename T, std::size_t N>
 ///
 /// The decomposition satisfies the equation:
 /// \f[
-/// A \cdot v = \lambda \cdot v
+/// A * v = \lambda * v
 /// \f]
 /// where \f$ \lambda \f$ is an eigenvalue, and \f$ v \f$ is the corresponding eigenvector.
 ///

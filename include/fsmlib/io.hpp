@@ -195,8 +195,6 @@ inline std::ostream &operator<<(std::ostream &os,
 
 namespace fsmlib
 {
-#include <sstream>
-#include <iomanip>
 
 /// @brief Converts a fixed-size vector to an Octave-compatible variable assignment.
 /// @tparam T The type of the vector elements.
