@@ -12,6 +12,10 @@
 namespace fsmlib
 {
 
+/// @brief Support for type traits.
+namespace traits
+{
+
 /// @brief Marker class to identify valid container types.
 /// @details
 /// Classes intended to be recognized as valid containers should inherit
@@ -22,7 +26,7 @@ class valid_container_t {};
 /// @tparam T The type to check.
 /// @retval true if T derives from valid_container_t; false otherwise.
 template <typename T>
-inline constexpr bool is_valid_container_v = std::is_base_of<valid_container_t, T>::value;
+inline constexpr bool is_valid_container_v = std::is_base_of<fsmlib::traits::valid_container_t, T>::value;
 
 /// @brief Checks if the combination of two types is valid for element-wise operations.
 ///
@@ -35,9 +39,9 @@ inline constexpr bool is_valid_container_v = std::is_base_of<valid_container_t, 
 /// @tparam E1 The first type to check.
 /// @tparam E2 The second type to check.
 template <typename E1, typename E2>
-inline constexpr bool is_valid_combination_v = (fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-                                               (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) ||
-                                               (std::is_arithmetic_v<E1> && fsmlib::is_valid_container_v<E2>);
+inline constexpr bool is_valid_combination_v = (fsmlib::traits::is_valid_container_v<E1> && fsmlib::traits::is_valid_container_v<E2>) ||
+                                               (fsmlib::traits::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) ||
+                                               (std::is_arithmetic_v<E1> && fsmlib::traits::is_valid_container_v<E2>);
 
 /// @brief Checks if the combination of two types is valid for mutable element-wise operations.
 ///
@@ -51,8 +55,8 @@ inline constexpr bool is_valid_combination_v = (fsmlib::is_valid_container_v<E1>
 /// @tparam E2 The second type to check.
 template <typename E1, typename E2>
 inline constexpr bool is_valid_mutable_combination_v =
-    (fsmlib::is_valid_container_v<E1> && fsmlib::is_valid_container_v<E2>) ||
-    (fsmlib::is_valid_container_v<E1> && std::is_arithmetic_v<E2>);
+    (fsmlib::traits::is_valid_container_v<E1> && fsmlib::traits::is_valid_container_v<E2>) ||
+    (fsmlib::traits::is_valid_container_v<E1> && std::is_arithmetic_v<E2>);
 
 /// @brief Trait to determine the fixed size of a container.
 /// @tparam Vec The container type.
@@ -65,11 +69,13 @@ struct fixed_size {
 /// @brief Helper variable template for fixed_size.
 /// @tparam Vec The container type.
 template <typename Vec>
-inline constexpr std::size_t fixed_size_v = fixed_size<Vec>::value;
+inline constexpr std::size_t fixed_size_v = fsmlib::traits::fixed_size<Vec>::value;
 
 /// @brief Helper variable template to trigger a static assertion for invalid types.
 /// @tparam ... Args The types to evaluate.
 template <typename... Args>
 inline constexpr bool always_false_v = false;
+
+} // namespace traits
 
 } // namespace fsmlib

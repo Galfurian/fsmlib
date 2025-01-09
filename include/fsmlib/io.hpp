@@ -10,6 +10,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <fstream>
 
 #include "fsmlib/fsmlib.hpp"
 #include "fsmlib/control.hpp"
@@ -79,72 +80,6 @@ std::ostream &operator<<(std::ostream &os, const fsmlib::MatrixBase<T, N1, N2> &
     return os;
 }
 
-#if 0
-
-/// @brief Overload the << operator for View.
-/// @tparam T The type of the view elements.
-/// @tparam N The number of elements in the view.
-/// @param os The output stream.
-/// @param vec The view to print.
-/// @return The output stream with the view contents.
-template <typename T, std::size_t N>
-std::ostream &operator<<(std::ostream &os, const fsmlib::View<T, N> &vec)
-{
-    // Determine the maximum width of the elements for alignment.
-    std::size_t max_width = 0;
-    for (std::size_t i = 0; i < vec.size(); ++i) {
-        std::ostringstream ss;
-        ss << std::setprecision(6) << std::fixed << vec[i];
-        max_width = std::max(max_width, ss.str().length());
-    }
-
-    // Print the view elements with consistent alignment.
-    for (std::size_t i = 0; i < vec.size(); ++i) {
-        os << std::setw(static_cast<int>(max_width)) << std::setprecision(6) << std::fixed << vec[i];
-        if (i < vec.size() - 1) {
-            os << " ";
-        }
-    }
-
-    return os;
-}
-
-/// @brief Overload the << operator for MatrixView.
-/// @tparam T The type of the matrix view elements.
-/// @tparam N1 The number of rows in the view.
-/// @tparam N2 The number of columns in the view.
-/// @param os The output stream.
-/// @param mat The matrix view to print.
-/// @return The output stream with the matrix view contents.
-template <typename T, std::size_t N1, std::size_t N2>
-std::ostream &operator<<(std::ostream &os, const fsmlib::MatrixView<T, N1, N2> &mat)
-{
-    // Determine the maximum width of the elements for alignment.
-    std::size_t max_width = 0;
-    for (std::size_t r = 0; r < N1; ++r) {
-        for (std::size_t c = 0; c < N2; ++c) {
-            std::ostringstream ss;
-            ss << std::setprecision(6) << std::fixed << mat(r, c);
-            max_width = std::max(max_width, ss.str().length());
-        }
-    }
-
-    // Print the matrix view rows.
-    for (std::size_t r = 0; r < N1; ++r) {
-        for (std::size_t c = 0; c < N2; ++c) {
-            os << std::setw(static_cast<int>(max_width)) << std::setprecision(6) << std::fixed << mat(r, c);
-            if (c < N2 - 1) {
-                os << " ";
-            }
-        }
-        os << "\n";
-    }
-
-    return os;
-}
-
-#endif
-
 /// @brief Overload the << operator for continuous-time state-space models.
 /// @tparam T The type of the state-space model elements.
 /// @tparam N_state The number of state variables.
@@ -203,7 +138,7 @@ namespace fsmlib
 /// @param vec The input vector.
 /// @returns A string representing the vector in Octave format.
 template <typename T, std::size_t N>
-inline std::string to_octave(const std::string &name, const fsmlib::Vector<T, N> &vec)
+inline std::string to_octave(const std::string &name, const fsmlib::VectorBase<T, N> &vec)
 {
     std::ostringstream ss;
     ss << name << " = [";
@@ -225,7 +160,7 @@ inline std::string to_octave(const std::string &name, const fsmlib::Vector<T, N>
 /// @param mat The input matrix.
 /// @returns A string representing the matrix in Octave format.
 template <typename T, std::size_t Rows, std::size_t Cols>
-inline std::string to_octave(const std::string &name, const fsmlib::Matrix<T, Rows, Cols> &mat)
+inline std::string to_octave(const std::string &name, const fsmlib::MatrixBase<T, Rows, Cols> &mat)
 {
     std::ostringstream ss;
     ss << name << " = [";
@@ -240,6 +175,184 @@ inline std::string to_octave(const std::string &name, const fsmlib::Matrix<T, Ro
     }
     ss << "];";
     return ss.str();
+}
+
+/// @brief Converts a matrix to LaTeX tabular format.
+///
+/// @param matrix The matrix to convert.
+/// @return std::string The LaTeX string representation of the matrix.
+template <typename T, size_t Rows, size_t Cols>
+std::string to_latex(const T (&matrix)[Rows][Cols])
+{
+    std::ostringstream oss;
+    oss << "\\begin{bmatrix}\n";
+
+    for (size_t i = 0; i < Rows; ++i) {
+        for (size_t j = 0; j < Cols; ++j) {
+            oss << matrix[i][j];
+            if (j < Cols - 1) {
+                oss << " & "; // Separate columns with "&".
+            }
+        }
+        if (i < Rows - 1) {
+            oss << " \\\\\n"; // New row.
+        }
+    }
+
+    oss << "\n\\end{bmatrix}";
+    return oss.str();
+}
+
+/// @brief Converts a matrix to Markdown table format.
+///
+/// @param matrix The matrix to convert.
+/// @return std::string The Markdown string representation of the matrix.
+template <typename T, size_t Rows, size_t Cols>
+std::string to_markdown(const T (&matrix)[Rows][Cols])
+{
+    std::ostringstream oss;
+
+    // Create the header line.
+    for (size_t j = 0; j < Cols; ++j) {
+        oss << "| Col" << j + 1;
+    }
+    oss << " |\n";
+
+    // Create the separator line.
+    for (size_t j = 0; j < Cols; ++j) {
+        oss << "|---";
+    }
+    oss << " |\n";
+
+    // Create the data rows.
+    for (size_t i = 0; i < Rows; ++i) {
+        for (size_t j = 0; j < Cols; ++j) {
+            oss << "| " << matrix[i][j];
+        }
+        oss << " |\n";
+    }
+
+    return oss.str();
+}
+
+/// @brief Saves the matrix to a CSV file.
+///
+/// @param filename The name of the file to save the matrix to.
+/// @param matrix The matrix to save.
+/// @return int 0 on success, non-zero on error.
+template <typename T, size_t Rows, size_t Cols>
+int save_matrix_to_csv(const std::string &filename, const T (&matrix)[Rows][Cols])
+{
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        return -1; // Error opening file.
+    }
+
+    for (size_t i = 0; i < Rows; ++i) {
+        for (size_t j = 0; j < Cols; ++j) {
+            file << matrix[i][j];
+            if (j < Cols - 1)
+                file << ","; // Separate columns with commas.
+        }
+        file << "\n"; // New line for each row.
+    }
+
+    file.close();
+    return 0; // Success.
+}
+
+/// @brief Saves the matrix to a binary file.
+///
+/// @param filename The name of the file to save the matrix to.
+/// @param matrix The matrix to save.
+/// @return int 0 on success, non-zero on error.
+template <typename T, size_t Rows, size_t Cols>
+int save_matrix_to_binary(const std::string &filename, const T (&matrix)[Rows][Cols])
+{
+    std::ofstream file(filename, std::ios::binary);
+    if (!file.is_open()) {
+        return -1; // Error opening file.
+    }
+
+    // Store dimensions in local variables.
+    size_t rows = Rows;
+    size_t cols = Cols;
+
+    // Write dimensions to the file.
+    file.write(reinterpret_cast<const char *>(&rows), sizeof(rows));
+    file.write(reinterpret_cast<const char *>(&cols), sizeof(cols));
+
+    // Write matrix data.
+    file.write(reinterpret_cast<const char *>(matrix), sizeof(matrix));
+
+    file.close();
+    return 0; // Success.
+}
+
+/// @brief Loads a matrix from a CSV file.
+///
+/// @param filename The name of the file to load the matrix from.
+/// @param matrix The matrix to load into.
+/// @return int 0 on success, non-zero on error.
+template <typename T, size_t Rows, size_t Cols>
+int load_matrix_from_csv(const std::string &filename, T (&matrix)[Rows][Cols])
+{
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        return -1; // Error opening file.
+    }
+
+    std::string line;
+    size_t row = 0;
+
+    while (std::getline(file, line) && row < Rows) {
+        std::stringstream ss(line);
+        std::string value;
+        size_t col = 0;
+
+        while (std::getline(ss, value, ',') && col < Cols) {
+            std::istringstream(value) >> matrix[row][col];
+            ++col;
+        }
+
+        ++row;
+    }
+
+    file.close();
+    return 0; // Success.
+}
+
+/// @brief Loads a matrix from a binary file.
+///
+/// @param filename The name of the file to load the matrix from.
+/// @param matrix The matrix to load into.
+/// @return int 0 on success, non-zero on error.
+template <typename T, size_t Rows, size_t Cols>
+int load_matrix_from_binary(const std::string &filename, T (&matrix)[Rows][Cols])
+{
+    std::ifstream file(filename, std::ios::binary);
+    if (!file.is_open()) {
+        return -1; // Error opening file.
+    }
+
+    // Load dimensions in local variables.
+    size_t rows;
+    size_t cols;
+
+    // Read dimensions.
+    file.read(reinterpret_cast<char *>(&rows), sizeof(rows));
+    file.read(reinterpret_cast<char *>(&cols), sizeof(cols));
+
+    if (rows != Rows || cols != Cols) {
+        file.close();
+        return -2; // Dimension mismatch.
+    }
+
+    // Read matrix data.
+    file.read(reinterpret_cast<char *>(matrix), sizeof(matrix));
+
+    file.close();
+    return 0; // Success.
 }
 
 } // namespace fsmlib

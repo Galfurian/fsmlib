@@ -24,7 +24,7 @@ namespace fsmlib
 /// @tparam T The type of the vector elements.
 /// @tparam N The number of elements in the vector.
 template <typename T, std::size_t N>
-class VectorBase : public valid_container_t {
+class VectorBase : public fsmlib::traits::valid_container_t {
 public:
     /// @brief Type of the elements in the vector.
     using value_type = T;
@@ -212,7 +212,7 @@ private:
 /// @tparam Rows The number of rows in the matrix.
 /// @tparam Cols The number of columns in the matrix.
 template <typename T, std::size_t Rows, std::size_t Cols = Rows>
-class MatrixBase : public fsmlib::valid_container_t {
+class MatrixBase : public fsmlib::traits::valid_container_t {
 public:
     /// @brief Type of the elements in the matrix.
     using value_type = T;

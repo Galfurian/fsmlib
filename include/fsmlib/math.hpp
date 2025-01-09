@@ -144,10 +144,8 @@ template <typename T1, typename T2, std::size_t Rows, std::size_t Cols, typename
                                                       Operation op)
 {
     fsmlib::Matrix<decltype(op(lhs.at(0, 0), rhs.at(0, 0))), Rows, Cols> result;
-    for (std::size_t row = 0; row < Rows; ++row) {
-        for (std::size_t col = 0; col < Cols; ++col) {
-            result.at(row, col) = op(lhs.at(row, col), rhs.at(row, col));
-        }
+    for (std::size_t i = 0; i < (Rows * Cols); ++i) {
+        result[i] = op(lhs[i], rhs[i]);
     }
     return result;
 }
@@ -167,10 +165,8 @@ template <typename T1, typename T2, std::size_t Rows, std::size_t Cols, typename
 constexpr inline void
 apply_elementwise(fsmlib::MatrixBase<T1, Rows, Cols> &lhs, const fsmlib::MatrixBase<T2, Rows, Cols> &rhs, Operation op)
 {
-    for (std::size_t row = 0; row < Rows; ++row) {
-        for (std::size_t col = 0; col < Cols; ++col) {
-            lhs.at(row, col) = op(lhs.at(row, col), rhs.at(row, col));
-        }
+    for (std::size_t i = 0; i < (Rows * Cols); ++i) {
+        lhs[i] = op(lhs[i], rhs[i]);
     }
 }
 
@@ -195,10 +191,8 @@ template <typename T1,
 apply_elementwise(const fsmlib::MatrixBase<T1, Rows, Cols> &lhs, const T2 &rhs, Operation op)
 {
     fsmlib::Matrix<decltype(op(lhs.at(0, 0), rhs)), Rows, Cols> result;
-    for (std::size_t row = 0; row < Rows; ++row) {
-        for (std::size_t col = 0; col < Cols; ++col) {
-            result.at(row, col) = op(lhs.at(row, col), rhs);
-        }
+    for (std::size_t i = 0; i < (Rows * Cols); ++i) {
+        result[i] = op(lhs[i], rhs);
     }
     return result;
 }
@@ -222,10 +216,8 @@ template <typename T1,
           typename = std::enable_if_t<std::is_arithmetic_v<T2>>>
 constexpr inline void apply_elementwise(fsmlib::MatrixBase<T1, Rows, Cols> &lhs, const T2 &rhs, Operation op)
 {
-    for (std::size_t row = 0; row < Rows; ++row) {
-        for (std::size_t col = 0; col < Cols; ++col) {
-            lhs.at(row, col) = op(lhs.at(row, col), rhs);
-        }
+    for (std::size_t i = 0; i < (Rows * Cols); ++i) {
+        lhs[i] = op(lhs[i], rhs);
     }
 }
 
@@ -250,10 +242,8 @@ template <typename T1,
 apply_elementwise(const T1 &lhs, const fsmlib::MatrixBase<T2, Rows, Cols> &rhs, Operation op)
 {
     fsmlib::Matrix<decltype(op(lhs, rhs.at(0, 0))), Rows, Cols> result;
-    for (std::size_t row = 0; row < Rows; ++row) {
-        for (std::size_t col = 0; col < Cols; ++col) {
-            result.at(row, col) = op(lhs, rhs.at(row, col));
-        }
+    for (std::size_t i = 0; i < (Rows * Cols); ++i) {
+        result[i] = op(lhs, rhs[i]);
     }
     return result;
 }
@@ -277,10 +267,8 @@ template <typename T1,
           typename = std::enable_if_t<std::is_arithmetic_v<T1>>>
 constexpr inline void apply_elementwise(T1 lhs, fsmlib::MatrixBase<T2, Rows, Cols> &rhs, Operation op)
 {
-    for (std::size_t row = 0; row < Rows; ++row) {
-        for (std::size_t col = 0; col < Cols; ++col) {
-            rhs.at(row, col) = op(lhs, rhs.at(row, col));
-        }
+    for (std::size_t i = 0; i < (Rows * Cols); ++i) {
+        rhs[i] = op(lhs, rhs[i]);
     }
 }
 
@@ -331,10 +319,8 @@ template <typename T, std::size_t Rows, std::size_t Cols, typename Operation>
 [[nodiscard]] constexpr inline auto apply_elementwise(const fsmlib::MatrixBase<T, Rows, Cols> &mat, Operation op)
 {
     fsmlib::Matrix<decltype(op(mat.at(0, 0))), Rows, Cols> result;
-    for (std::size_t row = 0; row < Rows; ++row) {
-        for (std::size_t col = 0; col < Cols; ++col) {
-            result.at(row, col) = op(mat.at(row, col));
-        }
+    for (std::size_t i = 0; i < (Rows * Cols); ++i) {
+        result[i] = op(mat[i]);
     }
     return result;
 }
@@ -351,10 +337,8 @@ template <typename T, std::size_t Rows, std::size_t Cols, typename Operation>
 template <typename T, std::size_t Rows, std::size_t Cols, typename Operation>
 constexpr inline void apply_elementwise(fsmlib::MatrixBase<T, Rows, Cols> &mat, Operation op)
 {
-    for (std::size_t row = 0; row < Rows; ++row) {
-        for (std::size_t col = 0; col < Cols; ++col) {
-            mat.at(row, col) = op(mat.at(row, col));
-        }
+    for (std::size_t i = 0; i < (Rows * Cols); ++i) {
+        mat[i] = op(mat[i]);
     }
 }
 
@@ -782,7 +766,7 @@ template <typename T, std::size_t N>
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of the element-wise addition.
-template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator+(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a + b; });
@@ -795,7 +779,7 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of the element-wise subtraction.
-template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator-(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a - b; });
@@ -808,7 +792,7 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of the element-wise multiplication.
-template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator*(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a * b; });
@@ -821,7 +805,7 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of the element-wise division.
-template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator/(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a / b; });
@@ -834,7 +818,7 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise equality comparison.
-template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator==(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a == b; });
@@ -847,7 +831,7 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise inequality comparison.
-template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator!=(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a != b; });
@@ -860,7 +844,7 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise less-than comparison.
-template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator<(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a < b; });
@@ -873,7 +857,7 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise greater-than comparison.
-template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator>(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a > b; });
@@ -886,7 +870,7 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise less-than-or-equal comparison.
-template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator<=(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a <= b; });
@@ -899,7 +883,7 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid
 /// @param lhs The left-hand side operand (container or scalar).
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise greater-than-or-equal comparison.
-template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_combination_v<E1, E2>>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
 [[nodiscard]] constexpr inline auto operator>=(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a >= b; });
@@ -912,7 +896,7 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid
 /// @param lhs The left-hand side operand, modified in place.
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return The modified left-hand side operand after the addition.
-template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_mutable_combination_v<E1, E2>>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_mutable_combination_v<E1, E2>>>
 constexpr inline auto operator+=(E1 &lhs, const E2 &rhs)
 {
     fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a + b; });
@@ -926,7 +910,7 @@ constexpr inline auto operator+=(E1 &lhs, const E2 &rhs)
 /// @param lhs The left-hand side operand, modified in place.
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return The modified left-hand side operand after the subtraction.
-template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_mutable_combination_v<E1, E2>>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_mutable_combination_v<E1, E2>>>
 constexpr inline auto operator-=(E1 &lhs, const E2 &rhs)
 {
     fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a - b; });
@@ -940,7 +924,7 @@ constexpr inline auto operator-=(E1 &lhs, const E2 &rhs)
 /// @param lhs The left-hand side operand, modified in place.
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return The modified left-hand side operand after the multiplication.
-template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_mutable_combination_v<E1, E2>>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_mutable_combination_v<E1, E2>>>
 constexpr inline auto operator*=(E1 &lhs, const E2 &rhs)
 {
     fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a * b; });
@@ -954,7 +938,7 @@ constexpr inline auto operator*=(E1 &lhs, const E2 &rhs)
 /// @param lhs The left-hand side operand, modified in place.
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return The modified left-hand side operand after the division.
-template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::is_valid_mutable_combination_v<E1, E2>>>
+template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_mutable_combination_v<E1, E2>>>
 constexpr inline auto operator/=(E1 &lhs, const E2 &rhs)
 {
     fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a / b; });
