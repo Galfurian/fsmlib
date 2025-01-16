@@ -166,7 +166,7 @@ inline std::string to_octave(const std::string &name, const fsmlib::MatrixBase<T
     ss << name << " = [";
     for (std::size_t i = 0; i < Rows; ++i) {
         for (std::size_t j = 0; j < Cols; ++j) {
-            ss << std::setprecision(6) << mat[i][j];
+            ss << std::setprecision(6) << mat(i, j);
             if (j < Cols - 1) {
                 ss << ", ";
             }
@@ -179,17 +179,17 @@ inline std::string to_octave(const std::string &name, const fsmlib::MatrixBase<T
 
 /// @brief Converts a matrix to LaTeX tabular format.
 ///
-/// @param matrix The matrix to convert.
+/// @param mat The matrix to convert.
 /// @return std::string The LaTeX string representation of the matrix.
 template <typename T, size_t Rows, size_t Cols>
-std::string to_latex(const T (&matrix)[Rows][Cols])
+std::string to_latex(const fsmlib::MatrixBase<T, Rows, Cols> &mat)
 {
     std::ostringstream oss;
     oss << "\\begin{bmatrix}\n";
 
     for (size_t i = 0; i < Rows; ++i) {
         for (size_t j = 0; j < Cols; ++j) {
-            oss << matrix[i][j];
+            oss << mat(i, j);
             if (j < Cols - 1) {
                 oss << " & "; // Separate columns with "&".
             }
@@ -205,10 +205,10 @@ std::string to_latex(const T (&matrix)[Rows][Cols])
 
 /// @brief Converts a matrix to Markdown table format.
 ///
-/// @param matrix The matrix to convert.
+/// @param mat The matrix to convert.
 /// @return std::string The Markdown string representation of the matrix.
 template <typename T, size_t Rows, size_t Cols>
-std::string to_markdown(const T (&matrix)[Rows][Cols])
+std::string to_markdown(const fsmlib::MatrixBase<T, Rows, Cols> &mat)
 {
     std::ostringstream oss;
 
@@ -227,7 +227,7 @@ std::string to_markdown(const T (&matrix)[Rows][Cols])
     // Create the data rows.
     for (size_t i = 0; i < Rows; ++i) {
         for (size_t j = 0; j < Cols; ++j) {
-            oss << "| " << matrix[i][j];
+            oss << "| " << mat(i, j);
         }
         oss << " |\n";
     }
@@ -238,10 +238,10 @@ std::string to_markdown(const T (&matrix)[Rows][Cols])
 /// @brief Saves the matrix to a CSV file.
 ///
 /// @param filename The name of the file to save the matrix to.
-/// @param matrix The matrix to save.
+/// @param mat The matrix to save.
 /// @return int 0 on success, non-zero on error.
 template <typename T, size_t Rows, size_t Cols>
-int save_matrix_to_csv(const std::string &filename, const T (&matrix)[Rows][Cols])
+int save_matrix_to_csv(const std::string &filename, const fsmlib::MatrixBase<T, Rows, Cols> &mat)
 {
     std::ofstream file(filename);
     if (!file.is_open()) {
@@ -250,7 +250,7 @@ int save_matrix_to_csv(const std::string &filename, const T (&matrix)[Rows][Cols
 
     for (size_t i = 0; i < Rows; ++i) {
         for (size_t j = 0; j < Cols; ++j) {
-            file << matrix[i][j];
+            file << mat(i, j);
             if (j < Cols - 1)
                 file << ","; // Separate columns with commas.
         }
@@ -264,10 +264,10 @@ int save_matrix_to_csv(const std::string &filename, const T (&matrix)[Rows][Cols
 /// @brief Saves the matrix to a binary file.
 ///
 /// @param filename The name of the file to save the matrix to.
-/// @param matrix The matrix to save.
+/// @param mat The matrix to save.
 /// @return int 0 on success, non-zero on error.
 template <typename T, size_t Rows, size_t Cols>
-int save_matrix_to_binary(const std::string &filename, const T (&matrix)[Rows][Cols])
+int save_matrix_to_binary(const std::string &filename, const fsmlib::MatrixBase<T, Rows, Cols> &mat)
 {
     std::ofstream file(filename, std::ios::binary);
     if (!file.is_open()) {
@@ -283,7 +283,7 @@ int save_matrix_to_binary(const std::string &filename, const T (&matrix)[Rows][C
     file.write(reinterpret_cast<const char *>(&cols), sizeof(cols));
 
     // Write matrix data.
-    file.write(reinterpret_cast<const char *>(matrix), sizeof(matrix));
+    file.write(reinterpret_cast<const char *>(mat), sizeof(mat));
 
     file.close();
     return 0; // Success.
@@ -295,7 +295,7 @@ int save_matrix_to_binary(const std::string &filename, const T (&matrix)[Rows][C
 /// @param matrix The matrix to load into.
 /// @return int 0 on success, non-zero on error.
 template <typename T, size_t Rows, size_t Cols>
-int load_matrix_from_csv(const std::string &filename, T (&matrix)[Rows][Cols])
+int load_matrix_from_csv(const std::string &filename, fsmlib::MatrixBase<T, Rows, Cols> &mat)
 {
     std::ifstream file(filename);
     if (!file.is_open()) {
@@ -311,7 +311,7 @@ int load_matrix_from_csv(const std::string &filename, T (&matrix)[Rows][Cols])
         size_t col = 0;
 
         while (std::getline(ss, value, ',') && col < Cols) {
-            std::istringstream(value) >> matrix[row][col];
+            std::istringstream(value) >> mat(row, col);
             ++col;
         }
 
@@ -328,7 +328,7 @@ int load_matrix_from_csv(const std::string &filename, T (&matrix)[Rows][Cols])
 /// @param matrix The matrix to load into.
 /// @return int 0 on success, non-zero on error.
 template <typename T, size_t Rows, size_t Cols>
-int load_matrix_from_binary(const std::string &filename, T (&matrix)[Rows][Cols])
+int load_matrix_from_binary(const std::string &filename, fsmlib::MatrixBase<T, Rows, Cols> &mat)
 {
     std::ifstream file(filename, std::ios::binary);
     if (!file.is_open()) {
@@ -349,7 +349,7 @@ int load_matrix_from_binary(const std::string &filename, T (&matrix)[Rows][Cols]
     }
 
     // Read matrix data.
-    file.read(reinterpret_cast<char *>(matrix), sizeof(matrix));
+    file.read(reinterpret_cast<char *>(mat), sizeof(mat));
 
     file.close();
     return 0; // Success.

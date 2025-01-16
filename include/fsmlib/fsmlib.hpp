@@ -29,7 +29,7 @@ public:
     /// @brief Type of the elements in the vector.
     using value_type = T;
     /// @brief Type of the size of the vector.
-    using size_type  = std::integral_constant<std::size_t, N>;
+    using size_type = std::integral_constant<std::size_t, N>;
 
     /// @brief Virtual destructor.
     virtual ~VectorBase() = default;
@@ -217,7 +217,7 @@ public:
     /// @brief Type of the elements in the matrix.
     using value_type = T;
     /// @brief Type of the size of the matrix.
-    using size_type  = std::pair<std::size_t, std::size_t>;
+    using size_type = std::pair<std::size_t, std::size_t>;
 
     /// @brief Virtual destructor.
     virtual ~MatrixBase() = default;
@@ -481,14 +481,14 @@ template <bool IsColumn, typename T, std::size_t N>
         // Create a column matrix
         fsmlib::Matrix<T, N, 1> mat;
         for (std::size_t i = 0; i < N; ++i) {
-            mat[i][0] = vec[i];
+            mat(i, 0) = vec[i];
         }
         return mat;
     } else {
         // Create a row matrix
         fsmlib::Matrix<T, 1, N> mat;
         for (std::size_t i = 0; i < N; ++i) {
-            mat[0][i] = vec[i];
+            mat(0, i) = vec[i];
         }
         return mat;
     }
@@ -504,7 +504,7 @@ constexpr auto to_vector(const fsmlib::MatrixBase<T, Rows, 1> &mat)
 {
     fsmlib::Vector<T, Rows> vec;
     for (std::size_t i = 0; i < Rows; ++i) {
-        vec[i] = mat[i][0];
+        vec[i] = mat(i, 0);
     }
     return vec;
 }
@@ -519,7 +519,7 @@ constexpr auto to_vector(const fsmlib::MatrixBase<T, 1, Cols> &mat)
 {
     fsmlib::Vector<T, Cols> vec;
     for (std::size_t i = 0; i < Cols; ++i) {
-        vec[i] = mat[0][i];
+        vec[i] = mat(0, i);
     }
     return vec;
 }
@@ -818,7 +818,7 @@ template <typename T, std::size_t N>
 {
     Matrix<T, N, N> result{};
     for (std::size_t i = 0; i < N; ++i) {
-        result[i][i] = vec[i];
+        result(i, i) = vec[i];
     }
     return result;
 }
@@ -835,7 +835,7 @@ template <typename T, std::size_t N1, std::size_t N2>
     constexpr std::size_t min_dim = (N1 < N2 ? N1 : N2);
     Vector<T, min_dim> result{};
     for (std::size_t i = 0; i < min_dim; ++i) {
-        result[i] = mat[i][i];
+        result[i] = mat(i, i);
     }
     return result;
 }
