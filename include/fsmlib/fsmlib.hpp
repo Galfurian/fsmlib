@@ -13,6 +13,7 @@
 #include <cstddef>
 
 #include "fsmlib/traits.hpp"
+#include "fsmlib/feq.hpp"
 
 #define COLUMN_MAJOR
 
@@ -837,6 +838,97 @@ template <typename T, std::size_t N1, std::size_t N2>
     for (std::size_t i = 0; i < min_dim; ++i) {
         result[i] = mat(i, i);
     }
+    return result;
+}
+
+/// @brief Generates num points between start and stop and returns them as a fixed-size Vector.
+/// @tparam T The type of the elements.
+/// @tparam N The number of elements in the vector.
+/// @param start The minimum value.
+/// @param stop The maximum value.
+/// @return A fixed-size Vector containing the generated sequence.
+template <typename T, std::size_t N>
+[[nodiscard]] inline auto linspace(T start, T stop)
+{
+    static_assert(N > 0, "Vector size must be greater than 0");
+    Vector<T, N> result;
+
+    // Handle the case where the range size is 1
+    if constexpr (N == 1) {
+        result[0] = stop;
+        return result;
+    }
+
+    bool are_the_same;
+    if constexpr (std::is_floating_point<T>::value) {
+        are_the_same = fsmlib::feq::approximately_equal(start, stop);
+    } else {
+        are_the_same = start == stop;
+    }
+
+    if (are_the_same) {
+        for (std::size_t i = 0; i < N; ++i) {
+            result[i] = stop;
+        }
+    } else if (start < stop) {
+        T step = (stop - start) / static_cast<T>(N - 1);
+        for (std::size_t i = 0; i < N; ++i) {
+            result[i] = start + step * static_cast<T>(i);
+        }
+    } else {
+        // When start > stop, generate a decreasing sequence
+        T step = (start - stop) / static_cast<T>(N - 1);
+        for (std::size_t i = 0; i < N; ++i) {
+            result[i] = start - step * static_cast<T>(i);
+        }
+    }
+
+    return result;
+}
+
+/// @brief Returns a fixed-size Vector with 'N' elements logarithmically spaced from base^start to base^stop.
+/// @tparam T The type of the elements.
+/// @tparam N The number of elements in the vector.
+/// @param start The first exponent.
+/// @param stop The last exponent.
+/// @param base The base for the logarithmic scale (default is 10).
+/// @return A fixed-size Vector containing the generated sequence.
+template <typename T, std::size_t N>
+[[nodiscard]] inline auto logspace(T start, T stop, T base = 10)
+{
+    static_assert(N > 0, "Vector size must be greater than 0");
+    Vector<T, N> result;
+
+    // Handle the case where the range size is 1
+    if constexpr (N == 1) {
+        result[0] = std::pow(base, stop);
+        return result;
+    }
+
+    bool are_the_same;
+    if constexpr (std::is_floating_point<T>::value) {
+        are_the_same = fsmlib::feq::approximately_equal(start, stop);
+    } else {
+        are_the_same = start == stop;
+    }
+
+    if (are_the_same) {
+        for (std::size_t i = 0; i < N; ++i) {
+            result[i] = std::pow(base, stop);
+        }
+    } else if (start < stop) {
+        T step = (stop - start) / static_cast<T>(N - 1);
+        for (std::size_t i = 0; i < N; ++i) {
+            result[i] = std::pow(base, start + step * static_cast<T>(i));
+        }
+    } else {
+        // When start > stop, generate a decreasing sequence
+        T step = (start - stop) / static_cast<T>(N - 1);
+        for (std::size_t i = 0; i < N; ++i) {
+            result[i] = std::pow(base, start - step * static_cast<T>(i));
+        }
+    }
+
     return result;
 }
 
