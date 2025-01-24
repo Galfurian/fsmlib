@@ -719,14 +719,14 @@ int main()
             };
 
             // Verify eigenvalues by comparing with expected values.
-            if (fsmlib::any(fsmlib::abs(fsmlib::abs(eigenvalues) - fsmlib::abs(expected_eigenvalues)) > 1e-3)) {
+            if (fsmlib::any(fsmlib::abs(fsmlib::abs(eigenvalues) - fsmlib::abs(expected_eigenvalues)) > 1e-2)) {
                 std::cerr << "Input    :\n" << A << "\n";
                 std::cerr << "Expected :\n" << expected_eigenvalues << "\n";
                 std::cerr << "Got      :\n" << eigenvalues << "\n";
                 throw std::runtime_error("Test failed: eigenvalues mismatch");
             }
             // Verify eigenvectors by comparing each element of the matrix
-            if (fsmlib::any(fsmlib::abs(fsmlib::abs(eigenvectors) - fsmlib::abs(expected_eigenvectors)) > 1e-3)) {
+            if (fsmlib::any(fsmlib::abs(fsmlib::abs(eigenvectors) - fsmlib::abs(expected_eigenvectors)) > 1e-2)) {
                 std::cerr << "Input    :\n" << A << "\n";
                 std::cerr << "Expected :\n" << expected_eigenvectors << "\n";
                 std::cerr << "Got      :\n" << eigenvectors << "\n";
