@@ -58,7 +58,7 @@ public:
         return data_[offset_ + index];
     }
 
-    constexpr std::size_t size() const noexcept override
+    constexpr std::size_t size() const noexcept
     {
         return N;
     }

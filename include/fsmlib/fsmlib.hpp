@@ -37,7 +37,7 @@ public:
 
     /// @brief Returns the size of the vector.
     /// @return Size of the vector.
-    virtual constexpr std::size_t size() const noexcept
+    constexpr std::size_t size() const noexcept
     {
         return N;
     }
@@ -225,7 +225,7 @@ public:
 
     /// @brief Returns the size of the matrix.
     /// @return Pair containing the number of rows and columns.
-    virtual constexpr std::size_t size() const noexcept
+    constexpr std::size_t size() const noexcept
     {
         return Rows * Cols;
     }
