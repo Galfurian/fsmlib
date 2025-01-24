@@ -1,4 +1,5 @@
 #include <fsmlib/fsmlib.hpp>
+#include <fsmlib/math.hpp>
 #include <fsmlib/io.hpp>
 
 #include <iostream>
@@ -20,7 +21,8 @@ int main()
             fsmlib::Vector<double, 3> vec = { 1.1, 2.2, 3.3 };
             vec[0]                        = 4.4;
             vec[2]                        = 6.6;
-            if (vec[0] != 4.4 || vec[1] != 2.2 || vec[2] != 6.6) {
+            fsmlib::Vector<double, 3> expected = { 4.4, 2.2, 6.6 };
+            if (fsmlib::any(fsmlib::abs(vec - expected) > 1e-06)) {
                 throw std::runtime_error("Test failed: Vector modification");
             }
             std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: Vector modification\n";

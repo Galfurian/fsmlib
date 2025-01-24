@@ -329,7 +329,7 @@ template <typename T, std::size_t Rows, std::size_t Cols, std::size_t NumPoles>
     static_assert(Rows == NumPoles, "The number of poles must match the system order.");
     // Ensure the system is controllable.
     auto ct = ctrb(A, B);
-    if (fsmlib::linalg::determinant(ct) == 0) {
+    if (fsmlib::feq::approximately_equal_to_zero(fsmlib::linalg::determinant(ct))) {
         throw std::runtime_error("acker: system not controllable, pole placement invalid.");
     }
     // Compute the desired characteristic polynomial.

@@ -616,13 +616,9 @@ template <typename T, std::size_t N>
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
 
-    // Ensure the input matrix is symmetric
-    for (std::size_t i = 0; i < N; ++i) {
-        for (std::size_t j = 0; j < i; ++j) {
-            if (mat(i, j) != mat(j, i)) {
-                throw std::runtime_error("Cholesky decomposition: Matrix is not symmetric.");
-            }
-        }
+    // Ensure the input matrix is symmetric.
+    if (!fsmlib::is_symmetric(mat)) {
+        throw std::runtime_error("Cholesky decomposition: Matrix is not symmetric.");
     }
 
     fsmlib::Matrix<data_type_t, N, N> lower = {}; // Lower triangular matrix
@@ -1116,7 +1112,7 @@ template <typename T, std::size_t N>
     std::size_t first_nonzero   = N;
     // Find the first non-zero element
     for (std::size_t i = 0; i < N; ++i) {
-        if (a[i] != 0) {
+        if (!fsmlib::feq::approximately_equal_to_zero(a[i])) {
             first_nonzero = i;
             break;
         }

@@ -101,10 +101,10 @@ int main()
             fsmlib::Vector<double, 1> expected_y      = { 1.0 };
 
             // Validate results
-            if (fsmlib::any(x_next != expected_x_next)) {
+            if (fsmlib::any(fsmlib::abs(x_next - expected_x_next) > 1e-06)) {
                 throw std::runtime_error("Test failed: Incorrect next state in Simulation step");
             }
-            if (fsmlib::any(y != expected_y)) {
+            if (fsmlib::any(fsmlib::abs(y - expected_y) > 1e-06)) {
                 throw std::runtime_error("Test failed: Incorrect output in Simulation step");
             }
 
@@ -235,7 +235,7 @@ int main()
                 { 1., 0., 0. }, { 0., 1., 0. }, { 1., 2., 0. }, { 0., 1., 3. }, { 1., 4., 6. }, { 0., 1., 6. },
             };
             // Verify the result
-            if (fsmlib::any(result != expected)) {
+            if (fsmlib::any(fsmlib::abs(result - expected) > 1e-06)) {
                 std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
                 throw std::runtime_error("Test failed: obsv with 3x3 state matrix and 2x3 output matrix");
             }
@@ -251,7 +251,7 @@ int main()
             // Expected coefficients for polynomial.
             fsmlib::Vector<double, 4> expected = { 1.0, -0.5, -7.5, 9.0 };
             // Verify the result
-            if (fsmlib::any(result != expected)) {
+            if (fsmlib::any(fsmlib::abs(result - expected) > 1e-06)) {
                 std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
                 throw std::runtime_error("Test failed: poly function with 3 roots");
             }
@@ -265,7 +265,7 @@ int main()
             auto result = fsmlib::linalg::polyreduce(coefficients);
             // Expected result
             fsmlib::Vector<double, 6> expected = { 1.0, -0.5, 9.0, 0., 0., 0. };
-            if (fsmlib::any(result != expected)) {
+            if (fsmlib::any(fsmlib::abs(result - expected) > 1e-06)) {
                 std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
                 throw std::runtime_error("Test failed: polyreduce");
             }
@@ -283,7 +283,7 @@ int main()
             auto result = fsmlib::control::acker(A, B, poles);
             // Expected gain matrix
             fsmlib::Matrix<double, 1, 2> expected = { { 9.0, 10.0 } };
-            if (fsmlib::any(result != expected)) {
+            if (fsmlib::any(fsmlib::abs(result - expected) > 1e-06)) {
                 std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
                 throw std::runtime_error("Test failed: acker with 2x2 system and 2 poles");
             }
