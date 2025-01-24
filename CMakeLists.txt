@@ -54,7 +54,7 @@ add_library(fsmlib::fsmlib ALIAS fsmlib)
 # Inlcude header directories.
 target_include_directories(fsmlib INTERFACE ${PROJECT_SOURCE_DIR}/include)
 # Set the library to use c++-20
-target_compile_features(fsmlib INTERFACE cxx_std_20)
+target_compile_features(fsmlib INTERFACE cxx_std_17)
 
 # -----------------------------------------------------------------------------
 # COMPILATION FLAGS

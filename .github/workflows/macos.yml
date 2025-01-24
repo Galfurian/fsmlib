@@ -38,8 +38,8 @@ jobs:
       fail-fast: false
       matrix:
         include: [
-          { cc: clang, cxx: clang++, label: "Apple Clang" },  # Default macOS Clang
-          { cc: gcc-11, cxx: g++-11, label: "GCC 11" }       # Install GCC 11
+          { cc: clang-9, cxx: clang-9++, label: "CLANG 9" },
+          { cc: gcc-8, cxx: g++-8, label: "GCC 8" }
         ]
 
     env:
@@ -51,12 +51,12 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install GCC (if applicable)
-        if: matrix.cc == 'gcc-11'
+        if: matrix.cc == 'gcc-8'
         run: |
           brew update
-          brew install gcc@11
-          echo "CC=gcc-11" >> $GITHUB_ENV
-          echo "CXX=g++-11" >> $GITHUB_ENV
+          brew install gcc@8
+          echo "CC=gcc-8" >> $GITHUB_ENV
+          echo "CXX=g++-8" >> $GITHUB_ENV
 
       - name: Configure Project
         run: |

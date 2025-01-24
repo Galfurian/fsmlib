@@ -238,7 +238,7 @@ template <typename T, std::size_t N>
     // Create the output matrix.
     fsmlib::Matrix<data_type_t, N - 1> output{};
     // Create the indexing variables.
-    std::size_t i, j, row, col;
+    std::size_t i = 0, j = 0, row = 0, col = 0;
     // Looping for each element of the matrix.
     for (i = 0, j = 0, row = 0, col = 0; row < N; ++row) {
         for (col = 0; col < N; ++col) {
@@ -307,7 +307,7 @@ template <typename T, std::size_t N>
     // We need to create a temporary.
     fsmlib::Matrix<data_type_t, N> A(matrix);
     // Create the indexing variables.
-    std::size_t c, r = 0, k;
+    std::size_t c = 0, r = 0, k = 0;
     // Initialize the determinant, and create both pivot and ratio variable.
     data_type_t det = static_cast<data_type_t>(1.), pivot, ratio;
     // We convert the temporary to upper triangular form.
