@@ -27,6 +27,20 @@ struct StateSpace {
     fsmlib::Matrix<T, N_state, N_input> B;  ///< Input matrix.
     fsmlib::Matrix<T, N_output, N_state> C; ///< Output matrix.
     fsmlib::Matrix<T, N_output, N_input> D; ///< Feedforward matrix.
+
+    StateSpace() : A{}, B{}, C{}, D{}
+    {
+        // Nothing to do.
+    }
+
+    StateSpace(const fsmlib::Matrix<T, N_state, N_state> &_A,
+               const fsmlib::Matrix<T, N_state, N_input> &_B,
+               const fsmlib::Matrix<T, N_output, N_state> &_C,
+               const fsmlib::Matrix<T, N_output, N_input> &_D)
+        : A(_A), B(_B), C(_C), D(_D)
+    {
+        // Nothing to do.
+    }
 };
 
 /// @brief Represents a discrete-time state-space model, extending the continuous model.
@@ -41,6 +55,21 @@ struct DiscreteStateSpace {
     fsmlib::Matrix<T, N_output, N_state> C; ///< Output matrix.
     fsmlib::Matrix<T, N_output, N_input> D; ///< Feedforward matrix.
     T sample_time;                          ///< The sample time used for discretization.
+
+    DiscreteStateSpace() : A{}, B{}, C{}, D{}, sample_time{}
+    {
+        // Nothing to do.
+    }
+
+    DiscreteStateSpace(const fsmlib::Matrix<T, N_state, N_state> &_A,
+                       const fsmlib::Matrix<T, N_state, N_input> &_B,
+                       const fsmlib::Matrix<T, N_output, N_state> &_C,
+                       const fsmlib::Matrix<T, N_output, N_input> &_D,
+                       T _sample_time)
+        : A(_A), B(_B), C(_C), D(_D), sample_time(_sample_time)
+    {
+        // Nothing to do.
+    }
 };
 
 /// @brief Represents a single transfer function for a MIMO system.
@@ -136,7 +165,7 @@ constexpr inline void step(const StateSpace<T, N_state, N_input, N_output> &sys,
 /// @param y Reference to a vector that will hold the computed output.
 /// @details This function computes the next state and output of a state-space model
 /// based on the provided current state and input. The next state is computed as:
-///  x_{next} = A * x + B * u 
+///  x_{next} = A * x + B * u
 /// and the output is computed as:
 ///  y = C * x + D * u .
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
