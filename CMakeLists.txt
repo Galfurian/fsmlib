@@ -94,32 +94,18 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Cl
     if(STRICT_WARNINGS)
         # Enable a broad set of warnings to catch common and subtle issues:
         target_compile_options(fsmlib INTERFACE
-            -Wall              # Enable most general-purpose warnings.
-            -Wextra            # Enable extra warnings not included in -Wall.
-            -Wconversion       # Warn about implicit type conversions that may lose data.
-            -pedantic          # Enforce strict compliance with the C++ standard.
-            -Wshadow           # Warn about variable shadowing, which can cause subtle bugs.
-            -Wnon-virtual-dtor # Warn when a class with virtual functions lacks a virtual destructor.
-            -Wnull-dereference # Warn about potential null pointer dereferences.
-            -Wformat=2         # Enable strict checks for printf/scanf format strings.
+            -Wall                # Enable most general-purpose warnings.
+            -Wextra              # Enable extra warnings not included in -Wall.
+            -Wconversion         # Warn about implicit type conversions that may lose data.
+            -pedantic            # Enforce strict compliance with the C++ standard.
+            -Wshadow             # Warn about variable shadowing, which can cause subtle bugs.
+            -Wnon-virtual-dtor   # Warn when a class with virtual functions lacks a virtual destructor.
+            -Wnull-dereference   # Warn about potential null pointer dereferences.
+            -Wformat=2           # Enable strict checks for printf/scanf format strings.
             -Woverloaded-virtual # Warn when a derived class function hides a base class virtual function.
-            -Wfloat-equal      # Warn about direct comparisons of floating-point values, which can be imprecise.
+            -Wfloat-equal        # Warn about direct comparisons of floating-point values, which can be imprecise.
         )
 
-        # Enable runtime sanitizers in debugging builds for enhanced error detection:
-        # - AddressSanitizer detects memory corruption issues (e.g., buffer overflows).
-        # - UndefinedBehaviorSanitizer detects undefined behavior.
-        # - ThreadSanitizer detects data races in multithreaded programs.
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-            target_compile_options(fsmlib INTERFACE
-                -fsanitize=address
-                -fsanitize=undefined
-            )
-            target_link_options(fsmlib INTERFACE
-                -fsanitize=address
-                -fsanitize=undefined
-            )
-        endif()
     endif()
 endif()
 
