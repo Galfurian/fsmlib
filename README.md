@@ -1,5 +1,10 @@
 # Fixed-Size Matrix Library (fsmlib)
 
+[![Ubuntu](https://github.com/Galfurian/fsmlib/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/Galfurian/fsmlib/actions/workflows/ubuntu.yml)
+[![Windows](https://github.com/Galfurian/fsmlib/actions/workflows/windows.yml/badge.svg)](https://github.com/Galfurian/fsmlib/actions/workflows/windows.yml)
+[![MacOS](https://github.com/Galfurian/fsmlib/actions/workflows/macos.yml/badge.svg)](https://github.com/Galfurian/fsmlib/actions/workflows/macos.yml)
+[![Documentation](https://github.com/Galfurian/fsmlib/actions/workflows/documentation.yml/badge.svg)](https://github.com/Galfurian/fsmlib/actions/workflows/documentation.yml)
+
 `fsmlib` is a lightweight, header-only C++ library for performing efficient
 operations on fixed-size matrices and vectors. Designed with performance and
 usability in mind, `fsmlib` leverages modern C++ features to enable
