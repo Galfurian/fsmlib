@@ -62,33 +62,27 @@ jobs:
       CXX: ${{ matrix.cxx }}
 
     steps:
-    # Step 1: Checkout the repository code
+    # Step: Clone the project.
     - name: Checkout Repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
-    # Step 2: Install the required compiler and dependencies
+    # Step: Install the required compiler and dependencies.
     - name: Install Compiler Dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y ${{ matrix.pkgs }}
 
-    # Step 3: Configure the project using CMake
+    # Step: Configure the project using CMake.
     - name: Configure Project
       run: |
-        mkdir -p build               # Create the build directory
-        cd build
-        cmake -DCMAKE_C_COMPILER=${{ env.CC }} \
-              -DCMAKE_CXX_COMPILER=${{ env.CXX }} \
-              -DBUILD_TESTS=ON \
-              -DWARNINGS_AS_ERRORS=ON ..
+        cmake -B build -DCMAKE_C_COMPILER=${{ env.CC }} -DCMAKE_CXX_COMPILER=${{ env.CXX }} -DBUILD_TESTS=ON -DWARNINGS_AS_ERRORS=ON -DSTRICT_WARNINGS=ON
 
-    # Step 4: Build the project using CMake
+    # Step: Build Project.
     - name: Build Project
       run: |
-        cmake --build build --parallel 2   # Use 2 parallel threads to speed up builds
+        cmake --build build --config Debug --parallel 2
 
-    # Step 5: Run tests using CTest
+    # Step: Run Tests.
     - name: Run Tests
       run: |
-        cd build
-        ctest -C Debug --verbose           # Run tests in Debug mode with verbose output
+        ctest --test-dir build --build-config Debug --verbose
