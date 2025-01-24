@@ -292,7 +292,7 @@ int save_matrix_to_binary(const std::string &filename, const fsmlib::MatrixBase<
 /// @brief Loads a matrix from a CSV file.
 ///
 /// @param filename The name of the file to load the matrix from.
-/// @param matrix The matrix to load into.
+/// @param mat The matrix to load into.
 /// @return int 0 on success, non-zero on error.
 template <typename T, size_t Rows, size_t Cols>
 int load_matrix_from_csv(const std::string &filename, fsmlib::MatrixBase<T, Rows, Cols> &mat)
@@ -325,7 +325,7 @@ int load_matrix_from_csv(const std::string &filename, fsmlib::MatrixBase<T, Rows
 /// @brief Loads a matrix from a binary file.
 ///
 /// @param filename The name of the file to load the matrix from.
-/// @param matrix The matrix to load into.
+/// @param mat The matrix to load into.
 /// @return int 0 on success, non-zero on error.
 template <typename T, size_t Rows, size_t Cols>
 int load_matrix_from_binary(const std::string &filename, fsmlib::MatrixBase<T, Rows, Cols> &mat)
