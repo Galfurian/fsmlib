@@ -65,6 +65,9 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     # which are not portable and may clutter warning logs.
     target_compile_definitions(fsmlib INTERFACE _CRT_SECURE_NO_WARNINGS)
 
+    # Disable warning C4702: unreachable code.
+    add_compile_options(/wd4702)
+
     if(WARNINGS_AS_ERRORS)
         # Treat all warnings as errors to enforce stricter code quality.
         target_compile_options(fsmlib INTERFACE /WX)
