@@ -15,7 +15,11 @@
 #include "fsmlib/traits.hpp"
 #include "fsmlib/feq.hpp"
 
-#define COLUMN_MAJOR
+#define COLUMN_MAJOR ///< Enables column-major access of matrices.
+
+#define FSMLIB_MAJOR_VERSION 1 ///< Major version of the library.
+#define FSMLIB_MINOR_VERSION 0 ///< Minor version of the library.
+#define FSMLIB_MICRO_VERSION 0 ///< Micro version of the library.
 
 /// @brief Namespace for the fixed-size matrix and vector library.
 namespace fsmlib
@@ -104,6 +108,7 @@ public:
     }
 
     /// @brief Copy constructor.
+    /// @param other The vector to copy from.
     Vector(const fsmlib::VectorBase<T, N> &other) : data_{}
     {
         if (this != &other) {
@@ -112,6 +117,7 @@ public:
     }
 
     /// @brief Copy constructor.
+    /// @param other The vector to copy from.
     Vector(const fsmlib::VectorBase<const T, N> &other) : data_{}
     {
         if (this != &other) {
@@ -326,6 +332,7 @@ public:
     }
 
     /// @brief Copy constructor.
+    /// @param other The matrix to copy from.
     Matrix(const MatrixBase<T, Rows, Cols> &other) : data_{}
     {
         if (this != &other) {
@@ -334,6 +341,7 @@ public:
     }
 
     /// @brief Copy constructor.
+    /// @param other The matrix to copy from.
     Matrix(const MatrixBase<const T, Rows, Cols> &other) : data_{}
     {
         std::copy(other.data(), other.data() + (Rows * Cols), data_);

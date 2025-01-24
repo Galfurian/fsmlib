@@ -58,6 +58,8 @@ public:
         return data_[offset_ + index];
     }
 
+    /// @brief Returns the size of the view.
+    /// @return Size of the view.
     constexpr std::size_t size() const noexcept
     {
         return N;

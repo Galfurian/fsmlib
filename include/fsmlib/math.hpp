@@ -43,11 +43,10 @@ apply_elementwise(const fsmlib::VectorBase<T1, N> &lhs, const fsmlib::VectorBase
 /// @tparam T1 The type of elements in the left-hand side vector.
 /// @tparam T2 The type of elements in the right-hand side vector.
 /// @tparam N The number of elements in the vectors.
-/// @tparam Operation The type of the operation to apply.
-/// @param lhs The left-hand side vector to modify in place.
-/// @param rhs The right-hand side vector.
-/// @param op The binary operation to apply element-wise.
-/// @return The modified left-hand side vector.
+/// @tparam Operation The type of the operation to apply. It must accept two arguments of types `T1` and `T2`.
+/// @param lhs The left-hand side vector to modify in place. The results of the operation are stored here.
+/// @param rhs The right-hand side vector, whose elements are used as input for the operation. This vector is not modified.
+/// @param op The binary operation to apply element-wise. It must accept arguments of types `T1` and `T2`.
 template <typename T1, typename T2, std::size_t N, typename Operation>
 constexpr inline void
 apply_elementwise(fsmlib::VectorBase<T1, N> &lhs, const fsmlib::VectorBase<T2, N> &rhs, Operation op)
@@ -86,11 +85,10 @@ template <typename T1,
 /// @tparam T1 The type of elements in the vector.
 /// @tparam T2 The type of the scalar (must be arithmetic).
 /// @tparam N The number of elements in the vector.
-/// @tparam Operation The type of the operation to apply.
-/// @param lhs The vector to modify in place.
-/// @param rhs The scalar.
-/// @param op The binary operation to apply element-wise.
-/// @return The modified vector.
+/// @tparam Operation The type of the operation to apply. It must accept arguments of types `T1` and `T2`.
+/// @param lhs The vector to modify in place. The results of the operation are stored here.
+/// @param rhs The scalar value used as the second operand in the operation.
+/// @param op The binary operation to apply element-wise. It must accept a vector element and the scalar as arguments.
 template <typename T1,
           typename T2,
           std::size_t N,
@@ -150,17 +148,16 @@ template <typename T1, typename T2, std::size_t Rows, std::size_t Cols, typename
     return result;
 }
 
-/// @brief Applies an element-wise operation on two matrices, modifying the left-hand side in place.
+/// @brief Applies an element-wise binary operation on two matrices, modifying the left-hand side in place.
 ///
 /// @tparam T1 The type of elements in the left-hand side matrix.
 /// @tparam T2 The type of elements in the right-hand side matrix.
 /// @tparam Rows The number of rows in the matrices.
 /// @tparam Cols The number of columns in the matrices.
-/// @tparam Operation The type of the operation to apply.
-/// @param lhs The left-hand side matrix to modify in place.
-/// @param rhs The right-hand side matrix.
-/// @param op The binary operation to apply element-wise.
-/// @return The modified left-hand side matrix.
+/// @tparam Operation The type of the binary operation to apply. It must be callable with two arguments of types `T1` and `T2`.
+/// @param lhs The left-hand side matrix to modify in place. The results of the operation will be stored here.
+/// @param rhs The right-hand side matrix, whose elements are used as input for the operation. This matrix is not modified.
+/// @param op The binary operation to apply element-wise. The operation must accept two arguments of types `T1` and `T2`.
 template <typename T1, typename T2, std::size_t Rows, std::size_t Cols, typename Operation>
 constexpr inline void
 apply_elementwise(fsmlib::MatrixBase<T1, Rows, Cols> &lhs, const fsmlib::MatrixBase<T2, Rows, Cols> &rhs, Operation op)
@@ -203,11 +200,10 @@ apply_elementwise(const fsmlib::MatrixBase<T1, Rows, Cols> &lhs, const T2 &rhs, 
 /// @tparam T2 The type of the scalar (must be arithmetic).
 /// @tparam Rows The number of rows in the matrix.
 /// @tparam Cols The number of columns in the matrix.
-/// @tparam Operation The type of the operation to apply.
-/// @param lhs The matrix to modify in place.
-/// @param rhs The scalar.
-/// @param op The binary operation to apply element-wise.
-/// @return The modified matrix.
+/// @tparam Operation The type of the operation to apply. It must accept arguments of types `T1` and `T2`.
+/// @param lhs The matrix to modify in place. The results of the operation are stored here.
+/// @param rhs The scalar value used as the second operand in the operation.
+/// @param op The binary operation to apply element-wise. It must accept a matrix element and the scalar as arguments.
 template <typename T1,
           typename T2,
           std::size_t Rows,
@@ -254,11 +250,10 @@ apply_elementwise(const T1 &lhs, const fsmlib::MatrixBase<T2, Rows, Cols> &rhs, 
 /// @tparam T2 The type of elements in the matrix.
 /// @tparam Rows The number of rows in the matrix.
 /// @tparam Cols The number of columns in the matrix.
-/// @tparam Operation The type of the operation to apply.
-/// @param lhs The scalar.
-/// @param rhs The matrix to modify in place.
-/// @param op The binary operation to apply element-wise.
-/// @return The modified matrix.
+/// @tparam Operation The type of the operation to apply. It must accept arguments of types `T1` and `T2`.
+/// @param lhs The scalar value used as the first operand in the operation.
+/// @param rhs The matrix to modify in place. The results of the operation are stored here.
+/// @param op The binary operation to apply element-wise. It must accept a scalar and a matrix element as arguments.
 template <typename T1,
           typename T2,
           std::size_t Rows,
@@ -294,10 +289,9 @@ template <typename T, std::size_t N, typename Operation>
 ///
 /// @tparam T The type of elements in the vector.
 /// @tparam N The number of elements in the vector.
-/// @tparam Operation The type of the unary operation to apply.
-/// @param vec The vector to modify in place.
+/// @tparam Operation The type of the unary operation to apply. It must accept a single argument of type `T`.
+/// @param vec The vector to modify in place. The operation is applied to each element.
 /// @param op The unary operation to apply element-wise.
-/// @return The modified vector.
 template <typename T, std::size_t N, typename Operation>
 constexpr inline void apply_elementwise(fsmlib::VectorBase<T, N> &vec, Operation op)
 {
@@ -330,10 +324,9 @@ template <typename T, std::size_t Rows, std::size_t Cols, typename Operation>
 /// @tparam T The type of elements in the matrix.
 /// @tparam Rows The number of rows in the matrix.
 /// @tparam Cols The number of columns in the matrix.
-/// @tparam Operation The type of the unary operation to apply.
-/// @param mat The matrix to modify in place.
-/// @param op The unary operation to apply element-wise.
-/// @return The modified matrix.
+/// @tparam Operation The type of the unary operation to apply, such as a lambda or function object.
+/// @param mat The matrix to modify in place. The operation is applied element-wise to this matrix.
+/// @param op The unary operation to apply to each element. It must be callable with a single argument of type `T`.
 template <typename T, std::size_t Rows, std::size_t Cols, typename Operation>
 constexpr inline void apply_elementwise(fsmlib::MatrixBase<T, Rows, Cols> &mat, Operation op)
 {
