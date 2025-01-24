@@ -162,6 +162,8 @@ endif()
 
 if(DOXYGEN_FOUND)
 
+    set(DOXYGEN_GENERATE_LATEX NO)
+
     # Record the options that describe how to populate the specified content.
     FetchContent_Declare(
         doxygenawesome
@@ -182,13 +184,11 @@ if(DOXYGEN_FOUND)
         )
     endif()
 
-    # = CUSTOMIZATION =========================================================
     set(DOXYGEN_WARN_FORMAT "$file:$line: $text")
     set(DOXYGEN_PROJECT_NAME fsmlib)
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE ${PROJECT_SOURCE_DIR}/README.md)
     set(DOXYGEN_SHOW_INCLUDE_FILES NO)
     set(DOXYGEN_GENERATE_TREEVIEW YES)
-    set(DOXYGEN_GENERATE_LATEX NO)
     set(DOXYGEN_HTML_HEADER ${doxygenawesome_SOURCE_DIR}/doxygen-custom/header.html)
     set(DOXYGEN_HTML_EXTRA_STYLESHEET ${doxygenawesome_SOURCE_DIR}/doxygen-awesome.css)
     set(DOXYGEN_HTML_EXTRA_FILES
@@ -196,6 +196,7 @@ if(DOXYGEN_FOUND)
         ${doxygenawesome_SOURCE_DIR}/doxygen-awesome-paragraph-link.js
         ${doxygenawesome_SOURCE_DIR}/doxygen-awesome-darkmode-toggle.js
     )
+
     doxygen_add_docs(
         fsmlib_documentation
         ${PROJECT_SOURCE_DIR}/README.md
