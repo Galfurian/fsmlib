@@ -6,6 +6,8 @@
 
 #include <cmath>
 #include <limits>
+#include <complex>
+#include <type_traits>
 
 namespace fsmlib
 {
@@ -27,7 +29,7 @@ static inline auto &tolerance()
 template <typename T1, typename T2>
 inline bool approximately_equal(T1 a, T2 b)
 {
-    return std::fabs(a - b) <= tolerance() * std::fmax(std::fabs(a), std::fabs(b));
+    return std::abs(a - b) <= tolerance() * std::max(std::abs(a), std::abs(b));
 }
 
 /// @brief Checks if the fir floating point value is lesser than or equal to the second one.
@@ -54,12 +56,12 @@ inline bool approximately_greater_than_equal(T1 a, T2 b)
 
 /// @brief Checks if the value is approximately equal to zero.
 /// @param a the value.
-/// @returns true if the value is approximately zero.
+/// @returns true if the value is approximately equal to zero.
 /// @returns false otherwise.
 template <typename T>
 inline bool approximately_equal_to_zero(T a)
 {
-    return std::fabs(a) <= fsmlib::feq::tolerance() * std::fabs(a);
+    return std::abs(a) <= fsmlib::feq::tolerance() * std::abs(a);
 }
 
 } // namespace feq
