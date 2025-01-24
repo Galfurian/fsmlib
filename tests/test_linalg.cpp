@@ -252,7 +252,7 @@ int main()
             };
             auto [iterations, scale] = fsmlib::linalg::scale_to_unit_norm(mat);
 
-            if (iterations != 0 || scale != 1.0) {
+            if (iterations != 0 || !fsmlib::feq::approximately_equal(scale, 1.0)) {
                 std::cerr << "Expected: iterations = 0, scale = 1.0\n";
                 std::cerr << "Got: iterations = " << iterations << ", scale = " << scale << "\n";
                 throw std::runtime_error("Test failed: scale_to_unit_norm");

@@ -191,8 +191,8 @@ template <typename T, std::size_t N>
                     factor = 1.0;
                 }
 
-                // Apply scaling if it improves the balance
-                if (factor != 1.0) {
+                // Apply scaling if it improves the balance.
+                if (!fsmlib::feq::approximately_equal(factor, 1.0)) {
                     converged = false;
                     for (std::size_t j = 0; j < N; ++j) {
                         result(i, j) *= factor;
@@ -314,10 +314,10 @@ template <typename T, std::size_t N>
     for (c = 0; c < N; ++c) {
         // If we have a negative value on the diagonal, we need to move it
         // somewhere else.
-        if (A(c, c) == 0.) {
+        if (fsmlib::feq::approximately_equal_to_zero(A(c, c))) {
             // Right now, I'm trying to find a place below the current
             k = c + 1;
-            while ((k < N) && (A(k, c) == 0.)) {
+            while ((k < N) && fsmlib::feq::approximately_equal_to_zero(A(k, c))) {
                 k++;
             }
             // If we did not find a non-zero value, we have a singular matrix.
@@ -383,7 +383,7 @@ template <typename T, std::size_t N>
     // Compute the determinant.
     data_type_t det = fsmlib::linalg::determinant(matrix);
     // If determinant is zero, the matrix is singular.
-    if (det == 0.) {
+    if (fsmlib::feq::approximately_equal_to_zero(det)) {
         return fsmlib::Matrix<data_type_t, N>();
     }
     // Find adjoint of the matrix.
