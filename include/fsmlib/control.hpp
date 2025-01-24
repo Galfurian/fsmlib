@@ -108,9 +108,9 @@ template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_ou
 /// @param y Reference to a vector that will hold the computed output.
 /// @details This function computes the next state and output of a state-space model
 /// based on the provided current state and input. The next state is computed as:
-/// \f$ x_{next} = A \cdot x + B \cdot u \f$
+///     x_{next} = A * x + B * u
 /// and the output is computed as:
-/// \f$ y = C \cdot x + D \cdot u \f$.
+///     y = C * x + D * u
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
 constexpr inline void step(const StateSpace<T, N_state, N_input, N_output> &sys,
                            const Vector<T, N_state> &x,
@@ -136,9 +136,9 @@ constexpr inline void step(const StateSpace<T, N_state, N_input, N_output> &sys,
 /// @param y Reference to a vector that will hold the computed output.
 /// @details This function computes the next state and output of a state-space model
 /// based on the provided current state and input. The next state is computed as:
-/// \f$ x_{next} = A \cdot x + B \cdot u \f$
+///  x_{next} = A * x + B * u 
 /// and the output is computed as:
-/// \f$ y = C \cdot x + D \cdot u \f$.
+///  y = C * x + D * u .
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
 constexpr inline void dstep(const DiscreteStateSpace<T, N_state, N_input, N_output> &sys,
                             const Vector<T, N_state> &x,

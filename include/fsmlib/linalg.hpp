@@ -931,10 +931,8 @@ template <typename T, std::size_t N>
 /// - The eigenvectors are returned as columns of the resulting matrix.
 ///
 /// The decomposition satisfies the equation:
-/// \f[
-/// A * v = \lambda * v
-/// \f]
-/// where \f$ \lambda \f$ is an eigenvalue, and \f$ v \f$ is the corresponding eigenvector.
+///     A * v = Lambda * v
+/// where  Lambda  is an eigenvalue, and  v  is the corresponding eigenvector.
 ///
 /// Example usage:
 /// @code

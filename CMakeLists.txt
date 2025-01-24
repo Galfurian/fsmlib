@@ -165,19 +165,6 @@ endif()
 
 if(DOXYGEN_FOUND)
 
-    # FetchContent: Doxygen Awesome CSS
-    FetchContent_Declare(doxygenawesome
-        GIT_REPOSITORY https://github.com/jothepro/doxygen-awesome-css
-        GIT_TAG main
-    )
-    FetchContent_MakeAvailable(doxygenawesome)
-
-    # Hide FetchContent variables to avoid clutter in ccmake.
-    mark_as_advanced(FORCE
-        FETCHCONTENT_UPDATES_DISCONNECTED_DOXYGENAWESOME
-        FETCHCONTENT_SOURCE_DIR_DOXYGENAWESOME
-    )
-
     # Read the file with the version.
     file(READ ${PROJECT_SOURCE_DIR}/include/fsmlib/fsmlib.hpp version_file)
     # Extract the version.
@@ -196,8 +183,21 @@ if(DOXYGEN_FOUND)
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE ${PROJECT_SOURCE_DIR}/README.md)
     set(DOXYGEN_SHOW_INCLUDE_FILES NO)
     set(DOXYGEN_GENERATE_TREEVIEW YES)
-    set(DOXYGEN_GENERATE_LATEX NO) # Disable LaTeX if not needed
-    set(DOXYGEN_GENERATE_MAN NO)   # Disable man pages if not needed
+    set(DOXYGEN_GENERATE_LATEX NO)
+    set(DOXYGEN_GENERATE_MAN NO)  
+
+    # FetchContent: Doxygen Awesome CSS
+    FetchContent_Declare(doxygenawesome
+        GIT_REPOSITORY https://github.com/jothepro/doxygen-awesome-css
+        GIT_TAG main
+    )
+    FetchContent_MakeAvailable(doxygenawesome)
+
+    # Hide FetchContent variables to avoid clutter in ccmake.
+    mark_as_advanced(FORCE
+        FETCHCONTENT_UPDATES_DISCONNECTED_DOXYGENAWESOME
+        FETCHCONTENT_SOURCE_DIR_DOXYGENAWESOME
+    )
 
     # Styling and UX enhancements using Doxygen Awesome
     set(DOXYGEN_HTML_HEADER ${doxygenawesome_SOURCE_DIR}/doxygen-custom/header.html)
