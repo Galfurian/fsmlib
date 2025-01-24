@@ -200,6 +200,7 @@ if(DOXYGEN_FOUND)
         ${PROJECT_SOURCE_DIR}/README.md
         ${PROJECT_SOURCE_DIR}/LICENSE.md
         ${PROJECT_SOURCE_DIR}/include/fsmlib/control.hpp
+        ${PROJECT_SOURCE_DIR}/include/fsmlib/feq.hpp
         ${PROJECT_SOURCE_DIR}/include/fsmlib/fsmlib.hpp
         ${PROJECT_SOURCE_DIR}/include/fsmlib/io.hpp
         ${PROJECT_SOURCE_DIR}/include/fsmlib/linalg.hpp
