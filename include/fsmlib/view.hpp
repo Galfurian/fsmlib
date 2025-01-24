@@ -73,22 +73,22 @@ public:
         return data_;
     }
 
-    constexpr T *begin() noexcept
+    constexpr T *begin() noexcept override
     {
         return data_ + offset_;
     }
 
-    constexpr T *end() noexcept
+    constexpr T *end() noexcept override
     {
         return data_ + offset_ + N;
     }
 
-    constexpr const T *begin() const noexcept
+    constexpr const T *begin() const noexcept override
     {
         return data_ + offset_;
     }
 
-    constexpr const T *end() const noexcept
+    constexpr const T *end() const noexcept override
     {
         return data_ + offset_ + N;
     }
