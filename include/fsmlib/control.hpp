@@ -28,11 +28,17 @@ struct StateSpace {
     fsmlib::Matrix<T, N_output, N_state> C; ///< Output matrix.
     fsmlib::Matrix<T, N_output, N_input> D; ///< Feedforward matrix.
 
+    /// @brief Default constructor to initialize the continuous-time state-space model.
     StateSpace() : A{}, B{}, C{}, D{}
     {
         // Nothing to do.
     }
 
+    /// @brief Constructor to initialize the continuous-time state-space model with given matrices.
+    /// @param _A System matrix.
+    /// @param _B Input matrix.
+    /// @param _C Output matrix.
+    /// @param _D Feedforward matrix.
     StateSpace(const fsmlib::Matrix<T, N_state, N_state> &_A,
                const fsmlib::Matrix<T, N_state, N_input> &_B,
                const fsmlib::Matrix<T, N_output, N_state> &_C,
@@ -56,11 +62,18 @@ struct DiscreteStateSpace {
     fsmlib::Matrix<T, N_output, N_input> D; ///< Feedforward matrix.
     T sample_time;                          ///< The sample time used for discretization.
 
+    /// @brief Default constructor to initialize the discrete-time state-space model.
     DiscreteStateSpace() : A{}, B{}, C{}, D{}, sample_time{}
     {
         // Nothing to do.
     }
 
+    /// @brief Constructor to initialize the discrete-time state-space model with given matrices. 
+    /// @param _A System matrix.
+    /// @param _B Input matrix.
+    /// @param _C Output matrix.
+    /// @param _D Feedforward matrix.
+    /// @param _sample_time The sample time used for discretization.
     DiscreteStateSpace(const fsmlib::Matrix<T, N_state, N_state> &_A,
                        const fsmlib::Matrix<T, N_state, N_input> &_B,
                        const fsmlib::Matrix<T, N_output, N_state> &_C,

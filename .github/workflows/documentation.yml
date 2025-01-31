@@ -48,5 +48,5 @@ jobs:
       # Step 3: Configure and Build Documentation
       - name: Generate Documentation
         run: |
-          cmake -B build -DDOXYGEN_WARN_AS_ERROR=NO
+          cmake -B build -DDOXYGEN_WARN_AS_ERROR=YES
           cmake --build build --target fsmlib_documentation
