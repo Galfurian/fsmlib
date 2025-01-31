@@ -176,7 +176,7 @@ if(DOXYGEN_FOUND)
     set(FSMLIB_MICRO_VERSION ${CMAKE_MATCH_1})
 
     # Customization: Doxygen Configuration
-    set(DOXYGEN_WARN_FORMAT "$file:$line: $text")
+    set(DOXYGEN_WARN_FORMAT "$file:$line:1: $text")
     set(DOXYGEN_PROJECT_NAME fsmlib)
     set(DOXYGEN_PROJECT_BRIEF "A lightweight fixed-size matrix library")
     set(DOXYGEN_PROJECT_NUMBER "${FSMLIB_MAJOR_VERSION}.${FSMLIB_MINOR_VERSION}.${FSMLIB_MICRO_VERSION}")
