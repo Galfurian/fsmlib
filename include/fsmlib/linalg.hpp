@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
 #include <array>
 #include <tuple>
 
-#include "fsmlib/view.hpp"
 #include "fsmlib/math.hpp"
+#include "fsmlib/view.hpp"
 
 namespace fsmlib
 {
@@ -27,7 +27,8 @@ namespace linalg
 /// @param A The input matrix.
 /// @returns The largest infinity norm among the rows of the matrix.
 template <typename T, std::size_t N1, std::size_t N2 = N1>
-[[nodiscard]] constexpr inline auto infinity_norm(const fsmlib::MatrixBase<T, N1, N2> &A)
+[[nodiscard]]
+constexpr inline auto infinity_norm(const fsmlib::MatrixBase<T, N1, N2> &A)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -47,7 +48,8 @@ template <typename T, std::size_t N1, std::size_t N2 = N1>
 /// @param v The input vector.
 /// @returns The square norm of the vector.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto square_norm(const fsmlib::Vector<T, N> &v)
+[[nodiscard]]
+constexpr inline auto square_norm(const fsmlib::Vector<T, N> &v)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -63,7 +65,8 @@ template <typename T, std::size_t N>
 /// @param A The input matrix.
 /// @returns The Frobenius norm of the matrix.
 template <typename T, std::size_t N1, std::size_t N2 = N1>
-[[nodiscard]] constexpr inline auto square_norm(const fsmlib::MatrixBase<T, N1, N2> &A)
+[[nodiscard]]
+constexpr inline auto square_norm(const fsmlib::MatrixBase<T, N1, N2> &A)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -86,12 +89,13 @@ template <typename T, std::size_t N1, std::size_t N2 = N1>
 /// @param mat The input matrix.
 /// @return The Frobenius norm of the matrix.
 template <typename T, std::size_t Rows, std::size_t Cols>
-[[nodiscard]] constexpr inline auto frobenius_norm(const fsmlib::MatrixBase<T, Rows, Cols> &mat)
+[[nodiscard]]
+constexpr inline auto frobenius_norm(const fsmlib::MatrixBase<T, Rows, Cols> &mat)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
     // Initialize the accumulator.
-    data_type_t sum = 0;
+    data_type_t sum   = 0;
     for (std::size_t i = 0; i < Rows; ++i) {
         for (std::size_t j = 0; j < Cols; ++j) {
             sum += mat(i, j) * mat(i, j);
@@ -104,10 +108,11 @@ template <typename T, std::size_t Rows, std::size_t Cols>
 /// @param A The input matrix.
 /// @returns A pair containing the number of scaling iterations and the scaling factor.
 template <typename T, std::size_t N1, std::size_t N2 = N1>
-[[nodiscard]] constexpr inline auto scale_to_unit_norm(const fsmlib::MatrixBase<T, N1, N2> &A)
+[[nodiscard]]
+constexpr inline auto scale_to_unit_norm(const fsmlib::MatrixBase<T, N1, N2> &A)
 {
     // Select the right type.
-    using data_type_t = std::remove_const_t<T>;
+    using data_type_t      = std::remove_const_t<T>;
     // Initialize the scaling factor and the number of iterations.
     std::size_t iterations = 0;
     data_type_t scale      = 1.0;
@@ -127,7 +132,8 @@ template <typename T, std::size_t N1, std::size_t N2 = N1>
 /// @param target_norm The target norm to scale the matrix to (default = 1.0).
 /// @returns A pair containing the scaling factor applied and the scaled matrix.
 template <typename T, std::size_t N1, std::size_t N2 = N1>
-[[nodiscard]] constexpr inline auto scale_to_target_norm(const fsmlib::MatrixBase<T, N1, N2> &A, T target_norm = 1.0)
+[[nodiscard]]
+constexpr inline auto scale_to_target_norm(const fsmlib::MatrixBase<T, N1, N2> &A, T target_norm = 1.0)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -152,7 +158,8 @@ template <typename T, std::size_t N1, std::size_t N2 = N1>
 ///          - The scaling factors are powers of 2 to ensure no loss of precision.
 ///          This process is iterative and stops when no further significant improvement is observed.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto balance(const fsmlib::MatrixBase<T, N, N> &mat)
+[[nodiscard]]
+constexpr inline auto balance(const fsmlib::MatrixBase<T, N, N> &mat)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -160,11 +167,11 @@ template <typename T, std::size_t N>
     // Initialize the result matrix.
     fsmlib::Matrix<data_type_t, N, N> result = mat;
     // Initialize the scaling vector.
-    auto scale = fsmlib::ones<data_type_t, N>();
+    auto scale                               = fsmlib::ones<data_type_t, N>();
     // Define the gamma factor for scaling.
-    constexpr data_type_t gamma = 2.0;
+    constexpr data_type_t gamma              = 2.0;
     // Define the convergence flag.
-    bool converged = false;
+    bool converged                           = false;
 
     // Iterate until convergence.
     while (!converged) {
@@ -211,7 +218,8 @@ template <typename T, std::size_t N>
 /// @param m The input matrix.
 /// @returns The transposed matrix.
 template <class T, std::size_t Rows, std::size_t Cols>
-[[nodiscard]] constexpr inline fsmlib::Matrix<T, Cols, Rows> transpose(const fsmlib::MatrixBase<T, Rows, Cols> &m)
+[[nodiscard]]
+constexpr inline fsmlib::Matrix<T, Cols, Rows> transpose(const fsmlib::MatrixBase<T, Rows, Cols> &m)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -231,7 +239,8 @@ template <class T, std::size_t Rows, std::size_t Cols>
 /// @param q The column to remove.
 /// @returns A matrix with row p and column q removed.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto cofactor(const fsmlib::MatrixBase<T, N> &matrix, std::size_t p, std::size_t q)
+[[nodiscard]]
+constexpr inline auto cofactor(const fsmlib::MatrixBase<T, N> &matrix, std::size_t p, std::size_t q)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -259,7 +268,8 @@ template <typename T, std::size_t N>
 /// @param matrix The input matrix.
 /// @returns The determinant of the matrix.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto determinant(const fsmlib::MatrixBase<T, N> &matrix)
+[[nodiscard]]
+constexpr inline auto determinant(const fsmlib::MatrixBase<T, N> &matrix)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -348,7 +358,8 @@ template <typename T, std::size_t N>
 /// @param A The input matrix.
 /// @returns The adjoint of the matrix.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto adjoint(const fsmlib::MatrixBase<T, N> &A)
+[[nodiscard]]
+constexpr inline auto adjoint(const fsmlib::MatrixBase<T, N> &A)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -376,12 +387,13 @@ template <typename T, std::size_t N>
 /// @param matrix The input matrix.
 /// @returns The inverse of the matrix if it exists, otherwise a zero matrix.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto inverse(const fsmlib::MatrixBase<T, N> &matrix)
+[[nodiscard]]
+constexpr inline auto inverse(const fsmlib::MatrixBase<T, N> &matrix)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
     // Compute the determinant.
-    data_type_t det = fsmlib::linalg::determinant(matrix);
+    data_type_t det   = fsmlib::linalg::determinant(matrix);
     // If determinant is zero, the matrix is singular.
     if (fsmlib::feq::approximately_equal_to_zero(det)) {
         return fsmlib::Matrix<data_type_t, N>();
@@ -409,8 +421,8 @@ template <typename T, std::size_t N>
 /// @param B The second matrix.
 /// @returns A matrix of size N1 x N3 resulting from A * B^-1.
 template <typename T1, typename T2, std::size_t N1, std::size_t N2, std::size_t N3>
-[[nodiscard]] inline constexpr auto div(const fsmlib::MatrixBase<T1, N1, N2> &A,
-                                        const fsmlib::MatrixBase<T2, N2, N3> &B)
+[[nodiscard]]
+inline constexpr auto div(const fsmlib::MatrixBase<T1, N1, N2> &A, const fsmlib::MatrixBase<T2, N2, N3> &B)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<std::common_type_t<T1, T2>>;
@@ -442,7 +454,8 @@ template <typename T1, typename T2, std::size_t N1, std::size_t N2, std::size_t 
 /// @endcode
 /// @note The matrix is modified in-place during the Gaussian elimination process.
 template <typename T, std::size_t Rows, std::size_t Cols>
-[[nodiscard]] constexpr inline auto rank(fsmlib::Matrix<T, Rows, Cols> mat)
+[[nodiscard]]
+constexpr inline auto rank(fsmlib::Matrix<T, Rows, Cols> mat)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -500,7 +513,8 @@ template <typename T, std::size_t Rows, std::size_t Cols>
 /// @param A The input matrix to decompose.
 /// @return A pair of matrices (Q, R) representing the QR decomposition.
 template <typename T, std::size_t Rows, std::size_t Cols>
-[[nodiscard]] constexpr inline auto qr_decomposition(const fsmlib::MatrixBase<T, Rows, Cols> &A)
+[[nodiscard]]
+constexpr inline auto qr_decomposition(const fsmlib::MatrixBase<T, Rows, Cols> &A)
 {
     static_assert(Rows >= Cols, "The input matrix must have at least as many rows as columns.");
     // Select the right type.
@@ -550,7 +564,8 @@ template <typename T, std::size_t Rows, std::size_t Cols>
 /// @param A The input square matrix to decompose.
 /// @return A pair of matrices (L, U) representing the LU decomposition, where L is lower triangular and U is upper triangular.
 template <typename T, std::size_t Rows, std::size_t Cols>
-[[nodiscard]] constexpr inline auto lu_decomposition(const fsmlib::MatrixBase<T, Rows, Cols> &A)
+[[nodiscard]]
+constexpr inline auto lu_decomposition(const fsmlib::MatrixBase<T, Rows, Cols> &A)
 {
     static_assert(Rows == Cols, "LU decomposition requires a square matrix.");
     // Select the right type.
@@ -611,7 +626,8 @@ template <typename T, std::size_t Rows, std::size_t Cols>
 /// auto L = fsmlib::linalg::cholesky_decomposition(A);
 /// @endcode
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto cholesky_decomposition(const fsmlib::MatrixBase<T, N, N> &mat)
+[[nodiscard]]
+constexpr inline auto cholesky_decomposition(const fsmlib::MatrixBase<T, N, N> &mat)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -657,7 +673,8 @@ template <typename T, std::size_t N>
 /// @param b The right-hand side vector.
 /// @return The solution vector x such that Ax = b.
 template <typename T, std::size_t Rows, std::size_t Cols>
-[[nodiscard]] constexpr inline auto solve(const fsmlib::MatrixBase<T, Rows, Cols> &A, const fsmlib::Vector<T, Rows> &b)
+[[nodiscard]]
+constexpr inline auto solve(const fsmlib::MatrixBase<T, Rows, Cols> &A, const fsmlib::Vector<T, Rows> &b)
 {
     static_assert(Rows == Cols, "solve requires a square matrix for LU decomposition.");
 
@@ -698,7 +715,8 @@ template <typename T, std::size_t Rows, std::size_t Cols>
 /// @param tolerance The convergence tolerance.
 /// @return A pair containing the dominant eigenvalue and its eigenvector.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto
+[[nodiscard]]
+constexpr inline auto
 power_iteration(const fsmlib::MatrixBase<T, N, N> &mat, std::size_t max_iterations = 1000, T tolerance = 1e-9)
 {
     // Select the right type.
@@ -753,8 +771,8 @@ power_iteration(const fsmlib::MatrixBase<T, N, N> &mat, std::size_t max_iteratio
 /// @param v The eigenvector.
 /// @return The deflated matrix.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto
-deflate(const fsmlib::MatrixBase<T, N, N> &mat, T lambda, const fsmlib::Vector<T, N> &v)
+[[nodiscard]]
+constexpr inline auto deflate(const fsmlib::MatrixBase<T, N, N> &mat, T lambda, const fsmlib::Vector<T, N> &v)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -787,8 +805,8 @@ deflate(const fsmlib::MatrixBase<T, N, N> &mat, T lambda, const fsmlib::Vector<T
 /// @param eigenvectors The matrix of eigenvectors.
 /// @return A pair of sorted eigenvalues and reordered eigenvectors.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto sort_eigenpairs(fsmlib::Vector<T, N> eigenvalues,
-                                                    fsmlib::Matrix<T, N, N> eigenvectors)
+[[nodiscard]]
+constexpr inline auto sort_eigenpairs(fsmlib::Vector<T, N> eigenvalues, fsmlib::Matrix<T, N, N> eigenvectors)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -823,7 +841,8 @@ template <typename T, std::size_t N>
 /// @param accuracy The desired accuracy (e.g., 1e-05).
 /// @returns The exponential of the matrix.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto expm(const fsmlib::MatrixBase<T, N, N> &A, double accuracy)
+[[nodiscard]]
+constexpr inline auto expm(const fsmlib::MatrixBase<T, N, N> &A, double accuracy)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -861,7 +880,8 @@ template <typename T, std::size_t N>
 /// @param p The non-negative integer power to raise the matrix to.
 /// @return The resulting matrix A^p.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto powm(const fsmlib::MatrixBase<T, N, N> &A, std::size_t p)
+[[nodiscard]]
+constexpr inline auto powm(const fsmlib::MatrixBase<T, N, N> &A, std::size_t p)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -949,7 +969,8 @@ template <typename T, std::size_t N>
 /// @note This implementation is optimized for fixed-size matrices and may not
 /// handle large, ill-conditioned matrices efficiently.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto
+[[nodiscard]]
+constexpr inline auto
 eigen(const fsmlib::MatrixBase<T, N, N> &mat, std::size_t max_iterations = 1000, T tolerance = 1e-24)
 {
     // Select the right type.
@@ -960,7 +981,7 @@ eigen(const fsmlib::MatrixBase<T, N, N> &mat, std::size_t max_iterations = 1000,
     }
 
     // Initialize the eigenvectors matrix.
-    auto eigenvectors = fsmlib::zeros<data_type_t, N, N>();
+    auto eigenvectors                          = fsmlib::zeros<data_type_t, N, N>();
     // Initialize the eigenvalues vector.
     fsmlib::Vector<data_type_t, N> eigenvalues = {};
 
@@ -1005,7 +1026,8 @@ eigen(const fsmlib::MatrixBase<T, N, N> &mat, std::size_t max_iterations = 1000,
 ///         - Sigma : Singular values (diagonal elements in a vector).
 ///         - V     : Right singular vectors (NxN orthogonal matrix).
 template <typename T, std::size_t M, std::size_t N>
-[[nodiscard]] constexpr inline auto svd(const fsmlib::MatrixBase<T, M, N> &mat)
+[[nodiscard]]
+constexpr inline auto svd(const fsmlib::MatrixBase<T, M, N> &mat)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -1082,12 +1104,13 @@ template <typename T, std::size_t M, std::size_t N>
 /// @param a The input vector containing the roots of the polynomial.
 /// @return A vector of coefficients of the polynomial.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto poly(const fsmlib::Vector<T, N> &a)
+[[nodiscard]]
+constexpr inline auto poly(const fsmlib::Vector<T, N> &a)
 {
     // Initialize the coefficients vector with size N + 1 (degree of polynomial + 1).
     fsmlib::Vector<T, N + 1> c = {};
     // The leading coefficient is always 1 for monic polynomials.
-    c[0] = 1;
+    c[0]                       = 1;
     // Compute the polynomial coefficients using the recurrence relation.
     for (std::size_t j = 0; j < N; ++j) {
         for (std::size_t i = j + 1; i >= 1; --i) {
@@ -1104,7 +1127,8 @@ template <typename T, std::size_t N>
 /// @param a The input vector of coefficients.
 /// @return A reduced vector with leading zeros removed.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto polyreduce(const fsmlib::Vector<T, N> &a)
+[[nodiscard]]
+constexpr inline auto polyreduce(const fsmlib::Vector<T, N> &a)
 {
     fsmlib::Vector<T, N> result = {};
     std::size_t first_nonzero   = N;
@@ -1128,7 +1152,8 @@ template <typename T, std::size_t N>
 /// @param A The input square matrix.
 /// @return A vector of coefficients representing the characteristic polynomial.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto characteristic_poly(fsmlib::Matrix<T, N, N> A)
+[[nodiscard]]
+constexpr inline auto characteristic_poly(fsmlib::Matrix<T, N, N> A)
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;

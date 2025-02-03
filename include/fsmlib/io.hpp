@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include <iostream>
-#include <iomanip>
-#include <sstream>
 #include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
 
-#include "fsmlib/fsmlib.hpp"
 #include "fsmlib/control.hpp"
+#include "fsmlib/fsmlib.hpp"
 #include "fsmlib/view.hpp"
 
 /// @brief Overload the << operator for Vector.
@@ -22,8 +22,7 @@
 /// @param os The output stream.
 /// @param vec The vector to print.
 /// @return The output stream with the vector contents.
-template <typename T, std::size_t N>
-std::ostream &operator<<(std::ostream &os, const fsmlib::VectorBase<T, N> &vec)
+template <typename T, std::size_t N> std::ostream &operator<<(std::ostream &os, const fsmlib::VectorBase<T, N> &vec)
 {
     // Determine the maximum width of the elements for alignment.
     std::size_t max_width = 0;
@@ -112,8 +111,8 @@ inline std::ostream &operator<<(std::ostream &os, const fsmlib::control::StateSp
 /// @param ss The discrete-time state-space model.
 /// @returns The output stream with the state-space model contents.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-inline std::ostream &operator<<(std::ostream &os,
-                                const fsmlib::control::DiscreteStateSpace<T, N_state, N_input, N_output> &ss)
+inline std::ostream &
+operator<<(std::ostream &os, const fsmlib::control::DiscreteStateSpace<T, N_state, N_input, N_output> &ss)
 {
     os << "A =\n"
        << ss.A << "\n"
@@ -181,8 +180,7 @@ inline std::string to_octave(const std::string &name, const fsmlib::MatrixBase<T
 ///
 /// @param mat The matrix to convert.
 /// @return std::string The LaTeX string representation of the matrix.
-template <typename T, size_t Rows, size_t Cols>
-std::string to_latex(const fsmlib::MatrixBase<T, Rows, Cols> &mat)
+template <typename T, size_t Rows, size_t Cols> std::string to_latex(const fsmlib::MatrixBase<T, Rows, Cols> &mat)
 {
     std::ostringstream oss;
     oss << "\\begin{bmatrix}\n";
@@ -207,8 +205,7 @@ std::string to_latex(const fsmlib::MatrixBase<T, Rows, Cols> &mat)
 ///
 /// @param mat The matrix to convert.
 /// @return std::string The Markdown string representation of the matrix.
-template <typename T, size_t Rows, size_t Cols>
-std::string to_markdown(const fsmlib::MatrixBase<T, Rows, Cols> &mat)
+template <typename T, size_t Rows, size_t Cols> std::string to_markdown(const fsmlib::MatrixBase<T, Rows, Cols> &mat)
 {
     std::ostringstream oss;
 

@@ -6,14 +6,14 @@
 
 #pragma once
 
-#include <initializer_list>
-#include <type_traits>
-#include <stdexcept>
 #include <algorithm>
 #include <cstddef>
+#include <initializer_list>
+#include <stdexcept>
+#include <type_traits>
 
-#include "fsmlib/traits.hpp"
 #include "fsmlib/feq.hpp"
+#include "fsmlib/traits.hpp"
 
 #define COLUMN_MAJOR ///< Enables column-major access of matrices.
 
@@ -28,23 +28,20 @@ namespace fsmlib
 /// @brief Abstract base class for fixed-size vectors.
 /// @tparam T The type of the vector elements.
 /// @tparam N The number of elements in the vector.
-template <typename T, std::size_t N>
-class VectorBase : public fsmlib::traits::valid_container_t {
+template <typename T, std::size_t N> class VectorBase : public fsmlib::traits::valid_container_t
+{
 public:
     /// @brief Type of the elements in the vector.
     using value_type = T;
     /// @brief Type of the size of the vector.
-    using size_type = std::integral_constant<std::size_t, N>;
+    using size_type  = std::integral_constant<std::size_t, N>;
 
     /// @brief Virtual destructor.
     virtual ~VectorBase() = default;
 
     /// @brief Returns the size of the vector.
     /// @return Size of the vector.
-    constexpr std::size_t size() const noexcept
-    {
-        return N;
-    }
+    constexpr std::size_t size() const noexcept { return N; }
 
     /// @brief Access an element by index (const version).
     /// @param index Index of the element to access.
@@ -99,17 +96,19 @@ protected:
 /// @brief Concrete class for a fixed-size vector.
 /// @tparam T The type of the vector elements.
 /// @tparam N The number of elements in the vector.
-template <typename T, std::size_t N>
-class Vector : public VectorBase<T, N> {
+template <typename T, std::size_t N> class Vector : public VectorBase<T, N>
+{
 public:
     /// @brief Default constructor.
-    constexpr Vector() : data_{}
+    constexpr Vector()
+        : data_{}
     {
     }
 
     /// @brief Copy constructor.
     /// @param other The vector to copy from.
-    Vector(const fsmlib::VectorBase<T, N> &other) : data_{}
+    Vector(const fsmlib::VectorBase<T, N> &other)
+        : data_{}
     {
         if (this != &other) {
             std::copy(other.data(), other.data() + N, data_);
@@ -118,7 +117,8 @@ public:
 
     /// @brief Copy constructor.
     /// @param other The vector to copy from.
-    Vector(const fsmlib::VectorBase<const T, N> &other) : data_{}
+    Vector(const fsmlib::VectorBase<const T, N> &other)
+        : data_{}
     {
         if (this != &other) {
             std::copy(other.data(), other.data() + N, data_);
@@ -127,7 +127,8 @@ public:
 
     /// @brief Constructor from an initializer list.
     /// @param init Initializer list of elements.
-    constexpr Vector(std::initializer_list<T> init) : data_{}
+    constexpr Vector(std::initializer_list<T> init)
+        : data_{}
     {
         if (init.size() != N) {
             throw std::out_of_range("Initializer list size does not match vector size");
@@ -162,35 +163,17 @@ public:
         return data_[index];
     }
 
-    constexpr const T *data() const noexcept override
-    {
-        return data_;
-    }
+    constexpr const T *data() const noexcept override { return data_; }
 
-    constexpr T *data() noexcept override
-    {
-        return data_;
-    }
+    constexpr T *data() noexcept override { return data_; }
 
-    constexpr T *begin() noexcept override
-    {
-        return data_;
-    }
+    constexpr T *begin() noexcept override { return data_; }
 
-    constexpr T *end() noexcept override
-    {
-        return data_ + N;
-    }
+    constexpr T *end() noexcept override { return data_ + N; }
 
-    constexpr const T *begin() const noexcept override
-    {
-        return data_;
-    }
+    constexpr const T *begin() const noexcept override { return data_; }
 
-    constexpr const T *end() const noexcept override
-    {
-        return data_ + N;
-    }
+    constexpr const T *end() const noexcept override { return data_ + N; }
 
     /// @brief Copy assignment operator.
     /// @param other The vector to copy from.
@@ -219,36 +202,28 @@ private:
 /// @tparam Rows The number of rows in the matrix.
 /// @tparam Cols The number of columns in the matrix.
 template <typename T, std::size_t Rows, std::size_t Cols = Rows>
-class MatrixBase : public fsmlib::traits::valid_container_t {
+class MatrixBase : public fsmlib::traits::valid_container_t
+{
 public:
     /// @brief Type of the elements in the matrix.
     using value_type = T;
     /// @brief Type of the size of the matrix.
-    using size_type = std::pair<std::size_t, std::size_t>;
+    using size_type  = std::pair<std::size_t, std::size_t>;
 
     /// @brief Virtual destructor.
     virtual ~MatrixBase() = default;
 
     /// @brief Returns the size of the matrix.
     /// @return Pair containing the number of rows and columns.
-    constexpr std::size_t size() const noexcept
-    {
-        return Rows * Cols;
-    }
+    constexpr std::size_t size() const noexcept { return Rows * Cols; }
 
     /// @brief Returns the number of rows in the matrix.
     /// @return Number of rows.
-    constexpr std::size_t rows() const noexcept
-    {
-        return Rows;
-    }
+    constexpr std::size_t rows() const noexcept { return Rows; }
 
     /// @brief Returns the number of columns in the matrix.
     /// @return Number of columns.
-    constexpr std::size_t cols() const noexcept
-    {
-        return Cols;
-    }
+    constexpr std::size_t cols() const noexcept { return Cols; }
 
     /// @brief Access an element by row and column (const version).
     /// @param row Row index of the element.
@@ -323,17 +298,19 @@ protected:
 /// @tparam T The type of the matrix elements.
 /// @tparam Rows The number of rows in the matrix.
 /// @tparam Cols The number of columns in the matrix.
-template <typename T, std::size_t Rows, std::size_t Cols = Rows>
-class Matrix : public MatrixBase<T, Rows, Cols> {
+template <typename T, std::size_t Rows, std::size_t Cols = Rows> class Matrix : public MatrixBase<T, Rows, Cols>
+{
 public:
     /// @brief Default constructor.
-    constexpr Matrix() : data_{}
+    constexpr Matrix()
+        : data_{}
     {
     }
 
     /// @brief Copy constructor.
     /// @param other The matrix to copy from.
-    Matrix(const MatrixBase<T, Rows, Cols> &other) : data_{}
+    Matrix(const MatrixBase<T, Rows, Cols> &other)
+        : data_{}
     {
         if (this != &other) {
             std::copy(other.data(), other.data() + (Rows * Cols), data_);
@@ -342,14 +319,16 @@ public:
 
     /// @brief Copy constructor.
     /// @param other The matrix to copy from.
-    Matrix(const MatrixBase<const T, Rows, Cols> &other) : data_{}
+    Matrix(const MatrixBase<const T, Rows, Cols> &other)
+        : data_{}
     {
         std::copy(other.data(), other.data() + (Rows * Cols), data_);
     }
 
     /// @brief Constructor from an initializer list of initializer lists.
     /// @param init Initializer list of rows, each being an initializer list of elements.
-    constexpr Matrix(std::initializer_list<std::initializer_list<T>> init) : data_{}
+    constexpr Matrix(std::initializer_list<std::initializer_list<T>> init)
+        : data_{}
     {
         if (init.size() != Rows) {
             throw std::out_of_range("Initializer list row count does not match matrix row count");
@@ -429,15 +408,9 @@ public:
         return data_[index];
     }
 
-    constexpr const T *data() const noexcept override
-    {
-        return data_;
-    }
+    constexpr const T *data() const noexcept override { return data_; }
 
-    constexpr T *data() noexcept override
-    {
-        return data_;
-    }
+    constexpr T *data() noexcept override { return data_; }
 
     /// @brief Copy assignment operator.
     /// @param other The matrix to copy from.
@@ -484,7 +457,8 @@ private:
 /// @param vec The input vector.
 /// @return A Matrix with one column (if IsColumn is true) or one row (if IsColumn is false).
 template <bool IsColumn, typename T, std::size_t N>
-[[nodiscard]] constexpr auto to_matrix(const fsmlib::VectorBase<T, N> &vec)
+[[nodiscard]]
+constexpr auto to_matrix(const fsmlib::VectorBase<T, N> &vec)
 {
     if constexpr (IsColumn) {
         // Create a column matrix
@@ -508,8 +482,7 @@ template <bool IsColumn, typename T, std::size_t N>
 /// @tparam Rows The number of rows in the matrix (size of the vector).
 /// @param mat The input matrix with one column.
 /// @return A Vector with size equal to the number of rows.
-template <typename T, std::size_t Rows>
-constexpr auto to_vector(const fsmlib::MatrixBase<T, Rows, 1> &mat)
+template <typename T, std::size_t Rows> constexpr auto to_vector(const fsmlib::MatrixBase<T, Rows, 1> &mat)
 {
     fsmlib::Vector<T, Rows> vec;
     for (std::size_t i = 0; i < Rows; ++i) {
@@ -523,8 +496,7 @@ constexpr auto to_vector(const fsmlib::MatrixBase<T, Rows, 1> &mat)
 /// @tparam Cols The number of columns in the matrix (size of the vector).
 /// @param mat The input matrix with one row.
 /// @return A Vector with size equal to the number of columns.
-template <typename T, std::size_t Cols>
-constexpr auto to_vector(const fsmlib::MatrixBase<T, 1, Cols> &mat)
+template <typename T, std::size_t Cols> constexpr auto to_vector(const fsmlib::MatrixBase<T, 1, Cols> &mat)
 {
     fsmlib::Vector<T, Cols> vec;
     for (std::size_t i = 0; i < Cols; ++i) {
@@ -542,8 +514,8 @@ constexpr auto to_vector(const fsmlib::MatrixBase<T, 1, Cols> &mat)
 /// @param B The second matrix (Rows x Cols2).
 /// @return A matrix of size Rows x (Cols1 + Cols2) containing A and B stacked horizontally.
 template <typename T, std::size_t Rows, std::size_t Cols1, std::size_t Cols2>
-constexpr Matrix<T, Rows, Cols1 + Cols2> hstack(const MatrixBase<T, Rows, Cols1> &A,
-                                                const MatrixBase<T, Rows, Cols2> &B)
+constexpr Matrix<T, Rows, Cols1 + Cols2>
+hstack(const MatrixBase<T, Rows, Cols1> &A, const MatrixBase<T, Rows, Cols2> &B)
 {
     Matrix<T, Rows, Cols1 + Cols2> result = {};
 
@@ -573,8 +545,8 @@ constexpr Matrix<T, Rows, Cols1 + Cols2> hstack(const MatrixBase<T, Rows, Cols1>
 /// @param B The second matrix (Rows2 x Cols).
 /// @return A matrix of size (Rows1 + Rows2) x Cols containing A and B stacked vertically.
 template <typename T, std::size_t Rows1, std::size_t Rows2, std::size_t Cols>
-constexpr Matrix<T, Rows1 + Rows2, Cols> vstack(const MatrixBase<T, Rows1, Cols> &A,
-                                                const MatrixBase<T, Rows2, Cols> &B)
+constexpr Matrix<T, Rows1 + Rows2, Cols>
+vstack(const MatrixBase<T, Rows1, Cols> &A, const MatrixBase<T, Rows2, Cols> &B)
 {
     Matrix<T, Rows1 + Rows2, Cols> result = {};
 
@@ -600,8 +572,7 @@ constexpr Matrix<T, Rows1 + Rows2, Cols> vstack(const MatrixBase<T, Rows1, Cols>
 /// @tparam Rows The number of rows in the matrix.
 /// @tparam Cols The number of columns in the matrix.
 /// @return A matrix of size Rows x Cols filled with zeros.
-template <typename T, std::size_t Rows, std::size_t Cols>
-constexpr fsmlib::Matrix<T, Rows, Cols> zeros()
+template <typename T, std::size_t Rows, std::size_t Cols> constexpr fsmlib::Matrix<T, Rows, Cols> zeros()
 {
     fsmlib::Matrix<T, Rows, Cols> result = {};
     for (std::size_t i = 0; i < Rows; ++i) {
@@ -617,8 +588,7 @@ constexpr fsmlib::Matrix<T, Rows, Cols> zeros()
 /// @tparam Rows The number of rows in the matrix.
 /// @tparam Cols The number of columns in the matrix.
 /// @return A matrix of size Rows x Cols filled with ones.
-template <typename T, std::size_t Rows, std::size_t Cols>
-constexpr fsmlib::Matrix<T, Rows, Cols> ones()
+template <typename T, std::size_t Rows, std::size_t Cols> constexpr fsmlib::Matrix<T, Rows, Cols> ones()
 {
     fsmlib::Matrix<T, Rows, Cols> result = {};
     for (std::size_t i = 0; i < Rows; ++i) {
@@ -633,8 +603,7 @@ constexpr fsmlib::Matrix<T, Rows, Cols> ones()
 /// @tparam T The type of the elements in the vector.
 /// @tparam N The number of elements in the vector.
 /// @return A vector of size N filled with zeros.
-template <typename T, std::size_t N>
-constexpr fsmlib::Vector<T, N> zeros()
+template <typename T, std::size_t N> constexpr fsmlib::Vector<T, N> zeros()
 {
     fsmlib::Vector<T, N> result = {};
     for (std::size_t i = 0; i < N; ++i) {
@@ -647,8 +616,7 @@ constexpr fsmlib::Vector<T, N> zeros()
 /// @tparam T The type of the elements in the vector.
 /// @tparam N The number of elements in the vector.
 /// @return A vector of size N filled with ones.
-template <typename T, std::size_t N>
-constexpr fsmlib::Vector<T, N> ones()
+template <typename T, std::size_t N> constexpr fsmlib::Vector<T, N> ones()
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;
@@ -719,7 +687,8 @@ constexpr fsmlib::Vector<T, N2> row(const fsmlib::MatrixBase<T, N1, N2> &mat, st
 /// @param vec The input vector whose indices are to be sorted.
 /// @returns A vector of indices sorted based on the values of the input vector.
 template <bool Ascending, typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto sort_indices(const fsmlib::VectorBase<T, N> &vec)
+[[nodiscard]]
+constexpr inline auto sort_indices(const fsmlib::VectorBase<T, N> &vec)
 {
     fsmlib::Vector<std::size_t, N> indices = {};
     for (std::size_t i = 0; i < N; ++i) {
@@ -749,8 +718,8 @@ template <bool Ascending, typename T, std::size_t N>
 ///          rearranged based on the `indices` vector.
 /// @note The `indices` vector must have the same size as the input vector.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto reorder(const fsmlib::VectorBase<T, N> &vec,
-                                            const fsmlib::VectorBase<std::size_t, N> &indices)
+[[nodiscard]]
+constexpr inline auto reorder(const fsmlib::VectorBase<T, N> &vec, const fsmlib::VectorBase<std::size_t, N> &indices)
 {
     fsmlib::Vector<T, N> result = {};
     for (std::size_t i = 0; i < N; ++i) {
@@ -770,9 +739,10 @@ template <typename T, std::size_t N>
 /// @details This function uses a compile-time flag to determine whether to reorder rows or columns.
 ///          The size of the `indices` vector must match the dimension being reordered.
 template <bool IsColumnReorder, typename T, std::size_t Rows, std::size_t Cols>
-[[nodiscard]] constexpr inline auto
-reorder(const fsmlib::MatrixBase<T, Rows, Cols> &mat,
-        const fsmlib::VectorBase<std::size_t, IsColumnReorder ? Cols : Rows> &indices)
+[[nodiscard]]
+constexpr inline auto reorder(
+    const fsmlib::MatrixBase<T, Rows, Cols> &mat,
+    const fsmlib::VectorBase<std::size_t, IsColumnReorder ? Cols : Rows> &indices)
 {
     // Ensure indices size matches the dimension being reordered
     static_assert(IsColumnReorder ? (Cols > 0) : (Rows > 0), "Matrix dimensions must be non-zero.");
@@ -805,7 +775,8 @@ reorder(const fsmlib::MatrixBase<T, Rows, Cols> &mat,
 /// @param tolerance The tolerance for checking symmetry.
 /// @return True if the matrix is symmetric; false otherwise.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline bool is_symmetric(const fsmlib::MatrixBase<T, N, N> &mat, T tolerance = 1e-9)
+[[nodiscard]]
+constexpr inline bool is_symmetric(const fsmlib::MatrixBase<T, N, N> &mat, T tolerance = 1e-9)
 {
     for (std::size_t i = 0; i < N; ++i) {
         for (std::size_t j = 0; j < i; ++j) {
@@ -823,7 +794,8 @@ template <typename T, std::size_t N>
 /// @param vec The input vector.
 /// @return A diagonal matrix with the vector elements on the main diagonal.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline Matrix<T, N, N> diag(const fsmlib::VectorBase<T, N> &vec)
+[[nodiscard]]
+constexpr inline Matrix<T, N, N> diag(const fsmlib::VectorBase<T, N> &vec)
 {
     Matrix<T, N, N> result{};
     for (std::size_t i = 0; i < N; ++i) {
@@ -839,7 +811,8 @@ template <typename T, std::size_t N>
 /// @param mat The input matrix.
 /// @return A vector containing the diagonal elements of the matrix.
 template <typename T, std::size_t N1, std::size_t N2>
-[[nodiscard]] constexpr inline Vector<T, (N1 < N2 ? N1 : N2)> diag(const MatrixBase<T, N1, N2> &mat)
+[[nodiscard]]
+constexpr inline Vector<T, (N1 < N2 ? N1 : N2)> diag(const MatrixBase<T, N1, N2> &mat)
 {
     constexpr std::size_t min_dim = (N1 < N2 ? N1 : N2);
     Vector<T, min_dim> result{};
@@ -856,7 +829,8 @@ template <typename T, std::size_t N1, std::size_t N2>
 /// @param stop The maximum value.
 /// @return A fixed-size Vector containing the generated sequence.
 template <typename T, std::size_t N>
-[[nodiscard]] inline auto linspace(T start, T stop)
+[[nodiscard]]
+inline auto linspace(T start, T stop)
 {
     static_assert(N > 0, "Vector size must be greater than 0");
     Vector<T, N> result;
@@ -902,7 +876,8 @@ template <typename T, std::size_t N>
 /// @param base The base for the logarithmic scale (default is 10).
 /// @return A fixed-size Vector containing the generated sequence.
 template <typename T, std::size_t N>
-[[nodiscard]] inline auto logspace(T start, T stop, T base = 10)
+[[nodiscard]]
+inline auto logspace(T start, T stop, T base = 10)
 {
     static_assert(N > 0, "Vector size must be greater than 0");
     Vector<T, N> result;

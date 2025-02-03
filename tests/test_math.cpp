@@ -1,11 +1,11 @@
 
 #include <fsmlib/fsmlib.hpp>
-#include <fsmlib/math.hpp>
 #include <fsmlib/io.hpp>
+#include <fsmlib/math.hpp>
 
-#include <iostream>
-#include <iomanip>
 #include <array>
+#include <iomanip>
+#include <iostream>
 
 int main()
 {
@@ -13,9 +13,9 @@ int main()
         int test_count = 1; // Test counter variable
 
         {
-            fsmlib::Vector<int, 3> vec1     = { 1, 2, 3 };
-            fsmlib::Vector<int, 3> vec2     = { 4, 5, 6 };
-            fsmlib::Vector<int, 3> expected = { 5, 7, 9 };
+            fsmlib::Vector<int, 3> vec1     = {1, 2, 3};
+            fsmlib::Vector<int, 3> vec2     = {4, 5, 6};
+            fsmlib::Vector<int, 3> expected = {5, 7, 9};
             auto result                     = vec1 + vec2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Vector addition");
@@ -24,9 +24,9 @@ int main()
         }
 
         {
-            fsmlib::Vector<int, 3> vec1     = { 7, 8, 9 };
-            fsmlib::Vector<int, 3> vec2     = { 4, 5, 6 };
-            fsmlib::Vector<int, 3> expected = { 3, 3, 3 };
+            fsmlib::Vector<int, 3> vec1     = {7, 8, 9};
+            fsmlib::Vector<int, 3> vec2     = {4, 5, 6};
+            fsmlib::Vector<int, 3> expected = {3, 3, 3};
             auto result                     = vec1 - vec2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Vector subtraction");
@@ -35,9 +35,9 @@ int main()
         }
 
         {
-            fsmlib::Vector<int, 3> vec1     = { 1, 2, 3 };
-            fsmlib::Vector<int, 3> vec2     = { 4, 5, 6 };
-            fsmlib::Vector<int, 3> expected = { 4, 10, 18 };
+            fsmlib::Vector<int, 3> vec1     = {1, 2, 3};
+            fsmlib::Vector<int, 3> vec2     = {4, 5, 6};
+            fsmlib::Vector<int, 3> expected = {4, 10, 18};
             auto result                     = vec1 * vec2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Vector multiplication");
@@ -46,9 +46,9 @@ int main()
         }
 
         {
-            fsmlib::Vector<int, 3> vec1     = { 6, 8, 10 };
-            fsmlib::Vector<int, 3> vec2     = { 3, 2, 5 };
-            fsmlib::Vector<int, 3> expected = { 2, 4, 2 };
+            fsmlib::Vector<int, 3> vec1     = {6, 8, 10};
+            fsmlib::Vector<int, 3> vec2     = {3, 2, 5};
+            fsmlib::Vector<int, 3> expected = {2, 4, 2};
             auto result                     = vec1 / vec2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Vector division");
@@ -57,9 +57,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat1     = { { { 1, 2 }, { 3, 4 } } };
-            fsmlib::Matrix<int, 2, 2> mat2     = { { { 5, 6 }, { 7, 8 } } };
-            fsmlib::Matrix<int, 2, 2> expected = { { { 6, 8 }, { 10, 12 } } };
+            fsmlib::Matrix<int, 2, 2> mat1     = {{{1, 2}, {3, 4}}};
+            fsmlib::Matrix<int, 2, 2> mat2     = {{{5, 6}, {7, 8}}};
+            fsmlib::Matrix<int, 2, 2> expected = {{{6, 8}, {10, 12}}};
             auto result                        = mat1 + mat2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix addition");
@@ -68,9 +68,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat1     = { { { 6, 8 }, { 10, 12 } } };
-            fsmlib::Matrix<int, 2, 2> mat2     = { { { 5, 6 }, { 7, 8 } } };
-            fsmlib::Matrix<int, 2, 2> expected = { { { 1, 2 }, { 3, 4 } } };
+            fsmlib::Matrix<int, 2, 2> mat1     = {{{6, 8}, {10, 12}}};
+            fsmlib::Matrix<int, 2, 2> mat2     = {{{5, 6}, {7, 8}}};
+            fsmlib::Matrix<int, 2, 2> expected = {{{1, 2}, {3, 4}}};
             auto result                        = mat1 - mat2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix subtraction");
@@ -79,9 +79,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat1     = { { { 1, 2 }, { 3, 4 } } };
-            fsmlib::Matrix<int, 2, 2> mat2     = { { { 2, 2 }, { 2, 2 } } };
-            fsmlib::Matrix<int, 2, 2> expected = { { { 2, 4 }, { 6, 8 } } };
+            fsmlib::Matrix<int, 2, 2> mat1     = {{{1, 2}, {3, 4}}};
+            fsmlib::Matrix<int, 2, 2> mat2     = {{{2, 2}, {2, 2}}};
+            fsmlib::Matrix<int, 2, 2> expected = {{{2, 4}, {6, 8}}};
             auto result                        = mat1 * mat2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix multiplication");
@@ -90,9 +90,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat1     = { { { 10, 20 }, { 30, 40 } } };
-            fsmlib::Matrix<int, 2, 2> mat2     = { { { 2, 4 }, { 5, 10 } } };
-            fsmlib::Matrix<int, 2, 2> expected = { { { 5, 5 }, { 6, 4 } } };
+            fsmlib::Matrix<int, 2, 2> mat1     = {{{10, 20}, {30, 40}}};
+            fsmlib::Matrix<int, 2, 2> mat2     = {{{2, 4}, {5, 10}}};
+            fsmlib::Matrix<int, 2, 2> expected = {{{5, 5}, {6, 4}}};
             auto result                        = mat1 / mat2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix division");
@@ -101,9 +101,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 3> mat   = { { { 1, 2, 3 }, { 4, 5, 6 } } };
-            fsmlib::Vector<int, 3> vec      = { 1, 2, 3 };
-            fsmlib::Vector<int, 2> expected = { 14, 32 }; // [1+4+9, 4+10+18]
+            fsmlib::Matrix<int, 2, 3> mat   = {{{1, 2, 3}, {4, 5, 6}}};
+            fsmlib::Vector<int, 3> vec      = {1, 2, 3};
+            fsmlib::Vector<int, 2> expected = {14, 32}; // [1+4+9, 4+10+18]
             auto result                     = fsmlib::multiply(mat, vec);
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix-Vector multiplication");
@@ -113,9 +113,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 3> mat1     = { { { 1, 2, 3 }, { 4, 5, 6 } } };
-            fsmlib::Matrix<int, 3, 2> mat2     = { { { 1, 4 }, { 2, 5 }, { 3, 6 } } };
-            fsmlib::Matrix<int, 2, 2> expected = { { { 14, 32 }, { 32, 77 } } };
+            fsmlib::Matrix<int, 2, 3> mat1     = {{{1, 2, 3}, {4, 5, 6}}};
+            fsmlib::Matrix<int, 3, 2> mat2     = {{{1, 4}, {2, 5}, {3, 6}}};
+            fsmlib::Matrix<int, 2, 2> expected = {{{14, 32}, {32, 77}}};
             auto result                        = fsmlib::multiply(mat1, mat2);
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix-Matrix multiplication");
@@ -125,9 +125,9 @@ int main()
         }
 
         {
-            fsmlib::Vector<int, 3> vec1     = { 1, 2, 3 };
-            fsmlib::Vector<int, 3> vec2     = { 4, 5, 6 };
-            fsmlib::Vector<int, 3> expected = { 5, 7, 9 };
+            fsmlib::Vector<int, 3> vec1     = {1, 2, 3};
+            fsmlib::Vector<int, 3> vec2     = {4, 5, 6};
+            fsmlib::Vector<int, 3> expected = {5, 7, 9};
             vec1 += vec2;
             if (fsmlib::any(vec1 != expected)) {
                 throw std::runtime_error("Test failed: Vector += Vector");
@@ -136,9 +136,9 @@ int main()
         }
 
         {
-            fsmlib::Vector<int, 3> vec1     = { 7, 8, 9 };
-            fsmlib::Vector<int, 3> vec2     = { 4, 5, 6 };
-            fsmlib::Vector<int, 3> expected = { 3, 3, 3 };
+            fsmlib::Vector<int, 3> vec1     = {7, 8, 9};
+            fsmlib::Vector<int, 3> vec2     = {4, 5, 6};
+            fsmlib::Vector<int, 3> expected = {3, 3, 3};
             vec1 -= vec2;
             if (fsmlib::any(vec1 != expected)) {
                 throw std::runtime_error("Test failed: Vector -= Vector");
@@ -147,9 +147,9 @@ int main()
         }
 
         {
-            fsmlib::Vector<int, 3> vec1     = { 1, 2, 3 };
-            fsmlib::Vector<int, 3> vec2     = { 4, 5, 6 };
-            fsmlib::Vector<int, 3> expected = { 4, 10, 18 };
+            fsmlib::Vector<int, 3> vec1     = {1, 2, 3};
+            fsmlib::Vector<int, 3> vec2     = {4, 5, 6};
+            fsmlib::Vector<int, 3> expected = {4, 10, 18};
             vec1 *= vec2;
             if (fsmlib::any(vec1 != expected)) {
                 throw std::runtime_error("Test failed: Vector *= Vector");
@@ -158,9 +158,9 @@ int main()
         }
 
         {
-            fsmlib::Vector<int, 3> vec1     = { 6, 8, 10 };
-            fsmlib::Vector<int, 3> vec2     = { 3, 2, 5 };
-            fsmlib::Vector<int, 3> expected = { 2, 4, 2 };
+            fsmlib::Vector<int, 3> vec1     = {6, 8, 10};
+            fsmlib::Vector<int, 3> vec2     = {3, 2, 5};
+            fsmlib::Vector<int, 3> expected = {2, 4, 2};
             vec1 /= vec2;
             if (fsmlib::any(vec1 != expected)) {
                 throw std::runtime_error("Test failed: Vector /= Vector");
@@ -169,9 +169,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat1     = { { { 1, 2 }, { 3, 4 } } };
-            fsmlib::Matrix<int, 2, 2> mat2     = { { { 5, 6 }, { 7, 8 } } };
-            fsmlib::Matrix<int, 2, 2> expected = { { { 6, 8 }, { 10, 12 } } };
+            fsmlib::Matrix<int, 2, 2> mat1     = {{{1, 2}, {3, 4}}};
+            fsmlib::Matrix<int, 2, 2> mat2     = {{{5, 6}, {7, 8}}};
+            fsmlib::Matrix<int, 2, 2> expected = {{{6, 8}, {10, 12}}};
             mat1 += mat2;
             if (fsmlib::any(mat1 != expected)) {
                 throw std::runtime_error("Test failed: Matrix += Matrix");
@@ -180,9 +180,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat1     = { { { 6, 8 }, { 10, 12 } } };
-            fsmlib::Matrix<int, 2, 2> mat2     = { { { 5, 6 }, { 7, 8 } } };
-            fsmlib::Matrix<int, 2, 2> expected = { { { 1, 2 }, { 3, 4 } } };
+            fsmlib::Matrix<int, 2, 2> mat1     = {{{6, 8}, {10, 12}}};
+            fsmlib::Matrix<int, 2, 2> mat2     = {{{5, 6}, {7, 8}}};
+            fsmlib::Matrix<int, 2, 2> expected = {{{1, 2}, {3, 4}}};
             mat1 -= mat2;
             if (fsmlib::any(mat1 != expected)) {
                 throw std::runtime_error("Test failed: Matrix -= Matrix");
@@ -191,9 +191,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat1     = { { { 1, 2 }, { 3, 4 } } };
-            fsmlib::Matrix<int, 2, 2> mat2     = { { { 2, 2 }, { 2, 2 } } };
-            fsmlib::Matrix<int, 2, 2> expected = { { { 2, 4 }, { 6, 8 } } };
+            fsmlib::Matrix<int, 2, 2> mat1     = {{{1, 2}, {3, 4}}};
+            fsmlib::Matrix<int, 2, 2> mat2     = {{{2, 2}, {2, 2}}};
+            fsmlib::Matrix<int, 2, 2> expected = {{{2, 4}, {6, 8}}};
             mat1 *= mat2;
             if (fsmlib::any(mat1 != expected)) {
                 throw std::runtime_error("Test failed: Matrix *= Matrix");
@@ -202,9 +202,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat1     = { { { 10, 20 }, { 30, 40 } } };
-            fsmlib::Matrix<int, 2, 2> mat2     = { { { 2, 4 }, { 5, 10 } } };
-            fsmlib::Matrix<int, 2, 2> expected = { { { 5, 5 }, { 6, 4 } } };
+            fsmlib::Matrix<int, 2, 2> mat1     = {{{10, 20}, {30, 40}}};
+            fsmlib::Matrix<int, 2, 2> mat2     = {{{2, 4}, {5, 10}}};
+            fsmlib::Matrix<int, 2, 2> expected = {{{5, 5}, {6, 4}}};
             mat1 /= mat2;
             if (fsmlib::any(mat1 != expected)) {
                 throw std::runtime_error("Test failed: Matrix /= Matrix");
@@ -213,9 +213,9 @@ int main()
         }
 
         {
-            fsmlib::Vector<int, 3> vec1      = { 5, 3, 7 };
+            fsmlib::Vector<int, 3> vec1      = {5, 3, 7};
             int scalar                       = 4;
-            fsmlib::Vector<bool, 3> expected = { true, false, true };
+            fsmlib::Vector<bool, 3> expected = {true, false, true};
             auto result                      = vec1 > scalar;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Vector > Scalar");
@@ -224,9 +224,9 @@ int main()
         }
 
         {
-            fsmlib::Vector<int, 3> vec1      = { 5, 3, 7 };
-            fsmlib::Vector<int, 3> vec2      = { 4, 3, 8 };
-            fsmlib::Vector<bool, 3> expected = { true, false, false };
+            fsmlib::Vector<int, 3> vec1      = {5, 3, 7};
+            fsmlib::Vector<int, 3> vec2      = {4, 3, 8};
+            fsmlib::Vector<bool, 3> expected = {true, false, false};
             auto result                      = vec1 > vec2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Vector > Vector");
@@ -235,9 +235,9 @@ int main()
         }
 
         {
-            fsmlib::Vector<int, 3> vec1      = { 5, 3, 7 };
+            fsmlib::Vector<int, 3> vec1      = {5, 3, 7};
             int scalar                       = 6;
-            fsmlib::Vector<bool, 3> expected = { true, true, false };
+            fsmlib::Vector<bool, 3> expected = {true, true, false};
             auto result                      = vec1 < scalar;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Vector < Scalar");
@@ -246,9 +246,9 @@ int main()
         }
 
         {
-            fsmlib::Vector<int, 3> vec1      = { 5, 3, 7 };
-            fsmlib::Vector<int, 3> vec2      = { 4, 3, 8 };
-            fsmlib::Vector<bool, 3> expected = { false, false, true };
+            fsmlib::Vector<int, 3> vec1      = {5, 3, 7};
+            fsmlib::Vector<int, 3> vec2      = {4, 3, 8};
+            fsmlib::Vector<bool, 3> expected = {false, false, true};
             auto result                      = vec1 < vec2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Vector < Vector");
@@ -257,9 +257,9 @@ int main()
         }
 
         {
-            fsmlib::Vector<int, 3> vec1      = { 5, 3, 7 };
+            fsmlib::Vector<int, 3> vec1      = {5, 3, 7};
             int scalar                       = 5;
-            fsmlib::Vector<bool, 3> expected = { true, false, true };
+            fsmlib::Vector<bool, 3> expected = {true, false, true};
             auto result                      = vec1 >= scalar;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Vector >= Scalar");
@@ -268,9 +268,9 @@ int main()
         }
 
         {
-            fsmlib::Vector<int, 3> vec1      = { 5, 3, 7 };
-            fsmlib::Vector<int, 3> vec2      = { 5, 2, 7 };
-            fsmlib::Vector<bool, 3> expected = { true, true, true };
+            fsmlib::Vector<int, 3> vec1      = {5, 3, 7};
+            fsmlib::Vector<int, 3> vec2      = {5, 2, 7};
+            fsmlib::Vector<bool, 3> expected = {true, true, true};
             auto result                      = vec1 >= vec2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Vector >= Vector");
@@ -279,9 +279,9 @@ int main()
         }
 
         {
-            fsmlib::Vector<int, 3> vec1      = { 5, 3, 7 };
+            fsmlib::Vector<int, 3> vec1      = {5, 3, 7};
             int scalar                       = 5;
-            fsmlib::Vector<bool, 3> expected = { true, true, false };
+            fsmlib::Vector<bool, 3> expected = {true, true, false};
             auto result                      = vec1 <= scalar;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Vector <= Scalar");
@@ -290,9 +290,9 @@ int main()
         }
 
         {
-            fsmlib::Vector<int, 3> vec1      = { 5, 3, 7 };
-            fsmlib::Vector<int, 3> vec2      = { 5, 4, 8 };
-            fsmlib::Vector<bool, 3> expected = { true, true, true };
+            fsmlib::Vector<int, 3> vec1      = {5, 3, 7};
+            fsmlib::Vector<int, 3> vec2      = {5, 4, 8};
+            fsmlib::Vector<bool, 3> expected = {true, true, true};
             auto result                      = vec1 <= vec2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Vector <= Vector");
@@ -301,9 +301,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat       = { { { 5, 3 }, { 7, 4 } } };
+            fsmlib::Matrix<int, 2, 2> mat       = {{{5, 3}, {7, 4}}};
             int scalar                          = 4;
-            fsmlib::Matrix<bool, 2, 2> expected = { { { true, false }, { true, false } } };
+            fsmlib::Matrix<bool, 2, 2> expected = {{{true, false}, {true, false}}};
             auto result                         = mat > scalar;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix > Scalar");
@@ -312,9 +312,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat1      = { { { 5, 3 }, { 7, 4 } } };
-            fsmlib::Matrix<int, 2, 2> mat2      = { { { 4, 3 }, { 8, 3 } } };
-            fsmlib::Matrix<bool, 2, 2> expected = { { { true, false }, { false, true } } };
+            fsmlib::Matrix<int, 2, 2> mat1      = {{{5, 3}, {7, 4}}};
+            fsmlib::Matrix<int, 2, 2> mat2      = {{{4, 3}, {8, 3}}};
+            fsmlib::Matrix<bool, 2, 2> expected = {{{true, false}, {false, true}}};
             auto result                         = mat1 > mat2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix > Matrix");
@@ -323,9 +323,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat       = { { { 5, 3 }, { 7, 4 } } };
+            fsmlib::Matrix<int, 2, 2> mat       = {{{5, 3}, {7, 4}}};
             int scalar                          = 6;
-            fsmlib::Matrix<bool, 2, 2> expected = { { { true, true }, { false, true } } };
+            fsmlib::Matrix<bool, 2, 2> expected = {{{true, true}, {false, true}}};
             auto result                         = mat < scalar;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix < Scalar");
@@ -334,9 +334,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat1      = { { { 5, 3 }, { 7, 4 } } };
-            fsmlib::Matrix<int, 2, 2> mat2      = { { { 6, 2 }, { 8, 5 } } };
-            fsmlib::Matrix<bool, 2, 2> expected = { { { true, false }, { true, true } } };
+            fsmlib::Matrix<int, 2, 2> mat1      = {{{5, 3}, {7, 4}}};
+            fsmlib::Matrix<int, 2, 2> mat2      = {{{6, 2}, {8, 5}}};
+            fsmlib::Matrix<bool, 2, 2> expected = {{{true, false}, {true, true}}};
             auto result                         = mat1 < mat2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix < Matrix");
@@ -345,9 +345,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat       = { { { 5, 3 }, { 7, 4 } } };
+            fsmlib::Matrix<int, 2, 2> mat       = {{{5, 3}, {7, 4}}};
             int scalar                          = 5;
-            fsmlib::Matrix<bool, 2, 2> expected = { { { true, false }, { true, false } } };
+            fsmlib::Matrix<bool, 2, 2> expected = {{{true, false}, {true, false}}};
             auto result                         = mat >= scalar;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix >= Scalar");
@@ -356,9 +356,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat1      = { { { 5, 3 }, { 7, 4 } } };
-            fsmlib::Matrix<int, 2, 2> mat2      = { { { 5, 2 }, { 6, 4 } } };
-            fsmlib::Matrix<bool, 2, 2> expected = { { { true, true }, { true, true } } };
+            fsmlib::Matrix<int, 2, 2> mat1      = {{{5, 3}, {7, 4}}};
+            fsmlib::Matrix<int, 2, 2> mat2      = {{{5, 2}, {6, 4}}};
+            fsmlib::Matrix<bool, 2, 2> expected = {{{true, true}, {true, true}}};
             auto result                         = mat1 >= mat2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix >= Matrix");
@@ -367,9 +367,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat       = { { { 5, 3 }, { 7, 4 } } };
+            fsmlib::Matrix<int, 2, 2> mat       = {{{5, 3}, {7, 4}}};
             int scalar                          = 5;
-            fsmlib::Matrix<bool, 2, 2> expected = { { { true, true }, { false, true } } };
+            fsmlib::Matrix<bool, 2, 2> expected = {{{true, true}, {false, true}}};
             auto result                         = mat <= scalar;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix <= Scalar");
@@ -378,9 +378,9 @@ int main()
         }
 
         {
-            fsmlib::Matrix<int, 2, 2> mat1      = { { { 5, 3 }, { 7, 4 } } };
-            fsmlib::Matrix<int, 2, 2> mat2      = { { { 5, 4 }, { 7, 5 } } };
-            fsmlib::Matrix<bool, 2, 2> expected = { { { true, true }, { true, true } } };
+            fsmlib::Matrix<int, 2, 2> mat1      = {{{5, 3}, {7, 4}}};
+            fsmlib::Matrix<int, 2, 2> mat2      = {{{5, 4}, {7, 5}}};
+            fsmlib::Matrix<bool, 2, 2> expected = {{{true, true}, {true, true}}};
             auto result                         = mat1 <= mat2;
             if (fsmlib::any(result != expected)) {
                 throw std::runtime_error("Test failed: Matrix <= Matrix");
@@ -389,9 +389,9 @@ int main()
         }
         {
             // Test: Vector + View
-            fsmlib::Vector<int, 3> vec1     = { 1, 2, 3 };
-            fsmlib::Vector<int, 5> vec2     = { 10, 20, 30, 40, 50 };
-            fsmlib::Vector<int, 3> expected = { 31, 42, 53 };
+            fsmlib::Vector<int, 3> vec1     = {1, 2, 3};
+            fsmlib::Vector<int, 5> vec2     = {10, 20, 30, 40, 50};
+            fsmlib::Vector<int, 3> expected = {31, 42, 53};
 
             // View over vec2 elements 30, 40, 50 (offset 2, size 3)
             auto view   = fsmlib::view<int, 3>(vec2, 2);
@@ -408,9 +408,9 @@ int main()
 
         {
             // Test: Vector - View
-            fsmlib::Vector<int, 3> vec1     = { 50, 60, 70 };
-            fsmlib::Vector<int, 5> vec2     = { 10, 20, 30, 40, 50 };
-            fsmlib::Vector<int, 3> expected = { 30, 30, 30 };
+            fsmlib::Vector<int, 3> vec1     = {50, 60, 70};
+            fsmlib::Vector<int, 5> vec2     = {10, 20, 30, 40, 50};
+            fsmlib::Vector<int, 3> expected = {30, 30, 30};
 
             // View over vec2 elements 20, 30, 40 (offset 1, size 3)
             auto view   = fsmlib::view<int, 3>(vec2, 1);
@@ -427,9 +427,9 @@ int main()
 
         {
             // Test: Vector * View
-            fsmlib::Vector<int, 3> vec1     = { 2, 3, 4 };
-            fsmlib::Vector<int, 5> vec2     = { 1, 2, 3, 4, 5 };
-            fsmlib::Vector<int, 3> expected = { 6, 12, 20 };
+            fsmlib::Vector<int, 3> vec1     = {2, 3, 4};
+            fsmlib::Vector<int, 5> vec2     = {1, 2, 3, 4, 5};
+            fsmlib::Vector<int, 3> expected = {6, 12, 20};
 
             // View over vec2 elements 3, 4, 5 (offset 2, size 3)
             auto view   = fsmlib::view<int, 3>(vec2, 2);
@@ -446,9 +446,9 @@ int main()
 
         {
             // Test: Vector / View
-            fsmlib::Vector<int, 3> vec1     = { 40, 50, 60 };
-            fsmlib::Vector<int, 5> vec2     = { 1, 2, 4, 5, 6 };
-            fsmlib::Vector<int, 3> expected = { 10, 10, 10 };
+            fsmlib::Vector<int, 3> vec1     = {40, 50, 60};
+            fsmlib::Vector<int, 5> vec2     = {1, 2, 4, 5, 6};
+            fsmlib::Vector<int, 3> expected = {10, 10, 10};
 
             // View over vec2 elements 4, 5, 6 (offset 2, size 3)
             auto view   = fsmlib::view<int, 3>(vec2, 2);
@@ -464,7 +464,7 @@ int main()
         }
 
         {
-            fsmlib::Matrix<double, 2, 2> A = { { 1.0, 2.0 }, { 3.0, 4.0 } };
+            fsmlib::Matrix<double, 2, 2> A = {{1.0, 2.0}, {3.0, 4.0}};
             double tr                      = fsmlib::trace(A);
             double expected                = 1.0 + 4.0;
             if (std::abs(tr - expected) > 1e-6) {
@@ -475,7 +475,7 @@ int main()
         }
 
         {
-            fsmlib::Matrix<double, 3, 3> B = { { 5.0, 2.0, 3.0 }, { 1.0, 6.0, 4.0 }, { 7.0, 8.0, 9.0 } };
+            fsmlib::Matrix<double, 3, 3> B = {{5.0, 2.0, 3.0}, {1.0, 6.0, 4.0}, {7.0, 8.0, 9.0}};
             double tr                      = fsmlib::trace(B);
             double expected                = 5.0 + 6.0 + 9.0;
             if (std::abs(tr - expected) > 1e-6) {

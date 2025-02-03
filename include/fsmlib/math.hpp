@@ -28,7 +28,8 @@ namespace details
 /// @param op The binary operation to apply element-wise.
 /// @return A new vector containing the result of applying the operation element-wise.
 template <typename T1, typename T2, std::size_t N, typename Operation>
-[[nodiscard]] constexpr inline auto
+[[nodiscard]]
+constexpr inline auto
 apply_elementwise(const fsmlib::VectorBase<T1, N> &lhs, const fsmlib::VectorBase<T2, N> &rhs, Operation op)
 {
     fsmlib::Vector<decltype(op(lhs[0], rhs[0])), N> result;
@@ -66,12 +67,14 @@ apply_elementwise(fsmlib::VectorBase<T1, N> &lhs, const fsmlib::VectorBase<T2, N
 /// @param rhs The scalar.
 /// @param op The binary operation to apply element-wise.
 /// @return A new vector containing the result of applying the operation element-wise.
-template <typename T1,
-          typename T2,
-          std::size_t N,
-          typename Operation,
-          typename = std::enable_if_t<std::is_arithmetic_v<T2>>>
-[[nodiscard]] constexpr inline auto apply_elementwise(const fsmlib::VectorBase<T1, N> &lhs, const T2 &rhs, Operation op)
+template <
+    typename T1,
+    typename T2,
+    std::size_t N,
+    typename Operation,
+    typename = std::enable_if_t<std::is_arithmetic_v<T2>>>
+[[nodiscard]]
+constexpr inline auto apply_elementwise(const fsmlib::VectorBase<T1, N> &lhs, const T2 &rhs, Operation op)
 {
     fsmlib::Vector<decltype(op(lhs[0], rhs)), N> result;
     for (std::size_t i = 0; i < lhs.size(); ++i) {
@@ -89,11 +92,12 @@ template <typename T1,
 /// @param lhs The vector to modify in place. The results of the operation are stored here.
 /// @param rhs The scalar value used as the second operand in the operation.
 /// @param op The binary operation to apply element-wise. It must accept a vector element and the scalar as arguments.
-template <typename T1,
-          typename T2,
-          std::size_t N,
-          typename Operation,
-          typename = std::enable_if_t<std::is_arithmetic_v<T2>>>
+template <
+    typename T1,
+    typename T2,
+    std::size_t N,
+    typename Operation,
+    typename = std::enable_if_t<std::is_arithmetic_v<T2>>>
 constexpr inline void apply_elementwise(fsmlib::VectorBase<T1, N> &lhs, const T2 &rhs, Operation op)
 {
     for (std::size_t i = 0; i < lhs.size(); ++i) {
@@ -111,12 +115,14 @@ constexpr inline void apply_elementwise(fsmlib::VectorBase<T1, N> &lhs, const T2
 /// @param rhs The vector.
 /// @param op The binary operation to apply element-wise.
 /// @return A new vector containing the result of applying the operation element-wise.
-template <typename T1,
-          typename T2,
-          std::size_t N,
-          typename Operation,
-          typename = std::enable_if_t<std::is_arithmetic_v<T1>>>
-[[nodiscard]] constexpr inline auto apply_elementwise(const T1 &lhs, const fsmlib::VectorBase<T2, N> &rhs, Operation op)
+template <
+    typename T1,
+    typename T2,
+    std::size_t N,
+    typename Operation,
+    typename = std::enable_if_t<std::is_arithmetic_v<T1>>>
+[[nodiscard]]
+constexpr inline auto apply_elementwise(const T1 &lhs, const fsmlib::VectorBase<T2, N> &rhs, Operation op)
 {
     fsmlib::Vector<decltype(op(lhs, rhs[0])), N> result;
     for (std::size_t i = 0; i < lhs.size(); ++i) {
@@ -137,9 +143,11 @@ template <typename T1,
 /// @param op The binary operation to apply element-wise.
 /// @return A new matrix containing the result of applying the operation element-wise.
 template <typename T1, typename T2, std::size_t Rows, std::size_t Cols, typename Operation>
-[[nodiscard]] constexpr inline auto apply_elementwise(const fsmlib::MatrixBase<T1, Rows, Cols> &lhs,
-                                                      const fsmlib::MatrixBase<T2, Rows, Cols> &rhs,
-                                                      Operation op)
+[[nodiscard]]
+constexpr inline auto apply_elementwise(
+    const fsmlib::MatrixBase<T1, Rows, Cols> &lhs,
+    const fsmlib::MatrixBase<T2, Rows, Cols> &rhs,
+    Operation op)
 {
     fsmlib::Matrix<decltype(op(lhs.at(0, 0), rhs.at(0, 0))), Rows, Cols> result;
     for (std::size_t i = 0; i < (Rows * Cols); ++i) {
@@ -178,14 +186,15 @@ apply_elementwise(fsmlib::MatrixBase<T1, Rows, Cols> &lhs, const fsmlib::MatrixB
 /// @param rhs The scalar.
 /// @param op The binary operation to apply element-wise.
 /// @return A new matrix containing the result of applying the operation element-wise.
-template <typename T1,
-          typename T2,
-          std::size_t Rows,
-          std::size_t Cols,
-          typename Operation,
-          typename = std::enable_if_t<std::is_arithmetic_v<T2>>>
-[[nodiscard]] constexpr inline auto
-apply_elementwise(const fsmlib::MatrixBase<T1, Rows, Cols> &lhs, const T2 &rhs, Operation op)
+template <
+    typename T1,
+    typename T2,
+    std::size_t Rows,
+    std::size_t Cols,
+    typename Operation,
+    typename = std::enable_if_t<std::is_arithmetic_v<T2>>>
+[[nodiscard]]
+constexpr inline auto apply_elementwise(const fsmlib::MatrixBase<T1, Rows, Cols> &lhs, const T2 &rhs, Operation op)
 {
     fsmlib::Matrix<decltype(op(lhs.at(0, 0), rhs)), Rows, Cols> result;
     for (std::size_t i = 0; i < (Rows * Cols); ++i) {
@@ -204,12 +213,13 @@ apply_elementwise(const fsmlib::MatrixBase<T1, Rows, Cols> &lhs, const T2 &rhs, 
 /// @param lhs The matrix to modify in place. The results of the operation are stored here.
 /// @param rhs The scalar value used as the second operand in the operation.
 /// @param op The binary operation to apply element-wise. It must accept a matrix element and the scalar as arguments.
-template <typename T1,
-          typename T2,
-          std::size_t Rows,
-          std::size_t Cols,
-          typename Operation,
-          typename = std::enable_if_t<std::is_arithmetic_v<T2>>>
+template <
+    typename T1,
+    typename T2,
+    std::size_t Rows,
+    std::size_t Cols,
+    typename Operation,
+    typename = std::enable_if_t<std::is_arithmetic_v<T2>>>
 constexpr inline void apply_elementwise(fsmlib::MatrixBase<T1, Rows, Cols> &lhs, const T2 &rhs, Operation op)
 {
     for (std::size_t i = 0; i < (Rows * Cols); ++i) {
@@ -228,14 +238,15 @@ constexpr inline void apply_elementwise(fsmlib::MatrixBase<T1, Rows, Cols> &lhs,
 /// @param rhs The matrix.
 /// @param op The binary operation to apply element-wise.
 /// @return A new matrix containing the result of applying the operation element-wise.
-template <typename T1,
-          typename T2,
-          std::size_t Rows,
-          std::size_t Cols,
-          typename Operation,
-          typename = std::enable_if_t<std::is_arithmetic_v<T1>>>
-[[nodiscard]] constexpr inline auto
-apply_elementwise(const T1 &lhs, const fsmlib::MatrixBase<T2, Rows, Cols> &rhs, Operation op)
+template <
+    typename T1,
+    typename T2,
+    std::size_t Rows,
+    std::size_t Cols,
+    typename Operation,
+    typename = std::enable_if_t<std::is_arithmetic_v<T1>>>
+[[nodiscard]]
+constexpr inline auto apply_elementwise(const T1 &lhs, const fsmlib::MatrixBase<T2, Rows, Cols> &rhs, Operation op)
 {
     fsmlib::Matrix<decltype(op(lhs, rhs.at(0, 0))), Rows, Cols> result;
     for (std::size_t i = 0; i < (Rows * Cols); ++i) {
@@ -254,12 +265,13 @@ apply_elementwise(const T1 &lhs, const fsmlib::MatrixBase<T2, Rows, Cols> &rhs, 
 /// @param lhs The scalar value used as the first operand in the operation.
 /// @param rhs The matrix to modify in place. The results of the operation are stored here.
 /// @param op The binary operation to apply element-wise. It must accept a scalar and a matrix element as arguments.
-template <typename T1,
-          typename T2,
-          std::size_t Rows,
-          std::size_t Cols,
-          typename Operation,
-          typename = std::enable_if_t<std::is_arithmetic_v<T1>>>
+template <
+    typename T1,
+    typename T2,
+    std::size_t Rows,
+    std::size_t Cols,
+    typename Operation,
+    typename = std::enable_if_t<std::is_arithmetic_v<T1>>>
 constexpr inline void apply_elementwise(T1 lhs, fsmlib::MatrixBase<T2, Rows, Cols> &rhs, Operation op)
 {
     for (std::size_t i = 0; i < (Rows * Cols); ++i) {
@@ -276,7 +288,8 @@ constexpr inline void apply_elementwise(T1 lhs, fsmlib::MatrixBase<T2, Rows, Col
 /// @param op The unary operation to apply element-wise.
 /// @return A new vector containing the result of applying the operation element-wise.
 template <typename T, std::size_t N, typename Operation>
-[[nodiscard]] constexpr inline auto apply_elementwise(const fsmlib::VectorBase<T, N> &vec, Operation op)
+[[nodiscard]]
+constexpr inline auto apply_elementwise(const fsmlib::VectorBase<T, N> &vec, Operation op)
 {
     fsmlib::Vector<decltype(op(vec[0])), N> result;
     for (std::size_t i = 0; i < vec.size(); ++i) {
@@ -310,7 +323,8 @@ constexpr inline void apply_elementwise(fsmlib::VectorBase<T, N> &vec, Operation
 /// @param op The unary operation to apply element-wise.
 /// @return A new matrix containing the result of applying the operation element-wise.
 template <typename T, std::size_t Rows, std::size_t Cols, typename Operation>
-[[nodiscard]] constexpr inline auto apply_elementwise(const fsmlib::MatrixBase<T, Rows, Cols> &mat, Operation op)
+[[nodiscard]]
+constexpr inline auto apply_elementwise(const fsmlib::MatrixBase<T, Rows, Cols> &mat, Operation op)
 {
     fsmlib::Matrix<decltype(op(mat.at(0, 0))), Rows, Cols> result;
     for (std::size_t i = 0; i < (Rows * Cols); ++i) {
@@ -342,8 +356,7 @@ constexpr inline void apply_elementwise(fsmlib::MatrixBase<T, Rows, Cols> &mat, 
 /// @param b The second value.
 /// @param tolerance The tolerance for comparison (default: 1e-09).
 /// @returns True if the values are approximately equal, false otherwise.
-template <typename T1, typename T2>
-inline bool approximately_equal(T1 a, T2 b, double tolerance = 1e-09)
+template <typename T1, typename T2> inline bool approximately_equal(T1 a, T2 b, double tolerance = 1e-09)
 {
     return std::fabs(a - b) <= tolerance * std::fmax(std::fabs(a), std::fabs(b));
 }
@@ -354,8 +367,7 @@ inline bool approximately_equal(T1 a, T2 b, double tolerance = 1e-09)
 /// @param a The first value.
 /// @param b The second value.
 /// @returns True if the first value is less than or approximately equal to the second, false otherwise.
-template <typename T1, typename T2>
-inline bool approximately_lesser_than_equal(T1 a, T2 b)
+template <typename T1, typename T2> inline bool approximately_lesser_than_equal(T1 a, T2 b)
 {
     return (a < b) || (fsmlib::details::approximately_equal(a, b));
 }
@@ -366,8 +378,7 @@ inline bool approximately_lesser_than_equal(T1 a, T2 b)
 /// @param a The first value.
 /// @param b The second value.
 /// @returns True if the first value is greater than or approximately equal to the second, false otherwise.
-template <typename T1, typename T2>
-inline bool approximately_greater_than_equal(T1 a, T2 b)
+template <typename T1, typename T2> inline bool approximately_greater_than_equal(T1 a, T2 b)
 {
     return (a > b) || (fsmlib::details::approximately_equal(a, b));
 }
@@ -381,7 +392,8 @@ inline bool approximately_greater_than_equal(T1 a, T2 b)
 /// @param value The value to place on the diagonal (default is 1).
 /// @returns An identity matrix with the specified diagonal value.
 template <class T, std::size_t N1, std::size_t N2 = N1>
-[[nodiscard]] constexpr inline auto eye(T value = 1)
+[[nodiscard]]
+constexpr inline auto eye(T value = 1)
 {
     constexpr std::size_t cnt = N1 < N2 ? N1 : N2;
     fsmlib::Matrix<T, N1, N2> r{};
@@ -399,7 +411,8 @@ template <class T, std::size_t N1, std::size_t N2 = N1>
 /// @param r The second vector.
 /// @returns The inner product of the two vectors.
 template <class T, class U, std::size_t N>
-[[nodiscard]] constexpr inline auto inner_product(const fsmlib::VectorBase<T, N> &l, const fsmlib::VectorBase<U, N> &r)
+[[nodiscard]]
+constexpr inline auto inner_product(const fsmlib::VectorBase<T, N> &l, const fsmlib::VectorBase<U, N> &r)
 {
     decltype(l[0] * r[0]) ret{};
     for (std::size_t i = 0; i < N; ++i) {
@@ -416,7 +429,8 @@ template <class T, class U, std::size_t N>
 /// @param r The second vector.
 /// @returns The inner product of the two vectors.
 template <class T, class U, std::size_t N>
-[[nodiscard]] constexpr inline auto dot(const fsmlib::VectorBase<T, N> &l, const fsmlib::VectorBase<U, N> &r)
+[[nodiscard]]
+constexpr inline auto dot(const fsmlib::VectorBase<T, N> &l, const fsmlib::VectorBase<U, N> &r)
 {
     return fsmlib::inner_product(l, r);
 }
@@ -430,8 +444,8 @@ template <class T, class U, std::size_t N>
 /// @param rv The second vector.
 /// @returns A matrix representing the outer product of the two vectors.
 template <class T, class U, std::size_t M, std::size_t N>
-[[nodiscard]] constexpr inline auto outer_product(const fsmlib::VectorBase<T, M> &lv,
-                                                  const fsmlib::VectorBase<U, N> &rv)
+[[nodiscard]]
+constexpr inline auto outer_product(const fsmlib::VectorBase<T, M> &lv, const fsmlib::VectorBase<U, N> &rv)
 {
     fsmlib::Matrix<decltype(lv[0] * rv[0]), M, N> ret{};
     for (std::size_t r = 0; r < M; ++r) {
@@ -450,10 +464,10 @@ template <class T, class U, std::size_t M, std::size_t N>
 /// @param vec The vector to multiply.
 /// @returns A vector representing the result of the multiplication.
 template <typename T1, typename T2, std::size_t N1, std::size_t N2>
-[[nodiscard]] constexpr inline auto multiply(const fsmlib::MatrixBase<T1, N1, N2> &mat,
-                                             const fsmlib::VectorBase<T2, N2> &vec)
+[[nodiscard]]
+constexpr inline auto multiply(const fsmlib::MatrixBase<T1, N1, N2> &mat, const fsmlib::VectorBase<T2, N2> &vec)
 {
-    using result_type_t = std::remove_const_t<std::common_type_t<T1, T2>>;
+    using result_type_t                      = std::remove_const_t<std::common_type_t<T1, T2>>;
     // Prepare the result.Z
     fsmlib::Vector<result_type_t, N1> result = {};
     for (std::size_t i = 0; i < N1; ++i) {
@@ -474,11 +488,11 @@ template <typename T1, typename T2, std::size_t N1, std::size_t N2>
 /// @param B The second matrix.
 /// @returns The resulting matrix after multiplication.
 template <typename T1, typename T2, std::size_t N1, std::size_t N2, std::size_t N3>
-[[nodiscard]] constexpr inline auto multiply(const fsmlib::MatrixBase<T1, N1, N2> &A,
-                                             const fsmlib::MatrixBase<T2, N2, N3> &B)
+[[nodiscard]]
+constexpr inline auto multiply(const fsmlib::MatrixBase<T1, N1, N2> &A, const fsmlib::MatrixBase<T2, N2, N3> &B)
 {
     // Promotes types for compatibility.
-    using result_type_t = std::remove_const_t<std::common_type_t<T1, T2>>;
+    using result_type_t                          = std::remove_const_t<std::common_type_t<T1, T2>>;
     // Prepare the result.
     fsmlib::Matrix<result_type_t, N1, N3> result = {};
     for (std::size_t r = 0; r < N1; ++r) {
@@ -501,7 +515,8 @@ template <typename T1, typename T2, std::size_t N1, std::size_t N2, std::size_t 
 /// @param pred The predicate to apply.
 /// @returns True if the predicate is true for any element, false otherwise.
 template <class T, std::size_t N, class F>
-[[nodiscard]] constexpr inline auto any(const fsmlib::VectorBase<T, N> &container, F pred)
+[[nodiscard]]
+constexpr inline auto any(const fsmlib::VectorBase<T, N> &container, F pred)
 {
     for (std::size_t i = 0; i < N; ++i) {
         if (pred(container[i])) {
@@ -517,7 +532,8 @@ template <class T, std::size_t N, class F>
 /// @param container The vector to check.
 /// @returns True if any element evaluates to true, false otherwise.
 template <class T, std::size_t N>
-[[nodiscard]] constexpr inline auto any(const fsmlib::VectorBase<T, N> &container)
+[[nodiscard]]
+constexpr inline auto any(const fsmlib::VectorBase<T, N> &container)
 {
     for (std::size_t i = 0; i < N; ++i) {
         if (container[i]) {
@@ -536,7 +552,8 @@ template <class T, std::size_t N>
 /// @param pred The predicate to apply.
 /// @returns True if the predicate is true for any element, false otherwise.
 template <class T, std::size_t Rows, std::size_t Cols, class F>
-[[nodiscard]] constexpr inline auto any(const fsmlib::MatrixBase<T, Rows, Cols> &container, F pred)
+[[nodiscard]]
+constexpr inline auto any(const fsmlib::MatrixBase<T, Rows, Cols> &container, F pred)
 {
     for (std::size_t i = 0; i < Rows; ++i) {
         for (std::size_t j = 0; j < Cols; ++j) {
@@ -555,7 +572,8 @@ template <class T, std::size_t Rows, std::size_t Cols, class F>
 /// @param container The matrix to check.
 /// @returns True if any element evaluates to true, false otherwise.
 template <class T, std::size_t Rows, std::size_t Cols>
-[[nodiscard]] constexpr inline auto any(const fsmlib::MatrixBase<T, Rows, Cols> &container)
+[[nodiscard]]
+constexpr inline auto any(const fsmlib::MatrixBase<T, Rows, Cols> &container)
 {
     for (std::size_t i = 0; i < Rows; ++i) {
         for (std::size_t j = 0; j < Cols; ++j) {
@@ -575,7 +593,8 @@ template <class T, std::size_t Rows, std::size_t Cols>
 /// @param pred The predicate to apply.
 /// @returns True if the predicate is true for all elements, false otherwise.
 template <class T, std::size_t N, class F>
-[[nodiscard]] constexpr inline auto all(const fsmlib::VectorBase<T, N> &container, F pred)
+[[nodiscard]]
+constexpr inline auto all(const fsmlib::VectorBase<T, N> &container, F pred)
 {
     for (std::size_t i = 0; i < N; ++i) {
         if (!pred(container[i])) {
@@ -591,7 +610,8 @@ template <class T, std::size_t N, class F>
 /// @param container The vector to check.
 /// @returns True if all elements evaluate to true, false otherwise.
 template <class T, std::size_t N>
-[[nodiscard]] constexpr inline auto all(const fsmlib::VectorBase<T, N> &container)
+[[nodiscard]]
+constexpr inline auto all(const fsmlib::VectorBase<T, N> &container)
 {
     for (std::size_t i = 0; i < N; ++i) {
         if (!container[i]) {
@@ -610,7 +630,8 @@ template <class T, std::size_t N>
 /// @param pred The predicate to apply.
 /// @returns True if the predicate is true for all elements, false otherwise.
 template <class T, std::size_t Rows, std::size_t Cols, class F>
-[[nodiscard]] constexpr inline auto all(const fsmlib::MatrixBase<T, Rows, Cols> &container, F pred)
+[[nodiscard]]
+constexpr inline auto all(const fsmlib::MatrixBase<T, Rows, Cols> &container, F pred)
 {
     for (std::size_t i = 0; i < Rows; ++i) {
         for (std::size_t j = 0; j < Cols; ++j) {
@@ -629,7 +650,8 @@ template <class T, std::size_t Rows, std::size_t Cols, class F>
 /// @param container The matrix to check.
 /// @returns True if all elements evaluate to true, false otherwise.
 template <class T, std::size_t Rows, std::size_t Cols>
-[[nodiscard]] constexpr inline auto all(const fsmlib::MatrixBase<T, Rows, Cols> &container)
+[[nodiscard]]
+constexpr inline auto all(const fsmlib::MatrixBase<T, Rows, Cols> &container)
 {
     for (std::size_t i = 0; i < Rows; ++i) {
         for (std::size_t j = 0; j < Cols; ++j) {
@@ -650,11 +672,12 @@ template <class T, std::size_t Rows, std::size_t Cols>
 /// @param start_column The starting column for the swap (default: 0).
 /// @param end_column The ending column for the swap (default: all columns).
 template <typename T, std::size_t N>
-constexpr inline void swap_rows(fsmlib::MatrixBase<T, N> &matrix,
-                                std::size_t i,
-                                std::size_t j,
-                                std::size_t start_column = 0,
-                                std::size_t end_column   = std::numeric_limits<std::size_t>::max())
+constexpr inline void swap_rows(
+    fsmlib::MatrixBase<T, N> &matrix,
+    std::size_t i,
+    std::size_t j,
+    std::size_t start_column = 0,
+    std::size_t end_column   = std::numeric_limits<std::size_t>::max())
 {
     end_column = std::min(end_column, N);
     for (std::size_t c = start_column; c < end_column; ++c) {
@@ -668,7 +691,8 @@ constexpr inline void swap_rows(fsmlib::MatrixBase<T, N> &matrix,
 /// @param v The input vector.
 /// @returns A vector with the absolute value of each element.
 template <class T, std::size_t N>
-[[nodiscard]] constexpr inline auto abs(const fsmlib::VectorBase<T, N> &v)
+[[nodiscard]]
+constexpr inline auto abs(const fsmlib::VectorBase<T, N> &v)
 {
     return fsmlib::details::apply_elementwise(v, [](const auto &x) { return std::abs(x); });
 }
@@ -680,7 +704,8 @@ template <class T, std::size_t N>
 /// @param m The input matrix.
 /// @returns A matrix with the absolute value of each element.
 template <class T, std::size_t Rows, std::size_t Cols>
-[[nodiscard]] constexpr inline auto abs(const fsmlib::MatrixBase<T, Rows, Cols> &m)
+[[nodiscard]]
+constexpr inline auto abs(const fsmlib::MatrixBase<T, Rows, Cols> &m)
 {
     return fsmlib::details::apply_elementwise(m, [](const auto &x) { return std::abs(x); });
 }
@@ -691,7 +716,8 @@ template <class T, std::size_t Rows, std::size_t Cols>
 /// @param v The input vector.
 /// @returns A vector with the square root of each element.
 template <class T, std::size_t N>
-[[nodiscard]] constexpr inline auto sqrt(const fsmlib::VectorBase<T, N> &v)
+[[nodiscard]]
+constexpr inline auto sqrt(const fsmlib::VectorBase<T, N> &v)
 {
     return fsmlib::details::apply_elementwise(v, [](const auto &x) { return std::sqrt(x); });
 }
@@ -703,7 +729,8 @@ template <class T, std::size_t N>
 /// @param m The input matrix.
 /// @returns A matrix with the square root of each element.
 template <class T, std::size_t Rows, std::size_t Cols>
-[[nodiscard]] constexpr inline auto sqrt(const fsmlib::MatrixBase<T, Rows, Cols> &m)
+[[nodiscard]]
+constexpr inline auto sqrt(const fsmlib::MatrixBase<T, Rows, Cols> &m)
 {
     return fsmlib::details::apply_elementwise(m, [](const auto &x) { return std::sqrt(x); });
 }
@@ -714,7 +741,8 @@ template <class T, std::size_t Rows, std::size_t Cols>
 /// @param v The input vector.
 /// @returns A vector with the log of each element.
 template <class T, std::size_t N>
-[[nodiscard]] constexpr inline auto log(const fsmlib::VectorBase<T, N> &v)
+[[nodiscard]]
+constexpr inline auto log(const fsmlib::VectorBase<T, N> &v)
 {
     return fsmlib::details::apply_elementwise(v, [](const auto &x) { return std::log(x); });
 }
@@ -726,7 +754,8 @@ template <class T, std::size_t N>
 /// @param m The input matrix.
 /// @returns A matrix with the natural logarithm of each element.
 template <class T, std::size_t Rows, std::size_t Cols>
-[[nodiscard]] constexpr inline auto log(const fsmlib::MatrixBase<T, Rows, Cols> &m)
+[[nodiscard]]
+constexpr inline auto log(const fsmlib::MatrixBase<T, Rows, Cols> &m)
 {
     return fsmlib::details::apply_elementwise(m, [](const auto &x) { return std::log(x); });
 }
@@ -737,10 +766,11 @@ template <class T, std::size_t Rows, std::size_t Cols>
 /// @param A The input square matrix.
 /// @return The sum of the diagonal elements.
 template <typename T, std::size_t N>
-[[nodiscard]] constexpr inline auto trace(const fsmlib::MatrixBase<T, N, N> &A)
+[[nodiscard]]
+constexpr inline auto trace(const fsmlib::MatrixBase<T, N, N> &A)
 {
     // Select the right type.
-    using data_type_t = std::remove_const_t<T>;
+    using data_type_t  = std::remove_const_t<T>;
     // Initialize the result.
     data_type_t result = 0;
     // Sum the diagonal elements.
@@ -760,7 +790,8 @@ template <typename T, std::size_t N>
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of the element-wise addition.
 template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
-[[nodiscard]] constexpr inline auto operator+(const E1 &lhs, const E2 &rhs)
+[[nodiscard]]
+constexpr inline auto operator+(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a + b; });
 }
@@ -773,7 +804,8 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of the element-wise subtraction.
 template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
-[[nodiscard]] constexpr inline auto operator-(const E1 &lhs, const E2 &rhs)
+[[nodiscard]]
+constexpr inline auto operator-(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a - b; });
 }
@@ -786,7 +818,8 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of the element-wise multiplication.
 template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
-[[nodiscard]] constexpr inline auto operator*(const E1 &lhs, const E2 &rhs)
+[[nodiscard]]
+constexpr inline auto operator*(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a * b; });
 }
@@ -799,7 +832,8 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of the element-wise division.
 template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
-[[nodiscard]] constexpr inline auto operator/(const E1 &lhs, const E2 &rhs)
+[[nodiscard]]
+constexpr inline auto operator/(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a / b; });
 }
@@ -812,7 +846,8 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise equality comparison.
 template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
-[[nodiscard]] constexpr inline auto operator==(const E1 &lhs, const E2 &rhs)
+[[nodiscard]]
+constexpr inline auto operator==(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a == b; });
 }
@@ -825,7 +860,8 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise inequality comparison.
 template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
-[[nodiscard]] constexpr inline auto operator!=(const E1 &lhs, const E2 &rhs)
+[[nodiscard]]
+constexpr inline auto operator!=(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a != b; });
 }
@@ -838,7 +874,8 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise less-than comparison.
 template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
-[[nodiscard]] constexpr inline auto operator<(const E1 &lhs, const E2 &rhs)
+[[nodiscard]]
+constexpr inline auto operator<(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a < b; });
 }
@@ -851,7 +888,8 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise greater-than comparison.
 template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
-[[nodiscard]] constexpr inline auto operator>(const E1 &lhs, const E2 &rhs)
+[[nodiscard]]
+constexpr inline auto operator>(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a > b; });
 }
@@ -864,7 +902,8 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise less-than-or-equal comparison.
 template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
-[[nodiscard]] constexpr inline auto operator<=(const E1 &lhs, const E2 &rhs)
+[[nodiscard]]
+constexpr inline auto operator<=(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a <= b; });
 }
@@ -877,7 +916,8 @@ template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::
 /// @param rhs The right-hand side operand (container or scalar).
 /// @return A new fsmlib::Vector containing the result of element-wise greater-than-or-equal comparison.
 template <typename E1, typename E2, typename = std::enable_if_t<fsmlib::traits::is_valid_combination_v<E1, E2>>>
-[[nodiscard]] constexpr inline auto operator>=(const E1 &lhs, const E2 &rhs)
+[[nodiscard]]
+constexpr inline auto operator>=(const E1 &lhs, const E2 &rhs)
 {
     return fsmlib::details::apply_elementwise(lhs, rhs, [](const auto &a, const auto &b) { return a >= b; });
 }

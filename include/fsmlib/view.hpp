@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include <type_traits>
-#include <stdexcept>
 #include <cstddef>
+#include <stdexcept>
+#include <type_traits>
 
 #include "fsmlib/fsmlib.hpp"
 
@@ -18,8 +18,8 @@ namespace fsmlib
 /// @brief A view into a subset of a larger vector.
 /// @tparam T The type of elements in the vector.
 /// @tparam N The size of the view.
-template <typename T, std::size_t N>
-class VectorView : public VectorBase<T, N> {
+template <typename T, std::size_t N> class VectorView : public VectorBase<T, N>
+{
 public:
     /// @brief Constructor to create a VectorView from a larger vector.
     ///
@@ -27,7 +27,9 @@ public:
     /// @param offset The offset into the larger vector where the view begins.
     /// @param total_size The total size of the larger vector.
     VectorView(T *data, std::size_t offset, std::size_t total_size)
-        : data_(data), offset_(offset), total_size_(total_size)
+        : data_(data)
+        , offset_(offset)
+        , total_size_(total_size)
     {
         if ((offset + N) > total_size) {
             throw std::out_of_range("View exceeds the bounds of the underlying vector.");
@@ -60,40 +62,19 @@ public:
 
     /// @brief Returns the size of the view.
     /// @return Size of the view.
-    constexpr std::size_t size() const noexcept
-    {
-        return N;
-    }
+    constexpr std::size_t size() const noexcept { return N; }
 
-    constexpr const T *data() const noexcept override
-    {
-        return data_;
-    }
+    constexpr const T *data() const noexcept override { return data_; }
 
-    constexpr T *data() noexcept override
-    {
-        return data_;
-    }
+    constexpr T *data() noexcept override { return data_; }
 
-    constexpr T *begin() noexcept override
-    {
-        return data_ + offset_;
-    }
+    constexpr T *begin() noexcept override { return data_ + offset_; }
 
-    constexpr T *end() noexcept override
-    {
-        return data_ + offset_ + N;
-    }
+    constexpr T *end() noexcept override { return data_ + offset_ + N; }
 
-    constexpr const T *begin() const noexcept override
-    {
-        return data_ + offset_;
-    }
+    constexpr const T *begin() const noexcept override { return data_ + offset_; }
 
-    constexpr const T *end() const noexcept override
-    {
-        return data_ + offset_ + N;
-    }
+    constexpr const T *end() const noexcept override { return data_ + offset_ + N; }
 
     /// @brief Copy assignment operator.
     /// @param other The vector view to copy from.
@@ -125,8 +106,8 @@ private:
 /// @tparam T The type of elements in the matrix.
 /// @tparam Rows The number of rows in the view.
 /// @tparam Cols The number of columns in the view.
-template <typename T, std::size_t Rows, std::size_t Cols>
-class MatrixView : public MatrixBase<T, Rows, Cols> {
+template <typename T, std::size_t Rows, std::size_t Cols> class MatrixView : public MatrixBase<T, Rows, Cols>
+{
 public:
     /// @brief Constructor to create a MatrixView from a larger matrix.
     ///
@@ -136,8 +117,11 @@ public:
     /// @param total_rows The total number of rows in the larger matrix.
     /// @param total_cols The total number of columns in the larger matrix.
     MatrixView(T *data, std::size_t row_offset, std::size_t col_offset, std::size_t total_rows, std::size_t total_cols)
-        : data_(data), row_offset_(row_offset), col_offset_(col_offset), total_rows_(total_rows),
-          total_cols_(total_cols)
+        : data_(data)
+        , row_offset_(row_offset)
+        , col_offset_(col_offset)
+        , total_rows_(total_rows)
+        , total_cols_(total_cols)
     {
         if (row_offset + Rows > total_rows || col_offset + Cols > total_cols) {
             throw std::out_of_range("View exceeds the bounds of the underlying matrix.");
@@ -196,15 +180,9 @@ public:
         return data_[indices_to_linear_index(row, col)];
     }
 
-    constexpr const T *data() const noexcept override
-    {
-        return data_;
-    }
+    constexpr const T *data() const noexcept override { return data_; }
 
-    constexpr T *data() noexcept override
-    {
-        return data_;
-    }
+    constexpr T *data() noexcept override { return data_; }
 
     /// @brief Begin iterator (non-const version).
     /// @param other The matrix view to copy from.
@@ -244,7 +222,7 @@ private:
         std::size_t row = index / Cols;
         std::size_t col = index % Cols;
 #endif
-        return { row, col };
+        return {row, col};
     }
 
     std::size_t indices_to_linear_index(std::size_t row, std::size_t col) const override
@@ -275,8 +253,8 @@ private:
 /// @tparam T The type of elements in the matrix.
 /// @tparam Rows The number of rows in the original matrix.
 /// @tparam Cols The number of columns in the original matrix.
-template <typename T, std::size_t Rows, std::size_t Cols>
-class CofactorView : public MatrixBase<T, Rows - 1, Cols - 1> {
+template <typename T, std::size_t Rows, std::size_t Cols> class CofactorView : public MatrixBase<T, Rows - 1, Cols - 1>
+{
 public:
     /// @brief Constructor to create a CofactorView from a larger matrix.
     ///
@@ -285,13 +263,17 @@ public:
     /// @param col_to_skip The column to exclude from the view.
     /// @param total_rows The total number of rows in the larger matrix.
     /// @param total_cols The total number of columns in the larger matrix.
-    CofactorView(T *data,
-                 std::size_t row_to_skip,
-                 std::size_t col_to_skip,
-                 std::size_t total_rows,
-                 std::size_t total_cols)
-        : data_(data), row_to_skip_(row_to_skip), col_to_skip_(col_to_skip), total_rows_(total_rows),
-          total_cols_(total_cols)
+    CofactorView(
+        T *data,
+        std::size_t row_to_skip,
+        std::size_t col_to_skip,
+        std::size_t total_rows,
+        std::size_t total_cols)
+        : data_(data)
+        , row_to_skip_(row_to_skip)
+        , col_to_skip_(col_to_skip)
+        , total_rows_(total_rows)
+        , total_cols_(total_cols)
     {
         if (row_to_skip >= Rows || col_to_skip >= Cols) {
             throw std::out_of_range("CofactorView row or column to skip is out of bounds.");
@@ -370,15 +352,9 @@ public:
         return data_[indices_to_linear_index(row, col)];
     }
 
-    constexpr const T *data() const noexcept override
-    {
-        return data_;
-    }
+    constexpr const T *data() const noexcept override { return data_; }
 
-    constexpr T *data() noexcept override
-    {
-        return data_;
-    }
+    constexpr T *data() noexcept override { return data_; }
 
 private:
     T *data_;                 ///< Pointer to the start of the larger matrix (row-major order).
@@ -406,7 +382,7 @@ private:
         if (col >= col_to_skip_) {
             col += 1;
         }
-        return { row, col };
+        return {row, col};
     }
 
     std::size_t indices_to_linear_index(std::size_t row, std::size_t col) const override

@@ -5,8 +5,8 @@
 #pragma once
 
 #include <cmath>
-#include <limits>
 #include <complex>
+#include <limits>
 #include <type_traits>
 
 namespace fsmlib
@@ -26,8 +26,7 @@ static inline auto &tolerance()
 /// @param b the second value.
 /// @returns true if they are approximately equal.
 /// @returns false otherwise.
-template <typename T1, typename T2>
-inline bool approximately_equal(T1 a, T2 b)
+template <typename T1, typename T2> inline bool approximately_equal(T1 a, T2 b)
 {
     return std::abs(a - b) <= tolerance() * std::max(std::abs(a), std::abs(b));
 }
@@ -37,8 +36,7 @@ inline bool approximately_equal(T1 a, T2 b)
 /// @param b the second value.
 /// @returns true if (a <= b).
 /// @returns false otherwise.
-template <typename T1, typename T2>
-inline bool approximately_lesser_than_equal(T1 a, T2 b)
+template <typename T1, typename T2> inline bool approximately_lesser_than_equal(T1 a, T2 b)
 {
     return (a < b) || (fsmlib::feq::approximately_equal(a, b));
 }
@@ -48,8 +46,7 @@ inline bool approximately_lesser_than_equal(T1 a, T2 b)
 /// @param b the second value.
 /// @returns true if (a >= b).
 /// @returns false otherwise.
-template <typename T1, typename T2>
-inline bool approximately_greater_than_equal(T1 a, T2 b)
+template <typename T1, typename T2> inline bool approximately_greater_than_equal(T1 a, T2 b)
 {
     return (a > b) || (fsmlib::feq::approximately_equal(a, b));
 }
@@ -58,8 +55,7 @@ inline bool approximately_greater_than_equal(T1 a, T2 b)
 /// @param a the value.
 /// @returns true if the value is approximately equal to zero.
 /// @returns false otherwise.
-template <typename T>
-inline bool approximately_equal_to_zero(T a)
+template <typename T> inline bool approximately_equal_to_zero(T a)
 {
     return std::abs(a) <= fsmlib::feq::tolerance() * std::abs(a);
 }

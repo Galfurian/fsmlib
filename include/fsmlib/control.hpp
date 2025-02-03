@@ -21,15 +21,18 @@ namespace control
 /// @tparam N_state The number of states.
 /// @tparam N_input The number of inputs.
 /// @tparam N_output The number of outputs.
-template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-struct StateSpace {
+template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output> struct StateSpace {
     fsmlib::Matrix<T, N_state, N_state> A;  ///< System matrix.
     fsmlib::Matrix<T, N_state, N_input> B;  ///< Input matrix.
     fsmlib::Matrix<T, N_output, N_state> C; ///< Output matrix.
     fsmlib::Matrix<T, N_output, N_input> D; ///< Feedforward matrix.
 
     /// @brief Default constructor to initialize the continuous-time state-space model.
-    StateSpace() : A{}, B{}, C{}, D{}
+    StateSpace()
+        : A{}
+        , B{}
+        , C{}
+        , D{}
     {
         // Nothing to do.
     }
@@ -39,11 +42,15 @@ struct StateSpace {
     /// @param _B Input matrix.
     /// @param _C Output matrix.
     /// @param _D Feedforward matrix.
-    StateSpace(const fsmlib::Matrix<T, N_state, N_state> &_A,
-               const fsmlib::Matrix<T, N_state, N_input> &_B,
-               const fsmlib::Matrix<T, N_output, N_state> &_C,
-               const fsmlib::Matrix<T, N_output, N_input> &_D)
-        : A(_A), B(_B), C(_C), D(_D)
+    StateSpace(
+        const fsmlib::Matrix<T, N_state, N_state> &_A,
+        const fsmlib::Matrix<T, N_state, N_input> &_B,
+        const fsmlib::Matrix<T, N_output, N_state> &_C,
+        const fsmlib::Matrix<T, N_output, N_input> &_D)
+        : A(_A)
+        , B(_B)
+        , C(_C)
+        , D(_D)
     {
         // Nothing to do.
     }
@@ -54,8 +61,7 @@ struct StateSpace {
 /// @tparam N_state The number of states.
 /// @tparam N_input The number of inputs.
 /// @tparam N_output The number of outputs.
-template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-struct DiscreteStateSpace {
+template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output> struct DiscreteStateSpace {
     fsmlib::Matrix<T, N_state, N_state> A;  ///< System matrix.
     fsmlib::Matrix<T, N_state, N_input> B;  ///< Input matrix.
     fsmlib::Matrix<T, N_output, N_state> C; ///< Output matrix.
@@ -63,23 +69,33 @@ struct DiscreteStateSpace {
     T sample_time;                          ///< The sample time used for discretization.
 
     /// @brief Default constructor to initialize the discrete-time state-space model.
-    DiscreteStateSpace() : A{}, B{}, C{}, D{}, sample_time{}
+    DiscreteStateSpace()
+        : A{}
+        , B{}
+        , C{}
+        , D{}
+        , sample_time{}
     {
         // Nothing to do.
     }
 
-    /// @brief Constructor to initialize the discrete-time state-space model with given matrices. 
+    /// @brief Constructor to initialize the discrete-time state-space model with given matrices.
     /// @param _A System matrix.
     /// @param _B Input matrix.
     /// @param _C Output matrix.
     /// @param _D Feedforward matrix.
     /// @param _sample_time The sample time used for discretization.
-    DiscreteStateSpace(const fsmlib::Matrix<T, N_state, N_state> &_A,
-                       const fsmlib::Matrix<T, N_state, N_input> &_B,
-                       const fsmlib::Matrix<T, N_output, N_state> &_C,
-                       const fsmlib::Matrix<T, N_output, N_input> &_D,
-                       T _sample_time)
-        : A(_A), B(_B), C(_C), D(_D), sample_time(_sample_time)
+    DiscreteStateSpace(
+        const fsmlib::Matrix<T, N_state, N_state> &_A,
+        const fsmlib::Matrix<T, N_state, N_input> &_B,
+        const fsmlib::Matrix<T, N_output, N_state> &_C,
+        const fsmlib::Matrix<T, N_output, N_input> &_D,
+        T _sample_time)
+        : A(_A)
+        , B(_B)
+        , C(_C)
+        , D(_D)
+        , sample_time(_sample_time)
     {
         // Nothing to do.
     }
@@ -89,13 +105,14 @@ struct DiscreteStateSpace {
 /// @tparam T The type of the coefficients (e.g., double, float).
 /// @tparam N_num The number of numerator coefficients (polynomial order + 1).
 /// @tparam N_den The number of denominator coefficients (polynomial order + 1).
-template <typename T, std::size_t N_num, std::size_t N_den>
-struct TransferFunction {
+template <typename T, std::size_t N_num, std::size_t N_den> struct TransferFunction {
     fsmlib::Vector<T, N_num> numerator;   ///< Fixed-size vector for numerator coefficients.
     fsmlib::Vector<T, N_den> denominator; ///< Fixed-size vector for denominator coefficients.
 
     /// @brief Constructor to initialize a transfer function with zero coefficients.
-    constexpr TransferFunction() : numerator{}, denominator{}
+    constexpr TransferFunction()
+        : numerator{}
+        , denominator{}
     {
     }
 
@@ -103,7 +120,8 @@ struct TransferFunction {
     /// @param num The numerator coefficients.
     /// @param den The denominator coefficients.
     constexpr TransferFunction(const fsmlib::Vector<T, N_num> &num, const fsmlib::Vector<T, N_den> &den)
-        : numerator(num), denominator(den)
+        : numerator(num)
+        , denominator(den)
     {
     }
 };
@@ -117,7 +135,8 @@ struct TransferFunction {
 /// @param sample_time The sample time for discretization.
 /// @returns The discretized state-space model.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-[[nodiscard]] constexpr inline auto c2d(const StateSpace<T, N_state, N_input, N_output> &sys, T sample_time)
+[[nodiscard]]
+constexpr inline auto c2d(const StateSpace<T, N_state, N_input, N_output> &sys, T sample_time)
 {
     DiscreteStateSpace<T, N_state, N_input, N_output> dsys;
 
@@ -154,16 +173,17 @@ template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_ou
 /// and the output is computed as:
 ///     y = C * x + D * u
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-constexpr inline void step(const StateSpace<T, N_state, N_input, N_output> &sys,
-                           const Vector<T, N_state> &x,
-                           const Vector<T, N_input> &u,
-                           Vector<T, N_state> &next,
-                           Vector<T, N_output> &y)
+constexpr inline void step(
+    const StateSpace<T, N_state, N_input, N_output> &sys,
+    const Vector<T, N_state> &x,
+    const Vector<T, N_input> &u,
+    Vector<T, N_state> &next,
+    Vector<T, N_output> &y)
 {
     // Compute the next state: x_next = A * x + B * u.
     next = fsmlib::multiply(sys.A, x) + fsmlib::multiply(sys.B, u);
     // Compute the output: y = C * x + D * u.
-    y = fsmlib::multiply(sys.C, x) + fsmlib::multiply(sys.D, u);
+    y    = fsmlib::multiply(sys.C, x) + fsmlib::multiply(sys.D, u);
 }
 
 /// @brief Simulates one step of a state-space model.
@@ -182,16 +202,17 @@ constexpr inline void step(const StateSpace<T, N_state, N_input, N_output> &sys,
 /// and the output is computed as:
 ///  y = C * x + D * u .
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-constexpr inline void dstep(const DiscreteStateSpace<T, N_state, N_input, N_output> &sys,
-                            const Vector<T, N_state> &x,
-                            const Vector<T, N_input> &u,
-                            Vector<T, N_state> &next,
-                            Vector<T, N_output> &y)
+constexpr inline void dstep(
+    const DiscreteStateSpace<T, N_state, N_input, N_output> &sys,
+    const Vector<T, N_state> &x,
+    const Vector<T, N_input> &u,
+    Vector<T, N_state> &next,
+    Vector<T, N_output> &y)
 {
     // Compute the next state: x_next = A * x + B * u.
     next = fsmlib::multiply(sys.A, x) + fsmlib::multiply(sys.B, u);
     // Compute the output: y = C * x + D * u.
-    y = fsmlib::multiply(sys.C, x) + fsmlib::multiply(sys.D, u);
+    y    = fsmlib::multiply(sys.C, x) + fsmlib::multiply(sys.D, u);
 }
 
 /// @brief Simulates the continuous-time state-space model.
@@ -206,10 +227,11 @@ constexpr inline void dstep(const DiscreteStateSpace<T, N_state, N_input, N_outp
 /// @param time_step The time step for numerical integration.
 /// @return The system output as a matrix.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output, std::size_t TimeSteps>
-fsmlib::Matrix<T, N_output, TimeSteps> lsim(const StateSpace<T, N_state, N_input, N_output> &ss,
-                                            const fsmlib::Matrix<T, N_input, TimeSteps> &input,
-                                            const fsmlib::Vector<T, N_state> &x0,
-                                            T time_step)
+fsmlib::Matrix<T, N_output, TimeSteps> lsim(
+    const StateSpace<T, N_state, N_input, N_output> &ss,
+    const fsmlib::Matrix<T, N_input, TimeSteps> &input,
+    const fsmlib::Vector<T, N_state> &x0,
+    T time_step)
 { // Output matrix to store the results.
     fsmlib::Matrix<T, N_output, TimeSteps> output{};
     // State vector initialized to the initial state x0.
@@ -248,9 +270,10 @@ fsmlib::Matrix<T, N_output, TimeSteps> lsim(const StateSpace<T, N_state, N_input
 /// @param x0 The initial state vector.
 /// @return The system output as a matrix.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output, std::size_t TimeSteps>
-fsmlib::Matrix<T, N_output, TimeSteps> dlsim(const DiscreteStateSpace<T, N_state, N_input, N_output> &dsys,
-                                             const fsmlib::Matrix<T, N_input, TimeSteps> &input,
-                                             const fsmlib::Vector<T, N_state> &x0)
+fsmlib::Matrix<T, N_output, TimeSteps> dlsim(
+    const DiscreteStateSpace<T, N_state, N_input, N_output> &dsys,
+    const fsmlib::Matrix<T, N_input, TimeSteps> &input,
+    const fsmlib::Vector<T, N_state> &x0)
 {
     // Output matrix to store the results.
     fsmlib::Matrix<T, N_output, TimeSteps> output{};
@@ -287,7 +310,8 @@ fsmlib::Matrix<T, N_output, TimeSteps> dlsim(const DiscreteStateSpace<T, N_state
 /// @return The controllability matrix.
 /// @details CM = [ B    A*B    A^2*B    ...    A^(N-1)*B ]
 template <typename T, std::size_t N, std::size_t Q>
-[[nodiscard]] constexpr inline auto ctrb(const Matrix<T, N, N> &A, const Matrix<T, N, Q> &B)
+[[nodiscard]]
+constexpr inline auto ctrb(const Matrix<T, N, N> &A, const Matrix<T, N, Q> &B)
 {
     // Initialize the controllability matrix with zeros.
     Matrix<T, N, N * Q> result = {};
@@ -328,7 +352,8 @@ template <typename T, std::size_t N, std::size_t Q>
 ///      | ...       |
 ///      | C*A^(n-1) |
 template <typename T, std::size_t N, std::size_t P>
-[[nodiscard]] constexpr inline auto obsv(const Matrix<T, N, N> &A, const Matrix<T, P, N> &C)
+[[nodiscard]]
+constexpr inline auto obsv(const Matrix<T, N, N> &A, const Matrix<T, P, N> &C)
 {
     // Initialize the observability matrix with the first block (C).
     Matrix<T, P * N, N> result = {};
@@ -364,9 +389,11 @@ template <typename T, std::size_t N, std::size_t P>
 /// @param poles The desired poles for generating the closed-loop behavior (fixed-size vector).
 /// @return Gains \( K \) such that \( A - BK \) has the given eigenvalues.
 template <typename T, std::size_t Rows, std::size_t Cols, std::size_t NumPoles>
-[[nodiscard]] constexpr inline auto acker(const fsmlib::Matrix<T, Rows, Rows> &A,
-                                          const fsmlib::Matrix<T, Rows, Cols> &B,
-                                          const fsmlib::Vector<T, NumPoles> &poles)
+[[nodiscard]]
+constexpr inline auto acker(
+    const fsmlib::Matrix<T, Rows, Rows> &A,
+    const fsmlib::Matrix<T, Rows, Cols> &B,
+    const fsmlib::Vector<T, NumPoles> &poles)
 {
     static_assert(Rows == NumPoles, "The number of poles must match the system order.");
     // Ensure the system is controllable.
@@ -375,7 +402,7 @@ template <typename T, std::size_t Rows, std::size_t Cols, std::size_t NumPoles>
         throw std::runtime_error("acker: system not controllable, pole placement invalid.");
     }
     // Compute the desired characteristic polynomial.
-    auto p = fsmlib::linalg::poly(poles);
+    auto p                           = fsmlib::linalg::poly(poles);
     // Construct the Ackermann matrix.
     fsmlib::Matrix<T, Rows, Rows> Ap = {};
     for (std::size_t i = 0; i < (Rows + 1); ++i) {

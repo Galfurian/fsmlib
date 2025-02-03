@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <type_traits>
 #include <cstddef>
+#include <type_traits>
 
 namespace fsmlib
 {
@@ -20,7 +20,9 @@ namespace traits
 /// @details
 /// Classes intended to be recognized as valid containers should inherit
 /// from this class.
-class valid_container_t {};
+class valid_container_t
+{
+};
 
 /// @brief Helper variable template to check if a type is a valid container.
 /// @tparam T The type to check.
@@ -39,9 +41,10 @@ inline constexpr bool is_valid_container_v = std::is_base_of<fsmlib::traits::val
 /// @tparam E1 The first type to check.
 /// @tparam E2 The second type to check.
 template <typename E1, typename E2>
-inline constexpr bool is_valid_combination_v = (fsmlib::traits::is_valid_container_v<E1> && fsmlib::traits::is_valid_container_v<E2>) ||
-                                               (fsmlib::traits::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) ||
-                                               (std::is_arithmetic_v<E1> && fsmlib::traits::is_valid_container_v<E2>);
+inline constexpr bool is_valid_combination_v =
+    (fsmlib::traits::is_valid_container_v<E1> && fsmlib::traits::is_valid_container_v<E2>) ||
+    (fsmlib::traits::is_valid_container_v<E1> && std::is_arithmetic_v<E2>) ||
+    (std::is_arithmetic_v<E1> && fsmlib::traits::is_valid_container_v<E2>);
 
 /// @brief Checks if the combination of two types is valid for mutable element-wise operations.
 ///
@@ -60,21 +63,18 @@ inline constexpr bool is_valid_mutable_combination_v =
 
 /// @brief Trait to determine the fixed size of a container.
 /// @tparam Vec The container type.
-template <typename Vec, typename = std::void_t<typename Vec::size_type>>
-struct fixed_size {
+template <typename Vec, typename = std::void_t<typename Vec::size_type>> struct fixed_size {
     /// @brief The fixed size of the container.
     static constexpr std::size_t value = Vec::size_type::value;
 };
 
 /// @brief Helper variable template for fixed_size.
 /// @tparam Vec The container type.
-template <typename Vec>
-inline constexpr std::size_t fixed_size_v = fsmlib::traits::fixed_size<Vec>::value;
+template <typename Vec> inline constexpr std::size_t fixed_size_v = fsmlib::traits::fixed_size<Vec>::value;
 
 /// @brief Helper variable template to trigger a static assertion for invalid types.
 /// @tparam ... Args The types to evaluate.
-template <typename... Args>
-inline constexpr bool always_false_v = false;
+template <typename... Args> inline constexpr bool always_false_v = false;
 
 } // namespace traits
 
