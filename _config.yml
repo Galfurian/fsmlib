@@ -1,5 +1,5 @@
-title: CMDLP
-description: A c++ command-line parsing library
+title: FSMLIB
+description: A lightweight, header-only C++ library for performing operations on fixed-size matrices.
 author: Enrico Fraccaroli
 show_downloads: false
 google_analytics:
