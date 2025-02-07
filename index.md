@@ -88,6 +88,8 @@ Output:
 
 ### Basic Matrix Operations
 
+{% raw %}
+
 ```cpp
 #include "fsmlib/fsmlib.hpp"
 #include "fsmlib/math.hpp"
@@ -109,6 +111,8 @@ int main() {
     return 0;
 }
 ```
+
+{% endraw %}
 
 Output:
 
