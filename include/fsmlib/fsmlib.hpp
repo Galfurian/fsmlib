@@ -28,7 +28,8 @@ namespace fsmlib
 /// @brief Abstract base class for fixed-size vectors.
 /// @tparam T The type of the vector elements.
 /// @tparam N The number of elements in the vector.
-template <typename T, std::size_t N> class VectorBase : public fsmlib::traits::valid_container_t
+template <typename T, std::size_t N>
+class VectorBase : public fsmlib::traits::valid_container_t
 {
 public:
     /// @brief Type of the elements in the vector.
@@ -96,7 +97,8 @@ protected:
 /// @brief Concrete class for a fixed-size vector.
 /// @tparam T The type of the vector elements.
 /// @tparam N The number of elements in the vector.
-template <typename T, std::size_t N> class Vector : public VectorBase<T, N>
+template <typename T, std::size_t N>
+class Vector : public VectorBase<T, N>
 {
 public:
     /// @brief Default constructor.
@@ -298,7 +300,8 @@ protected:
 /// @tparam T The type of the matrix elements.
 /// @tparam Rows The number of rows in the matrix.
 /// @tparam Cols The number of columns in the matrix.
-template <typename T, std::size_t Rows, std::size_t Cols = Rows> class Matrix : public MatrixBase<T, Rows, Cols>
+template <typename T, std::size_t Rows, std::size_t Cols = Rows>
+class Matrix : public MatrixBase<T, Rows, Cols>
 {
 public:
     /// @brief Default constructor.
@@ -482,7 +485,8 @@ constexpr auto to_matrix(const fsmlib::VectorBase<T, N> &vec)
 /// @tparam Rows The number of rows in the matrix (size of the vector).
 /// @param mat The input matrix with one column.
 /// @return A Vector with size equal to the number of rows.
-template <typename T, std::size_t Rows> constexpr auto to_vector(const fsmlib::MatrixBase<T, Rows, 1> &mat)
+template <typename T, std::size_t Rows>
+constexpr auto to_vector(const fsmlib::MatrixBase<T, Rows, 1> &mat)
 {
     fsmlib::Vector<T, Rows> vec;
     for (std::size_t i = 0; i < Rows; ++i) {
@@ -496,7 +500,8 @@ template <typename T, std::size_t Rows> constexpr auto to_vector(const fsmlib::M
 /// @tparam Cols The number of columns in the matrix (size of the vector).
 /// @param mat The input matrix with one row.
 /// @return A Vector with size equal to the number of columns.
-template <typename T, std::size_t Cols> constexpr auto to_vector(const fsmlib::MatrixBase<T, 1, Cols> &mat)
+template <typename T, std::size_t Cols>
+constexpr auto to_vector(const fsmlib::MatrixBase<T, 1, Cols> &mat)
 {
     fsmlib::Vector<T, Cols> vec;
     for (std::size_t i = 0; i < Cols; ++i) {
@@ -572,7 +577,8 @@ vstack(const MatrixBase<T, Rows1, Cols> &A, const MatrixBase<T, Rows2, Cols> &B)
 /// @tparam Rows The number of rows in the matrix.
 /// @tparam Cols The number of columns in the matrix.
 /// @return A matrix of size Rows x Cols filled with zeros.
-template <typename T, std::size_t Rows, std::size_t Cols> constexpr fsmlib::Matrix<T, Rows, Cols> zeros()
+template <typename T, std::size_t Rows, std::size_t Cols>
+constexpr fsmlib::Matrix<T, Rows, Cols> zeros()
 {
     fsmlib::Matrix<T, Rows, Cols> result = {};
     for (std::size_t i = 0; i < Rows; ++i) {
@@ -588,7 +594,8 @@ template <typename T, std::size_t Rows, std::size_t Cols> constexpr fsmlib::Matr
 /// @tparam Rows The number of rows in the matrix.
 /// @tparam Cols The number of columns in the matrix.
 /// @return A matrix of size Rows x Cols filled with ones.
-template <typename T, std::size_t Rows, std::size_t Cols> constexpr fsmlib::Matrix<T, Rows, Cols> ones()
+template <typename T, std::size_t Rows, std::size_t Cols>
+constexpr fsmlib::Matrix<T, Rows, Cols> ones()
 {
     fsmlib::Matrix<T, Rows, Cols> result = {};
     for (std::size_t i = 0; i < Rows; ++i) {
@@ -603,7 +610,8 @@ template <typename T, std::size_t Rows, std::size_t Cols> constexpr fsmlib::Matr
 /// @tparam T The type of the elements in the vector.
 /// @tparam N The number of elements in the vector.
 /// @return A vector of size N filled with zeros.
-template <typename T, std::size_t N> constexpr fsmlib::Vector<T, N> zeros()
+template <typename T, std::size_t N>
+constexpr fsmlib::Vector<T, N> zeros()
 {
     fsmlib::Vector<T, N> result = {};
     for (std::size_t i = 0; i < N; ++i) {
@@ -616,7 +624,8 @@ template <typename T, std::size_t N> constexpr fsmlib::Vector<T, N> zeros()
 /// @tparam T The type of the elements in the vector.
 /// @tparam N The number of elements in the vector.
 /// @return A vector of size N filled with ones.
-template <typename T, std::size_t N> constexpr fsmlib::Vector<T, N> ones()
+template <typename T, std::size_t N>
+constexpr fsmlib::Vector<T, N> ones()
 {
     // Select the right type.
     using data_type_t = std::remove_const_t<T>;

@@ -172,7 +172,9 @@ int main()
             fsmlib::Matrix<int, 2, 5> expected = {{{1, 2, 5, 6, 7}, {3, 4, 8, 9, 10}}};
 
             if (fsmlib::any(result != expected)) {
-                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
                 throw std::runtime_error("Test failed: hstack");
             }
 
@@ -188,7 +190,9 @@ int main()
             fsmlib::Matrix<int, 3, 3> expected = {{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}};
 
             if (fsmlib::any(result != expected)) {
-                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
                 throw std::runtime_error("Test failed: vstack");
             }
 

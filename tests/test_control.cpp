@@ -126,7 +126,9 @@ int main()
                 {0., 4., 67.},
             };
             if (fsmlib::any(fsmlib::abs(result - expected) > 1e-06)) {
-                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
                 throw std::runtime_error("Test failed: ctrb with 3x3 system");
             }
 
@@ -155,7 +157,9 @@ int main()
             };
 
             if (fsmlib::any(fsmlib::abs(result - expected) > 1e-03)) {
-                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
                 throw std::runtime_error("Test failed: ctrb with 4x4 system (single input)");
             }
 
@@ -182,7 +186,9 @@ int main()
             };
 
             if (fsmlib::any(fsmlib::abs(result - expected) > 1e-03)) {
-                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
                 throw std::runtime_error("Test failed: ctrb with 3x3 system (two inputs)");
             }
 
@@ -191,11 +197,18 @@ int main()
         }
         {
             fsmlib::Matrix<double, 5, 5> A = {
-                {0.12, 1.34, 0.56, 0.78, 0.90}, {0.23, 0.45, 1.23, 0.67, 0.89}, {0.34, 0.56, 0.78, 1.34, 1.45},
-                {0.45, 0.67, 0.89, 1.12, 1.23}, {0.56, 0.78, 1.34, 0.90, 1.11},
+                {0.12, 1.34, 0.56, 0.78, 0.90},
+                {0.23, 0.45, 1.23, 0.67, 0.89},
+                {0.34, 0.56, 0.78, 1.34, 1.45},
+                {0.45, 0.67, 0.89, 1.12, 1.23},
+                {0.56, 0.78, 1.34, 0.90, 1.11},
             };
             fsmlib::Matrix<double, 5, 2> B = {
-                {1.12, 0.45}, {0.78, 1.34}, {0.34, 0.67}, {0.23, 0.89}, {0.56, 1.12},
+                {1.12, 0.45},
+                {0.78, 1.34},
+                {0.34, 0.67},
+                {0.23, 0.89},
+                {0.56, 1.12},
             };
 
             auto result                            = fsmlib::control::ctrb(A, B);
@@ -208,7 +221,9 @@ int main()
             };
 
             if (fsmlib::any(fsmlib::abs(result - expected) > 1e-03)) {
-                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
                 throw std::runtime_error("Test failed: ctrb with 5x5 system (two inputs)");
             }
 
@@ -232,11 +247,18 @@ int main()
             auto result                           = fsmlib::control::obsv(A, C);
             // Expected result (manually calculated or verified with Octave)
             fsmlib::Matrix<double, 6, 3> expected = {
-                {1., 0., 0.}, {0., 1., 0.}, {1., 2., 0.}, {0., 1., 3.}, {1., 4., 6.}, {0., 1., 6.},
+                {1., 0., 0.},
+                {0., 1., 0.},
+                {1., 2., 0.},
+                {0., 1., 3.},
+                {1., 4., 6.},
+                {0., 1., 6.},
             };
             // Verify the result
             if (fsmlib::any(fsmlib::abs(result - expected) > 1e-06)) {
-                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
                 throw std::runtime_error("Test failed: obsv with 3x3 state matrix and 2x3 output matrix");
             }
             std::cout << "Test " << std::setw(2) << std::right << test_count++
@@ -252,7 +274,9 @@ int main()
             fsmlib::Vector<double, 4> expected = {1.0, -0.5, -7.5, 9.0};
             // Verify the result
             if (fsmlib::any(fsmlib::abs(result - expected) > 1e-06)) {
-                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
                 throw std::runtime_error("Test failed: poly function with 3 roots");
             }
             std::cout << "Test " << std::setw(2) << std::right << test_count++
@@ -266,7 +290,9 @@ int main()
             // Expected result
             fsmlib::Vector<double, 6> expected     = {1.0, -0.5, 9.0, 0., 0., 0.};
             if (fsmlib::any(fsmlib::abs(result - expected) > 1e-06)) {
-                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
                 throw std::runtime_error("Test failed: polyreduce");
             }
 
@@ -284,7 +310,9 @@ int main()
             // Expected gain matrix
             fsmlib::Matrix<double, 1, 2> expected = {{9.0, 10.0}};
             if (fsmlib::any(fsmlib::abs(result - expected) > 1e-06)) {
-                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
                 throw std::runtime_error("Test failed: acker with 2x2 system and 2 poles");
             }
             std::cout << "Test " << std::setw(2) << std::right << test_count++
@@ -303,7 +331,9 @@ int main()
             fsmlib::Matrix<double, 1, 3> expected = {{30.3346, -1.3159, 23.4318}};
             // Validate the result.
             if (fsmlib::any(fsmlib::abs(result - expected) > 1e-03)) {
-                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
                 throw std::runtime_error("Test failed: acker with 3x3 system and 3 poles");
             }
             std::cout << "Test " << std::setw(2) << std::right << test_count++

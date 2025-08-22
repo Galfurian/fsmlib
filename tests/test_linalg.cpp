@@ -217,7 +217,9 @@ int main()
                 {-3, 1},
             };
             if (fsmlib::any(result != expected)) {
-                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
                 throw std::runtime_error("Test failed: Adjoint of a matrix");
             }
             std::cout << "Test " << std::setw(2) << std::right << test_count++ << " passed: Adjoint of a matrix\n";
@@ -286,7 +288,9 @@ int main()
             };
 
             if (fsmlib::any(fsmlib::abs(result - expected) > 0.1)) {
-                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
                 throw std::runtime_error("Test failed: expm with simple 2x2 matrix");
             }
 
@@ -309,7 +313,9 @@ int main()
             };
 
             if (fsmlib::any(fsmlib::abs(result - expected) > 0.1)) {
-                std::cerr << "Expected:\n" << expected << "\nGot:\n" << result << "\n";
+                std::cerr << "Expected:\n"
+                          << expected << "\nGot:\n"
+                          << result << "\n";
                 throw std::runtime_error("Test failed: expm with simple 2x2 matrix");
             }
 
@@ -336,15 +342,21 @@ int main()
             auto reconstructed = fsmlib::multiply(Q, R);
 
             if (fsmlib::any(fsmlib::abs(Q - expected_Q) > 1e-3)) {
-                std::cerr << "Expected Q:\n" << expected_Q << "\nGot Q:\n" << Q << "\n";
+                std::cerr << "Expected Q:\n"
+                          << expected_Q << "\nGot Q:\n"
+                          << Q << "\n";
                 throw std::runtime_error("Test failed: qr_decomposition with simple 2x2 matrix");
             }
             if (fsmlib::any(fsmlib::abs(R - expected_R) > 1e-3)) {
-                std::cerr << "Expected R:\n" << expected_R << "\nGot R:\n" << R << "\n";
+                std::cerr << "Expected R:\n"
+                          << expected_R << "\nGot R:\n"
+                          << R << "\n";
                 throw std::runtime_error("Test failed: qr_decomposition with simple 2x2 matrix");
             }
             if (fsmlib::any(fsmlib::abs(reconstructed - mat) > 1e-3)) {
-                std::cerr << "Expected mat:\n" << mat << "\nGot Reconstructed:\n" << reconstructed << "\n";
+                std::cerr << "Expected mat:\n"
+                          << mat << "\nGot Reconstructed:\n"
+                          << reconstructed << "\n";
                 throw std::runtime_error("Test failed: qr_decomposition with simple 2x2 matrix");
             }
 
@@ -374,15 +386,21 @@ int main()
             auto reconstructed = fsmlib::multiply(Q, R);
 
             if (fsmlib::any(fsmlib::abs(Q - expected_Q) > 1e-3)) {
-                std::cerr << "Expected Q:\n" << expected_Q << "\nGot Q:\n" << Q << "\n";
+                std::cerr << "Expected Q:\n"
+                          << expected_Q << "\nGot Q:\n"
+                          << Q << "\n";
                 throw std::runtime_error("Test failed: qr_decomposition with 3x3 matrix");
             }
             if (fsmlib::any(fsmlib::abs(R - expected_R) > 1e-3)) {
-                std::cerr << "Expected R:\n" << expected_R << "\nGot R:\n" << R << "\n";
+                std::cerr << "Expected R:\n"
+                          << expected_R << "\nGot R:\n"
+                          << R << "\n";
                 throw std::runtime_error("Test failed: qr_decomposition with 3x3 matrix");
             }
             if (fsmlib::any(fsmlib::abs(reconstructed - mat) > 1e-3)) {
-                std::cerr << "Expected mat:\n" << mat << "\nGot Reconstructed:\n" << reconstructed << "\n";
+                std::cerr << "Expected mat:\n"
+                          << mat << "\nGot Reconstructed:\n"
+                          << reconstructed << "\n";
                 throw std::runtime_error("Test failed: qr_decomposition with 3x3 matrix");
             }
 
@@ -413,15 +431,21 @@ int main()
             auto reconstructed = fsmlib::multiply(L, U);
 
             if (fsmlib::any(fsmlib::abs(L - expected_L) > 1e-3)) {
-                std::cerr << "Expected L:\n" << expected_L << "\nGot L:\n" << L << "\n";
+                std::cerr << "Expected L:\n"
+                          << expected_L << "\nGot L:\n"
+                          << L << "\n";
                 throw std::runtime_error("Test failed: lu_decomposition with 3x3 matrix (L)");
             }
             if (fsmlib::any(fsmlib::abs(U - expected_U) > 1e-3)) {
-                std::cerr << "Expected U:\n" << expected_U << "\nGot U:\n" << U << "\n";
+                std::cerr << "Expected U:\n"
+                          << expected_U << "\nGot U:\n"
+                          << U << "\n";
                 throw std::runtime_error("Test failed: lu_decomposition with 3x3 matrix (U)");
             }
             if (fsmlib::any(fsmlib::abs(reconstructed - mat) > 1e-3)) {
-                std::cerr << "Expected mat:\n" << mat << "\nGot Reconstructed:\n" << reconstructed << "\n";
+                std::cerr << "Expected mat:\n"
+                          << mat << "\nGot Reconstructed:\n"
+                          << reconstructed << "\n";
                 throw std::runtime_error("Test failed: lu_decomposition with 3x3 matrix (Reconstruction)");
             }
 
@@ -455,15 +479,21 @@ int main()
             auto reconstructed = fsmlib::multiply(L, U);
 
             if (fsmlib::any(fsmlib::abs(L - expected_L) > 1e-3)) {
-                std::cerr << "Expected L:\n" << expected_L << "\nGot L:\n" << L << "\n";
+                std::cerr << "Expected L:\n"
+                          << expected_L << "\nGot L:\n"
+                          << L << "\n";
                 throw std::runtime_error("Test failed: lu_decomposition with 4x4 matrix (L)");
             }
             if (fsmlib::any(fsmlib::abs(U - expected_U) > 1e-3)) {
-                std::cerr << "Expected U:\n" << expected_U << "\nGot U:\n" << U << "\n";
+                std::cerr << "Expected U:\n"
+                          << expected_U << "\nGot U:\n"
+                          << U << "\n";
                 throw std::runtime_error("Test failed: lu_decomposition with 4x4 matrix (U)");
             }
             if (fsmlib::any(fsmlib::abs(reconstructed - mat) > 1e-3)) {
-                std::cerr << "Expected mat:\n" << mat << "\nGot Reconstructed:\n" << reconstructed << "\n";
+                std::cerr << "Expected mat:\n"
+                          << mat << "\nGot Reconstructed:\n"
+                          << reconstructed << "\n";
                 throw std::runtime_error("Test failed: lu_decomposition with 4x4 matrix (Reconstruction)");
             }
 
@@ -483,7 +513,9 @@ int main()
             fsmlib::Vector<double, 2> expected_x = {1.8, 2.3};
 
             if (fsmlib::any(fsmlib::abs(x - expected_x) > 1e-3)) {
-                std::cerr << "Expected x:\n" << expected_x << "\nGot x:\n" << x << "\n";
+                std::cerr << "Expected x:\n"
+                          << expected_x << "\nGot x:\n"
+                          << x << "\n";
                 throw std::runtime_error("Test failed: solve with 2x2 system");
             }
 
@@ -503,7 +535,9 @@ int main()
             fsmlib::Vector<double, 3> expected_x = {1.0, 1.0, 1.0};
 
             if (fsmlib::any(fsmlib::abs(x - expected_x) > 1e-3)) {
-                std::cerr << "Expected x:\n" << expected_x << "\nGot x:\n" << x << "\n";
+                std::cerr << "Expected x:\n"
+                          << expected_x << "\nGot x:\n"
+                          << x << "\n";
                 throw std::runtime_error("Test failed: solve with 3x3 system");
             }
 
@@ -526,11 +560,15 @@ int main()
             auto reconstructed = fsmlib::multiply(A, x);
 
             if (fsmlib::any(fsmlib::abs(x - expected_x) > 1e-3)) {
-                std::cerr << "Expected x:\n" << expected_x << "\nGot x:\n" << x << "\n";
+                std::cerr << "Expected x:\n"
+                          << expected_x << "\nGot x:\n"
+                          << x << "\n";
                 throw std::runtime_error("Test failed: solve with 4x4 system (solution)");
             }
             if (fsmlib::any(fsmlib::abs(reconstructed - b) > 1e-3)) {
-                std::cerr << "Expected b:\n" << b << "\nGot Reconstructed:\n" << reconstructed << "\n";
+                std::cerr << "Expected b:\n"
+                          << b << "\nGot Reconstructed:\n"
+                          << reconstructed << "\n";
                 throw std::runtime_error("Test failed: solve with 4x4 system (reconstruction)");
             }
 
@@ -560,13 +598,17 @@ int main()
 
             // Check if the decomposition matches the expected result
             if (fsmlib::any(fsmlib::abs(L - expected_L) > 1e-3)) {
-                std::cerr << "Expected L:\n" << expected_L << "\nGot L:\n" << L << "\n";
+                std::cerr << "Expected L:\n"
+                          << expected_L << "\nGot L:\n"
+                          << L << "\n";
                 throw std::runtime_error("Test failed: Cholesky decomposition (L mismatch)");
             }
 
             // Check if reconstruction matches the original matrix
             if (fsmlib::any(fsmlib::abs(reconstructed_A - A) > 1e-3)) {
-                std::cerr << "Expected A:\n" << A << "\nGot Reconstructed A:\n" << reconstructed_A << "\n";
+                std::cerr << "Expected A:\n"
+                          << A << "\nGot Reconstructed A:\n"
+                          << reconstructed_A << "\n";
                 throw std::runtime_error("Test failed: Cholesky decomposition (reconstruction mismatch)");
             }
 
@@ -607,15 +649,21 @@ int main()
             double expected_lambda               = 4.6180;
             fsmlib::Vector<double, 2> expected_v = {0.851, 0.526};
             if (std::abs(lambda - expected_lambda) > 1e-3) {
-                std::cerr << "Input    :\n" << A << "\n";
-                std::cerr << "Expected :\n" << expected_lambda << "\n";
-                std::cerr << "Got      :\n" << lambda << "\n";
+                std::cerr << "Input    :\n"
+                          << A << "\n";
+                std::cerr << "Expected :\n"
+                          << expected_lambda << "\n";
+                std::cerr << "Got      :\n"
+                          << lambda << "\n";
                 throw std::runtime_error("Test failed: power_iteration - lambda mismatch");
             }
             if (fsmlib::any(fsmlib::abs(v - expected_v) > 1e-3)) {
-                std::cerr << "Input    :\n" << A << "\n";
-                std::cerr << "Expected :\n" << expected_v << "\n";
-                std::cerr << "Got      :\n" << v << "\n";
+                std::cerr << "Input    :\n"
+                          << A << "\n";
+                std::cerr << "Expected :\n"
+                          << expected_v << "\n";
+                std::cerr << "Got      :\n"
+                          << v << "\n";
                 throw std::runtime_error("Test failed: power_iteration - eigenvector mismatch");
             }
             std::cout << "Test " << std::setw(2) << std::right << test_count++
@@ -632,15 +680,21 @@ int main()
             double expected_lambda               = 3.4142;
             fsmlib::Vector<double, 3> expected_v = {-0.5, 0.707, -0.5};
             if (std::abs(lambda - expected_lambda) > 1e-3) {
-                std::cerr << "Input    :\n" << A << "\n";
-                std::cerr << "Expected :\n" << expected_lambda << "\n";
-                std::cerr << "Got      :\n" << lambda << "\n";
+                std::cerr << "Input    :\n"
+                          << A << "\n";
+                std::cerr << "Expected :\n"
+                          << expected_lambda << "\n";
+                std::cerr << "Got      :\n"
+                          << lambda << "\n";
                 throw std::runtime_error("Test failed: power_iteration - lambda mismatch");
             }
             if (fsmlib::any(fsmlib::abs(v - expected_v) > 1e-3)) {
-                std::cerr << "Input    :\n" << A << "\n";
-                std::cerr << "Expected :\n" << expected_v << "\n";
-                std::cerr << "Got      :\n" << v << "\n";
+                std::cerr << "Input    :\n"
+                          << A << "\n";
+                std::cerr << "Expected :\n"
+                          << expected_v << "\n";
+                std::cerr << "Got      :\n"
+                          << v << "\n";
                 throw std::runtime_error("Test failed: power_iteration - eigenvector mismatch");
             }
             std::cout << "Test " << std::setw(2) << std::right << test_count++
@@ -658,15 +712,21 @@ int main()
             double expected_lambda               = 14.5130;
             fsmlib::Vector<double, 4> expected_v = {0.6157, 0.3744, 0.5260, 0.4518};
             if (std::abs(lambda - expected_lambda) > 1e-3) {
-                std::cerr << "Input    :\n" << A << "\n";
-                std::cerr << "Expected :\n" << expected_lambda << "\n";
-                std::cerr << "Got      :\n" << lambda << "\n";
+                std::cerr << "Input    :\n"
+                          << A << "\n";
+                std::cerr << "Expected :\n"
+                          << expected_lambda << "\n";
+                std::cerr << "Got      :\n"
+                          << lambda << "\n";
                 throw std::runtime_error("Test failed: power_iteration - lambda mismatch");
             }
             if (fsmlib::any(fsmlib::abs(v - expected_v) > 1e-3)) {
-                std::cerr << "Input    :\n" << A << "\n";
-                std::cerr << "Expected :\n" << expected_v << "\n";
-                std::cerr << "Got      :\n" << v << "\n";
+                std::cerr << "Input    :\n"
+                          << A << "\n";
+                std::cerr << "Expected :\n"
+                          << expected_v << "\n";
+                std::cerr << "Got      :\n"
+                          << v << "\n";
                 throw std::runtime_error("Test failed: power_iteration - eigenvector mismatch");
             }
             std::cout << "Test " << std::setw(2) << std::right << test_count++
@@ -684,15 +744,21 @@ int main()
             double expected_lambda               = 10.688;
             fsmlib::Vector<double, 4> expected_v = {0.655906, -0.538693, 0.070480, 0.524050};
             if (std::abs(lambda - expected_lambda) > 1e-3) {
-                std::cerr << "Input    :\n" << A << "\n";
-                std::cerr << "Expected :\n" << expected_lambda << "\n";
-                std::cerr << "Got      :\n" << lambda << "\n";
+                std::cerr << "Input    :\n"
+                          << A << "\n";
+                std::cerr << "Expected :\n"
+                          << expected_lambda << "\n";
+                std::cerr << "Got      :\n"
+                          << lambda << "\n";
                 throw std::runtime_error("Test failed: power_iteration - lambda mismatch");
             }
             if (fsmlib::any(fsmlib::abs(v - expected_v) > 1e-3)) {
-                std::cerr << "Input    :\n" << A << "\n";
-                std::cerr << "Expected :\n" << expected_v << "\n";
-                std::cerr << "Got      :\n" << v << "\n";
+                std::cerr << "Input    :\n"
+                          << A << "\n";
+                std::cerr << "Expected :\n"
+                          << expected_v << "\n";
+                std::cerr << "Got      :\n"
+                          << v << "\n";
                 throw std::runtime_error("Test failed: power_iteration - eigenvector mismatch");
             }
             std::cout << "Test " << std::setw(2) << std::right << test_count++
@@ -717,16 +783,22 @@ int main()
 
             // Verify eigenvalues by comparing with expected values.
             if (fsmlib::any(fsmlib::abs(fsmlib::abs(eigenvalues) - fsmlib::abs(expected_eigenvalues)) > 1e-2)) {
-                std::cerr << "Input    :\n" << A << "\n";
-                std::cerr << "Expected :\n" << expected_eigenvalues << "\n";
-                std::cerr << "Got      :\n" << eigenvalues << "\n";
+                std::cerr << "Input    :\n"
+                          << A << "\n";
+                std::cerr << "Expected :\n"
+                          << expected_eigenvalues << "\n";
+                std::cerr << "Got      :\n"
+                          << eigenvalues << "\n";
                 throw std::runtime_error("Test failed: eigenvalues mismatch");
             }
             // Verify eigenvectors by comparing each element of the matrix
             if (fsmlib::any(fsmlib::abs(fsmlib::abs(eigenvectors) - fsmlib::abs(expected_eigenvectors)) > 1e-2)) {
-                std::cerr << "Input      :\n" << A << "\n";
-                std::cerr << "Expected   :\n" << expected_eigenvectors << "\n";
-                std::cerr << "Got        :\n" << eigenvectors << "\n";
+                std::cerr << "Input      :\n"
+                          << A << "\n";
+                std::cerr << "Expected   :\n"
+                          << expected_eigenvectors << "\n";
+                std::cerr << "Got        :\n"
+                          << eigenvectors << "\n";
                 std::cerr << "Difference :\n"
                           << fsmlib::abs(fsmlib::abs(eigenvectors) - fsmlib::abs(expected_eigenvectors)) << "\n";
                 throw std::runtime_error("Test failed: eigenvectors mismatch");
@@ -755,16 +827,22 @@ int main()
 
             // Verify eigenvalues by comparing with expected values.
             if (fsmlib::any(fsmlib::abs(eigenvalues - expected_eigenvalues) > 1e-2)) {
-                std::cerr << "Input    :\n" << A << "\n";
-                std::cerr << "Expected :\n" << expected_eigenvalues << "\n";
-                std::cerr << "Got      :\n" << eigenvalues << "\n";
+                std::cerr << "Input    :\n"
+                          << A << "\n";
+                std::cerr << "Expected :\n"
+                          << expected_eigenvalues << "\n";
+                std::cerr << "Got      :\n"
+                          << eigenvalues << "\n";
                 throw std::runtime_error("Test failed: eigenvalues mismatch");
             }
             // Verify eigenvectors by comparing each element of the matrix
             if (fsmlib::any(fsmlib::abs(fsmlib::abs(eigenvectors) - fsmlib::abs(expected_eigenvectors)) > 1e-2)) {
-                std::cerr << "Input      :\n" << A << "\n";
-                std::cerr << "Expected   :\n" << expected_eigenvectors << "\n";
-                std::cerr << "Got        :\n" << eigenvectors << "\n";
+                std::cerr << "Input      :\n"
+                          << A << "\n";
+                std::cerr << "Expected   :\n"
+                          << expected_eigenvectors << "\n";
+                std::cerr << "Got        :\n"
+                          << eigenvectors << "\n";
                 std::cerr << "Difference :\n"
                           << fsmlib::abs(fsmlib::abs(eigenvectors) - fsmlib::abs(expected_eigenvectors)) << "\n";
                 throw std::runtime_error("Test failed: eigenvectors mismatch");
@@ -799,17 +877,23 @@ int main()
 
             // Verify eigenvalues by comparing with expected values.
             if (fsmlib::any(fsmlib::abs(eigenvalues - expected_eigenvalues) > 1e-3)) {
-                std::cerr << "Input    :\n" << A << "\n";
-                std::cerr << "Expected : \n" << expected_eigenvalues << "\n";
-                std::cerr << "Got      :\n" << eigenvalues << "\n";
+                std::cerr << "Input    :\n"
+                          << A << "\n";
+                std::cerr << "Expected : \n"
+                          << expected_eigenvalues << "\n";
+                std::cerr << "Got      :\n"
+                          << eigenvalues << "\n";
                 throw std::runtime_error("Test failed: eigenvalues mismatch");
             }
 
             // Verify eigenvectors by comparing each element of the matrix
             if (fsmlib::any(fsmlib::abs(eigenvectors - expected_eigenvectors) > 1e-3)) {
-                std::cerr << "Input    :\n" << A << "\n";
-                std::cerr << "Expected :\n" << expected_eigenvectors << "\n";
-                std::cerr << "Got      :\n" << eigenvectors << "\n";
+                std::cerr << "Input    :\n"
+                          << A << "\n";
+                std::cerr << "Expected :\n"
+                          << expected_eigenvectors << "\n";
+                std::cerr << "Got      :\n"
+                          << eigenvectors << "\n";
                 throw std::runtime_error("Test failed: eigenvectors mismatch");
             }
 
@@ -842,22 +926,28 @@ int main()
 
             // Verify U
             if (fsmlib::any(fsmlib::abs(U - expected_U) > 1e-3)) {
-                std::cerr << "Expected : \n" << expected_U << "\n";
-                std::cerr << "Got      : \n" << U << "\n";
+                std::cerr << "Expected : \n"
+                          << expected_U << "\n";
+                std::cerr << "Got      : \n"
+                          << U << "\n";
                 throw std::runtime_error("Test failed: U mismatch");
             }
 
             // Verify Sigma
             if (fsmlib::any(fsmlib::abs(Sigma - expected_Sigma) > 1e-3)) {
-                std::cerr << "Expected : \n" << expected_Sigma << "\n";
-                std::cerr << "Got      : \n" << Sigma << "\n";
+                std::cerr << "Expected : \n"
+                          << expected_Sigma << "\n";
+                std::cerr << "Got      : \n"
+                          << Sigma << "\n";
                 throw std::runtime_error("Test failed: Sigma mismatch");
             }
 
             // Verify V
             if (fsmlib::any(fsmlib::abs(V - expected_V) > 1e-3)) {
-                std::cerr << "Expected : \n" << expected_V << "\n";
-                std::cerr << "Got      : \n" << V << "\n";
+                std::cerr << "Expected : \n"
+                          << expected_V << "\n";
+                std::cerr << "Got      : \n"
+                          << V << "\n";
                 throw std::runtime_error("Test failed: V mismatch");
             }
 
@@ -888,22 +978,28 @@ int main()
 
             // Verify U
             if (fsmlib::any(fsmlib::abs(U - expected_U) > 1e-3)) {
-                std::cerr << "Expected : \n" << expected_U << "\n";
-                std::cerr << "Got      : \n" << U << "\n";
+                std::cerr << "Expected : \n"
+                          << expected_U << "\n";
+                std::cerr << "Got      : \n"
+                          << U << "\n";
                 throw std::runtime_error("Test failed: U mismatch");
             }
 
             // Verify Sigma
             if (fsmlib::any(fsmlib::abs(Sigma - expected_Sigma) > 1e-3)) {
-                std::cerr << "Expected : \n" << expected_Sigma << "\n";
-                std::cerr << "Got      : \n" << Sigma << "\n";
+                std::cerr << "Expected : \n"
+                          << expected_Sigma << "\n";
+                std::cerr << "Got      : \n"
+                          << Sigma << "\n";
                 throw std::runtime_error("Test failed: Sigma mismatch");
             }
 
             // Verify V
             if (fsmlib::any(fsmlib::abs(V - expected_V) > 1e-3)) {
-                std::cerr << "Expected : \n" << expected_V << "\n";
-                std::cerr << "Got      : \n" << V << "\n";
+                std::cerr << "Expected : \n"
+                          << expected_V << "\n";
+                std::cerr << "Got      : \n"
+                          << V << "\n";
                 throw std::runtime_error("Test failed: V mismatch");
             }
 
@@ -912,8 +1008,11 @@ int main()
 
         {
             fsmlib::Matrix<double, 5, 5> A = {
-                {1.1, -2.2, 3.3, 4.4, 5.5},  {6.6, 7.7, -8.8, 9.9, -1.1}, {2.2, 3.3, -4.4, 5.5, 6.6},
-                {7.7, -8.8, 9.9, -1.1, 2.2}, {3.3, 4.4, 5.5, 6.6, 7.7},
+                {1.1, -2.2, 3.3, 4.4, 5.5},
+                {6.6, 7.7, -8.8, 9.9, -1.1},
+                {2.2, 3.3, -4.4, 5.5, 6.6},
+                {7.7, -8.8, 9.9, -1.1, 2.2},
+                {3.3, 4.4, 5.5, 6.6, 7.7},
             };
 
             auto [U, Sigma, V] = fsmlib::linalg::svd(A);
@@ -937,22 +1036,28 @@ int main()
 
             // Verify U
             if (fsmlib::any(fsmlib::abs(U - expected_U) > 1e-3)) {
-                std::cerr << "Expected : \n" << expected_U << "\n";
-                std::cerr << "Got      : \n" << U << "\n";
+                std::cerr << "Expected : \n"
+                          << expected_U << "\n";
+                std::cerr << "Got      : \n"
+                          << U << "\n";
                 throw std::runtime_error("Test failed: U mismatch");
             }
 
             // Verify Sigma
             if (fsmlib::any(fsmlib::abs(Sigma - expected_Sigma) > 1e-3)) {
-                std::cerr << "Expected : \n" << expected_Sigma << "\n";
-                std::cerr << "Got      : \n" << Sigma << "\n";
+                std::cerr << "Expected : \n"
+                          << expected_Sigma << "\n";
+                std::cerr << "Got      : \n"
+                          << Sigma << "\n";
                 throw std::runtime_error("Test failed: Sigma mismatch");
             }
 
             // Verify V
             if (fsmlib::any(fsmlib::abs(V - expected_V) > 1e-3)) {
-                std::cerr << "Expected : \n" << expected_V << "\n";
-                std::cerr << "Got      : \n" << V << "\n";
+                std::cerr << "Expected : \n"
+                          << expected_V << "\n";
+                std::cerr << "Got      : \n"
+                          << V << "\n";
                 throw std::runtime_error("Test failed: V mismatch");
             }
 
@@ -971,7 +1076,9 @@ int main()
 
             // Validate the result
             if (fsmlib::any(fsmlib::abs(poly - expected) > 1e-06)) {
-                std::cerr << "Expected characteristic polynomial:\n" << expected << "\nGot:\n" << poly << "\n";
+                std::cerr << "Expected characteristic polynomial:\n"
+                          << expected << "\nGot:\n"
+                          << poly << "\n";
                 throw std::runtime_error("Test failed: characteristic_poly for 2x2 matrix");
             }
 
@@ -995,7 +1102,9 @@ int main()
 
             // Validate the result.
             if (fsmlib::any(fsmlib::abs(poly - expected) > 1e-06)) {
-                std::cerr << "Expected characteristic polynomial:\n" << expected << "\nGot:\n" << poly << "\n";
+                std::cerr << "Expected characteristic polynomial:\n"
+                          << expected << "\nGot:\n"
+                          << poly << "\n";
                 throw std::runtime_error("Test failed: characteristic_poly for 3x3 matrix");
             }
 
@@ -1021,7 +1130,9 @@ int main()
 
             // Validate the result.
             if (fsmlib::any(fsmlib::abs(poly - expected) > 1e-06)) {
-                std::cerr << "Expected characteristic polynomial:\n" << expected << "\nGot:\n" << poly << "\n";
+                std::cerr << "Expected characteristic polynomial:\n"
+                          << expected << "\nGot:\n"
+                          << poly << "\n";
                 throw std::runtime_error("Test failed: characteristic_poly for 4x4 matrix");
             }
 

@@ -21,7 +21,8 @@ namespace control
 /// @tparam N_state The number of states.
 /// @tparam N_input The number of inputs.
 /// @tparam N_output The number of outputs.
-template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output> struct StateSpace {
+template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
+struct StateSpace {
     fsmlib::Matrix<T, N_state, N_state> A;  ///< System matrix.
     fsmlib::Matrix<T, N_state, N_input> B;  ///< Input matrix.
     fsmlib::Matrix<T, N_output, N_state> C; ///< Output matrix.
@@ -61,7 +62,8 @@ template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_ou
 /// @tparam N_state The number of states.
 /// @tparam N_input The number of inputs.
 /// @tparam N_output The number of outputs.
-template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output> struct DiscreteStateSpace {
+template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
+struct DiscreteStateSpace {
     fsmlib::Matrix<T, N_state, N_state> A;  ///< System matrix.
     fsmlib::Matrix<T, N_state, N_input> B;  ///< Input matrix.
     fsmlib::Matrix<T, N_output, N_state> C; ///< Output matrix.
@@ -105,7 +107,8 @@ template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_ou
 /// @tparam T The type of the coefficients (e.g., double, float).
 /// @tparam N_num The number of numerator coefficients (polynomial order + 1).
 /// @tparam N_den The number of denominator coefficients (polynomial order + 1).
-template <typename T, std::size_t N_num, std::size_t N_den> struct TransferFunction {
+template <typename T, std::size_t N_num, std::size_t N_den>
+struct TransferFunction {
     fsmlib::Vector<T, N_num> numerator;   ///< Fixed-size vector for numerator coefficients.
     fsmlib::Vector<T, N_den> denominator; ///< Fixed-size vector for denominator coefficients.
 

@@ -18,7 +18,8 @@ namespace fsmlib
 /// @brief A view into a subset of a larger vector.
 /// @tparam T The type of elements in the vector.
 /// @tparam N The size of the view.
-template <typename T, std::size_t N> class VectorView : public VectorBase<T, N>
+template <typename T, std::size_t N>
+class VectorView : public VectorBase<T, N>
 {
 public:
     /// @brief Constructor to create a VectorView from a larger vector.
@@ -106,7 +107,8 @@ private:
 /// @tparam T The type of elements in the matrix.
 /// @tparam Rows The number of rows in the view.
 /// @tparam Cols The number of columns in the view.
-template <typename T, std::size_t Rows, std::size_t Cols> class MatrixView : public MatrixBase<T, Rows, Cols>
+template <typename T, std::size_t Rows, std::size_t Cols>
+class MatrixView : public MatrixBase<T, Rows, Cols>
 {
 public:
     /// @brief Constructor to create a MatrixView from a larger matrix.
@@ -253,7 +255,8 @@ private:
 /// @tparam T The type of elements in the matrix.
 /// @tparam Rows The number of rows in the original matrix.
 /// @tparam Cols The number of columns in the original matrix.
-template <typename T, std::size_t Rows, std::size_t Cols> class CofactorView : public MatrixBase<T, Rows - 1, Cols - 1>
+template <typename T, std::size_t Rows, std::size_t Cols>
+class CofactorView : public MatrixBase<T, Rows - 1, Cols - 1>
 {
 public:
     /// @brief Constructor to create a CofactorView from a larger matrix.

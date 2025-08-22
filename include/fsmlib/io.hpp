@@ -16,13 +16,17 @@
 #include "fsmlib/fsmlib.hpp"
 #include "fsmlib/view.hpp"
 
+namespace fsmlib
+{
+
 /// @brief Overload the << operator for Vector.
 /// @tparam T The type of the vector elements.
 /// @tparam N The number of elements in the vector.
 /// @param os The output stream.
 /// @param vec The vector to print.
 /// @return The output stream with the vector contents.
-template <typename T, std::size_t N> std::ostream &operator<<(std::ostream &os, const fsmlib::VectorBase<T, N> &vec)
+template <typename T, std::size_t N>
+std::ostream &operator<<(std::ostream &os, const VectorBase<T, N> &vec)
 {
     // Determine the maximum width of the elements for alignment.
     std::size_t max_width = 0;
@@ -51,7 +55,7 @@ template <typename T, std::size_t N> std::ostream &operator<<(std::ostream &os, 
 /// @param mat The matrix to print.
 /// @return The output stream with the matrix contents.
 template <typename T, std::size_t N1, std::size_t N2>
-std::ostream &operator<<(std::ostream &os, const fsmlib::MatrixBase<T, N1, N2> &mat)
+std::ostream &operator<<(std::ostream &os, const MatrixBase<T, N1, N2> &mat)
 {
     // Determine the maximum width of the elements for alignment.
     std::size_t max_width = 0;
@@ -79,6 +83,9 @@ std::ostream &operator<<(std::ostream &os, const fsmlib::MatrixBase<T, N1, N2> &
     return os;
 }
 
+namespace control
+{
+
 /// @brief Overload the << operator for continuous-time state-space models.
 /// @tparam T The type of the state-space model elements.
 /// @tparam N_state The number of state variables.
@@ -88,7 +95,7 @@ std::ostream &operator<<(std::ostream &os, const fsmlib::MatrixBase<T, N1, N2> &
 /// @param ss The continuous-time state-space model.
 /// @returns The output stream with the state-space model contents.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-inline std::ostream &operator<<(std::ostream &os, const fsmlib::control::StateSpace<T, N_state, N_input, N_output> &ss)
+inline std::ostream &operator<<(std::ostream &os, const StateSpace<T, N_state, N_input, N_output> &ss)
 {
     os << "A =\n"
        << ss.A << "\n"
@@ -111,8 +118,7 @@ inline std::ostream &operator<<(std::ostream &os, const fsmlib::control::StateSp
 /// @param ss The discrete-time state-space model.
 /// @returns The output stream with the state-space model contents.
 template <typename T, std::size_t N_state, std::size_t N_input, std::size_t N_output>
-inline std::ostream &
-operator<<(std::ostream &os, const fsmlib::control::DiscreteStateSpace<T, N_state, N_input, N_output> &ss)
+inline std::ostream &operator<<(std::ostream &os, const DiscreteStateSpace<T, N_state, N_input, N_output> &ss)
 {
     os << "A =\n"
        << ss.A << "\n"
@@ -127,8 +133,7 @@ operator<<(std::ostream &os, const fsmlib::control::DiscreteStateSpace<T, N_stat
     return os;
 }
 
-namespace fsmlib
-{
+} // namespace control
 
 /// @brief Converts a fixed-size vector to an Octave-compatible variable assignment.
 /// @tparam T The type of the vector elements.
@@ -180,7 +185,8 @@ inline std::string to_octave(const std::string &name, const fsmlib::MatrixBase<T
 ///
 /// @param mat The matrix to convert.
 /// @return std::string The LaTeX string representation of the matrix.
-template <typename T, size_t Rows, size_t Cols> std::string to_latex(const fsmlib::MatrixBase<T, Rows, Cols> &mat)
+template <typename T, size_t Rows, size_t Cols>
+std::string to_latex(const fsmlib::MatrixBase<T, Rows, Cols> &mat)
 {
     std::ostringstream oss;
     oss << "\\begin{bmatrix}\n";
@@ -205,7 +211,8 @@ template <typename T, size_t Rows, size_t Cols> std::string to_latex(const fsmli
 ///
 /// @param mat The matrix to convert.
 /// @return std::string The Markdown string representation of the matrix.
-template <typename T, size_t Rows, size_t Cols> std::string to_markdown(const fsmlib::MatrixBase<T, Rows, Cols> &mat)
+template <typename T, size_t Rows, size_t Cols>
+std::string to_markdown(const fsmlib::MatrixBase<T, Rows, Cols> &mat)
 {
     std::ostringstream oss;
 

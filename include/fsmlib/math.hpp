@@ -356,7 +356,8 @@ constexpr inline void apply_elementwise(fsmlib::MatrixBase<T, Rows, Cols> &mat, 
 /// @param b The second value.
 /// @param tolerance The tolerance for comparison (default: 1e-09).
 /// @returns True if the values are approximately equal, false otherwise.
-template <typename T1, typename T2> inline bool approximately_equal(T1 a, T2 b, double tolerance = 1e-09)
+template <typename T1, typename T2>
+inline bool approximately_equal(T1 a, T2 b, double tolerance = 1e-09)
 {
     return std::fabs(a - b) <= tolerance * std::fmax(std::fabs(a), std::fabs(b));
 }
@@ -367,7 +368,8 @@ template <typename T1, typename T2> inline bool approximately_equal(T1 a, T2 b, 
 /// @param a The first value.
 /// @param b The second value.
 /// @returns True if the first value is less than or approximately equal to the second, false otherwise.
-template <typename T1, typename T2> inline bool approximately_lesser_than_equal(T1 a, T2 b)
+template <typename T1, typename T2>
+inline bool approximately_lesser_than_equal(T1 a, T2 b)
 {
     return (a < b) || (fsmlib::details::approximately_equal(a, b));
 }
@@ -378,7 +380,8 @@ template <typename T1, typename T2> inline bool approximately_lesser_than_equal(
 /// @param a The first value.
 /// @param b The second value.
 /// @returns True if the first value is greater than or approximately equal to the second, false otherwise.
-template <typename T1, typename T2> inline bool approximately_greater_than_equal(T1 a, T2 b)
+template <typename T1, typename T2>
+inline bool approximately_greater_than_equal(T1 a, T2 b)
 {
     return (a > b) || (fsmlib::details::approximately_equal(a, b));
 }

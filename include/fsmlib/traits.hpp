@@ -63,18 +63,21 @@ inline constexpr bool is_valid_mutable_combination_v =
 
 /// @brief Trait to determine the fixed size of a container.
 /// @tparam Vec The container type.
-template <typename Vec, typename = std::void_t<typename Vec::size_type>> struct fixed_size {
+template <typename Vec, typename = std::void_t<typename Vec::size_type>>
+struct fixed_size {
     /// @brief The fixed size of the container.
     static constexpr std::size_t value = Vec::size_type::value;
 };
 
 /// @brief Helper variable template for fixed_size.
 /// @tparam Vec The container type.
-template <typename Vec> inline constexpr std::size_t fixed_size_v = fsmlib::traits::fixed_size<Vec>::value;
+template <typename Vec>
+inline constexpr std::size_t fixed_size_v = fsmlib::traits::fixed_size<Vec>::value;
 
 /// @brief Helper variable template to trigger a static assertion for invalid types.
 /// @tparam ... Args The types to evaluate.
-template <typename... Args> inline constexpr bool always_false_v = false;
+template <typename... Args>
+inline constexpr bool always_false_v = false;
 
 } // namespace traits
 
