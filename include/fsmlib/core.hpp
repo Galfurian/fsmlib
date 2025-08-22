@@ -18,7 +18,7 @@
 #define COLUMN_MAJOR ///< Enables column-major access of matrices.
 
 #define FSMLIB_MAJOR_VERSION 1 ///< Major version of the library.
-#define FSMLIB_MINOR_VERSION 0 ///< Minor version of the library.
+#define FSMLIB_MINOR_VERSION 1 ///< Minor version of the library.
 #define FSMLIB_MICRO_VERSION 0 ///< Micro version of the library.
 
 /// @brief Namespace for the fixed-size matrix and vector library.

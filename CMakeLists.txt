@@ -166,7 +166,7 @@ endif()
 if(DOXYGEN_FOUND)
 
     # Read the file with the version.
-    file(READ ${PROJECT_SOURCE_DIR}/include/fsmlib/fsmlib.hpp version_file)
+    file(READ ${PROJECT_SOURCE_DIR}/include/fsmlib/core.hpp version_file)
     # Extract the version.
     string(REGEX MATCH "FSMLIB_MAJOR_VERSION ([0-9]*)" _ ${version_file})
     set(FSMLIB_MAJOR_VERSION ${CMAKE_MATCH_1})
