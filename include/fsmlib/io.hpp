@@ -13,7 +13,7 @@
 #include <sstream>
 
 #include "fsmlib/control.hpp"
-#include "fsmlib/fsmlib.hpp"
+#include "fsmlib/core.hpp"
 #include "fsmlib/view.hpp"
 
 namespace fsmlib

@@ -8,7 +8,7 @@
 
 #include <cmath>
 
-#include "fsmlib/fsmlib.hpp"
+#include "fsmlib/core.hpp"
 
 namespace fsmlib
 {

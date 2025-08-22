@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "fsmlib/fsmlib.hpp"
+#include "fsmlib/core.hpp"
 
 namespace fsmlib
 {
